@@ -1,0 +1,8 @@
+<ul>
+  <% for(var i=0; i< reminders.length; i++) {%>
+    <li class="reminder">
+      <a class="reminder-title" href="<%= '/reminders/'+reminders[i]._id %>"><%= reminders[i].title %>:</a>
+      <span class="reminder-body"><%= reminders[i].body %></span>
+    </li>
+  <% } %>
+</ul>
