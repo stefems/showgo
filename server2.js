@@ -1,13 +1,16 @@
 
-var express = require('express');
-var exphbs = require('express-handlebars');
+const express = require('express');
+const mongoose = require('mongoose');
+const exphbs = require('express-handlebars');
+const passport = require('passport');
+const FacebookStrategy = require('passport-facebook').Strategy;
 const http = require('http');
+
 const env = require("./.env/.env.js");
-
-var user = require('./models/user');
-var passport = require('passport');
-var FacebookStrategy = require('passport-facebook').Strategy;
-
+const api = require('./server/routes/api');
+var User = require("./models/user");
+var Event = require("./models/event");
+var user;
 //-------------------------
 passport.use(new FacebookStrategy({
     clientID: env.facebookAppId,
@@ -61,7 +64,7 @@ passport.serializeUser(function(user, done) {
 });
 
 passport.deserializeUser(function(id, done) {
-    user.findById(id, function(err, user) {
+    User.findById(id, function(err, user) {
         done(err, user);
     });
 });
@@ -71,7 +74,7 @@ app.use(require('cookie-parser')("showgo"));
 app.use(require('express-session')({
     resave:false,
     saveUninitialized:false,
-    secret: env.secret
+    secret: env.hashSecret
 }));
 //-------------------------
 app.use(passport.initialize());
@@ -83,12 +86,16 @@ app.engine('handlebars', exphbs({
 }));
 app.set('view engine', 'handlebars');
 
-var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/users');
-var User = require("./models/user");
+mongoose.createConnection('mongodb://localhost/users');
+mongoose.createConnection('mongodb://localhost/events');
+
 
 app.set('port', process.env.PORT || 3000);
 app.use(express.static(__dirname + '/public'));
+
+// Get our API routes
+app.use('/api', api);
+
 
 function isLoggedIn(req, res, next) {
     console.log("isLoggedIn()");
@@ -96,7 +103,7 @@ function isLoggedIn(req, res, next) {
     req.loggedIn = !!req.user;
     next();
 }
-t=
+
 app.get('/loginCheck', function(req, res) {
     console.log("/loginCheck");
     if (!!req.user) {

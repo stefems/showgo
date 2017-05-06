@@ -9,6 +9,8 @@ import { PostsComponent } from './posts/posts.component';
 import { EventsComponent } from './events/events.component';
 import { AuthGuard }                from './auth-guard.service';
 import { AuthService }      from './auth.service';
+import { ApiService }      from './api.service';
+
 
 
 
@@ -43,7 +45,7 @@ const ROUTES = [
     HttpModule,
     RouterModule.forRoot(ROUTES) // Add routes to the app
   ],
-  providers: [AuthGuard, AuthService],
+  providers: [AuthGuard, AuthService, ApiService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

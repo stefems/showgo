@@ -14,6 +14,7 @@ export class AppComponent {
   subscription = Subscription;
   loginStatusObservable: boolean = false;
   user: any;
+  welcomeMessage = "Please log in!";
 
   constructor(private authService: AuthService) {
   	authService.login().subscribe(response => { 
@@ -22,7 +23,7 @@ export class AppComponent {
         authService.getUser().subscribe(response => {
           console.log(response);
           this.user = response;
-          // this.welcomeMessage = "Hi, " + this.user.name;
+          this.welcomeMessage = "Hi, " + this.user.displayName;
         });
       }
     });

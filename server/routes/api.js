@@ -7,13 +7,7 @@ var remindersController = require("./../../controllers/remindersController");
 
 
 /* GET api listing. */
-router.get('/', apiGeneralController.index);
-router.get('/index', apiGeneralController.index);
-router.get('/home', apiGeneralController.index);
-
-router.get("/reminders", remindersController.index);
-
-router.get("*", remindersController.index);
+router.get('/events', apiGeneralController.getEvents);
 
 
 module.exports = router;

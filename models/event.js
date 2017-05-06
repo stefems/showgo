@@ -1,6 +1,5 @@
 // requiring mongoose dependency
 var mongoose = require('mongoose');
-
 // defining schema for reminders
 var EventSchema = new mongoose.Schema({
 	eventId: String,
