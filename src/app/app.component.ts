@@ -14,21 +14,25 @@ export class AppComponent {
   subscription = Subscription;
   loginStatusObservable: boolean = false;
   user: any;
-  welcomeMessage = "Please log in!";
-
-  constructor(private authService: AuthService) {
-  	authService.login().subscribe(response => { 
-      this.loginStatus = response; 
-      if (this.loginStatus) {
-        authService.getUser().subscribe(response => {
-          console.log(response);
-          this.user = response;
-          this.welcomeMessage = "Hi, " + this.user.displayName;
-        });
-      }
-    });
-    
+  welcomeMessage = "";
+  
+  constructor(private authService: AuthService){
+    this.user = this.authService.getUser("", "");
+    this.user.displayName = "please login!";
+    this.welcomeMessage = "Hello, " + this.user.displayName;
   }
+  // constructor(private authService: AuthService) {
+  // 	authService.login().subscribe(response => { 
+  //     this.loginStatus = response; 
+  //     if (this.loginStatus) {
+  //       authService.getUser().subscribe(response => {
+  //         console.log(response);
+  //         this.user = response;
+  //         this.welcomeMessage = "Hi, " + this.user.displayName;
+  //       });
+  //     }
+  //   });
+  // }
   
   ngOnInit(){
 

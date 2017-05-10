@@ -1,10 +1,5 @@
 <h1>
-	{{title}}
+	<span>{{title}}</span><span><button (click)="logout()">Log out</button></span>
 </h1>
-<h2>
-	{{welcomeMessage}}
-</h2>
-<h3>
-	<a href="/logout">Log out</a>
-</h3>
+<h2>{{welcomeMessage}}</h2>
 <router-outlet></router-outlet>

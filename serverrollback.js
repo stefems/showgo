@@ -8,43 +8,32 @@ const http = require('http');
 
 const env = require("./.env/.env.js");
 const api = require('./server/routes/api');
-//const userRoutes = require('./server/routes/user');
-
 var User = require("./models/user");
 var Event = require("./models/event");
 var user;
 //-------------------------
-//STRATEGY
-//-------------------------
-/*passport.use(new FacebookStrategy({
+passport.use(new FacebookStrategy({
     clientID: env.facebookAppId,
     clientSecret: env.facebookAppSecret,
-    callbackURL: env.facebookCallbackUrl,
-    enableProof: true
+    callbackURL: env.facebookCallbackUrl
     }, function(accessToken, refreshToken, profile, done) {
-        console.log(profile);
+        //console.log(profile);
         User.findOne({ oauthID: profile.id }, function(err, user) {
               if(err) {
-                console.log("mongo find error");
                 console.log(err);  // handle errors!
-                done(null, null);
               }
               if (!err && user !== null) {
-                console.log("existing user found.");
                 //update user's access token
                 user.access_token = accessToken;
                 user.save(function(err) {
                   if(err) {
-                    console.log("mongo save error");
                     console.log(err);  // handle errors!
-                    done(null, null);
                   } else {
                     console.log("updating existing user's access token");
                     done(null, user);
                   }
                 });
               } else {
-                console.log("new user found.");
                 user = new User({
                   oauthID: profile.id,
                   name: profile.displayName,
@@ -57,9 +46,7 @@ var user;
                 });
                 user.save(function(err) {
                   if(err) {
-                    console.log("mongo new user save error");
                     console.log(err);  // handle errors!
-                    done(null, null);
                   } else {
                     console.log("saving new user");
                     done(null, user);
@@ -68,65 +55,15 @@ var user;
               }
         });
     }
-));*/
-passport.use(new FacebookStrategy({
-
-        // pull in our app id and secret from our auth.js file
-        clientID        : env.facebookAppId,
-        clientSecret    : env.facebookAppSecret,
-        callbackURL     : env.facebookCallbackUrl
-
-    },
-
-    // facebook will send back the token and profile
-    function(token, refreshToken, profile, done) {
-
-        // asynchronous
-        process.nextTick(function() {
-
-            // find the user in the database based on their facebook id
-            User.findOne({ 'id' : profile.id }, function(err, user) {
-
-                // if there is an error, stop everything and return that
-                // ie an error connecting to the database
-                if (err)
-                    return done(err);
-
-                // if the user is found, then log them in
-                if (user) {
-                    return done(null, user); // user found, return that user
-                } else {
-                    // if there is no user found with that facebook id, create them
-                    var newUser            = new User();
-
-                    // set all of the facebook information in our user model
-                    newUser.id    = profile.id; // set the users facebook id                   
-                    newUser.access_token = token; // we will save the token that facebook provides to the user                    
-                    newUser.name  = profile.displayName + ' ' + profile.name.familyName; // look at the passport user profile to see how names are returned
-                    // save our user to the database
-                    newUser.save(function(err) {
-                        if (err)
-                            throw err;
-
-                        // if successful, return the new user
-                        return done(null, newUser);
-                    });
-                }
-
-            });
-        });
-
-    }));
-//-------------------------
-//SERIALIZE & DESERIALIZE
+));
 //-------------------------
 passport.serializeUser(function(user, done) {
     console.log("serializeUser()");
     console.log(user);
     done(null, user._id);
 });
+
 passport.deserializeUser(function(id, done) {
-    console.log("deserializeUser()");
     User.findById(id, function(err, user) {
         done(err, user);
     });
@@ -157,20 +94,14 @@ app.set('port', process.env.PORT || 3000);
 app.use(express.static(__dirname + '/public'));
 
 // Get our API routes
-//app.use('/api', api);
-//app.use('/user', userRoutes);
+app.use('/api', api);
 
-// function isLoggedIn(req, res, next) {
-//     console.log("isLoggedIn()");
-//     console.log(req.user);
-//     req.loggedIn = !!req.user;
-//     next();
-// }
+
 function isLoggedIn(req, res, next) {
     console.log("isLoggedIn()");
-    if(!!req.user) { return next(); }
-    console.log("auth failed, going to /");
-    res.redirect('/');
+    console.log(req.user);
+    req.loggedIn = !!req.user;
+    next();
 }
 
 app.get('/loginCheck', function(req, res) {
@@ -184,19 +115,12 @@ app.get('/loginCheck', function(req, res) {
         res.json({"status": false});
     }
 });
-app.get("/error", function(req, res) {
-  res.send("/error");
-});
-app.get("/good", function(req, res) {
-  res.send("/good");
-});
-app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['user_friends', 'rsvp_event']}));
 
+app.get('/auth/facebook', passport.authenticate('facebook'));
 app.get('/auth/facebook/callback', passport.authenticate('facebook', {
-    successRedirect: '/',
-    failureRedirect: '/error'
-  })
-);
+  successRedirect: '/',
+  failureRedirect: '/error'
+}));
 
 app.get('/getUser', isLoggedIn, function(req, res){
   console.log("/getUser");
@@ -210,17 +134,17 @@ app.get('/logout', function(req, res){
 });
 
 // Catch all other routes and return the index file
-// app.get('*', (req, res) => {
-//   res.redirect('/');
-// });
+app.get('*', (req, res) => {
+  res.redirect('/');
+  //res.sendFile(path.join(__dirname, 'public/index.html'));
+});
 
 // 500 error handler (middleware)
-/*app.use(function(err, req, res, next){
+app.use(function(err, req, res, next){
     console.error(err.stack);
     res.status(500);
     res.send('error');
-});*/
-
+});
 const port = process.env.PORT || '3000';
 app.set('port', port);
 

@@ -10,7 +10,9 @@ var UserSchema = new mongoose.Schema({
   friends: [String],
   venue_pages: [String],
   shows_going: [String],
-  shows_interested: [String]
+  shows_interested: [String],
+  shows_ignored: [String],
+  id: String
 });
 // define the model
 var User = mongoose.model("User", UserSchema);

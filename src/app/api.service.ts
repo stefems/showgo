@@ -16,6 +16,10 @@ export class ApiService {
   private eventsObservableSource = new Subject<Event[]>(); 
   eventsObservable = this.eventsObservableSource.asObservable();
   private getEventsUrl = "http://45.55.156.114:3000/api/events";
+  private postJoinUrl = "http://45.55.156.114:3000/api/join";
+  private postDeclineUrl = "http://45.55.156.114:3000/api/decline";
+  private postInterestedUrl = "http://45.55.156.114:3000/api/interested";
+
 
   // store the URL so we can redirect after logging in
   redirectUrl: string;
@@ -39,7 +43,57 @@ export class ApiService {
         res.json()
         return eventArray;
       });
-  
   }
-  
+  postJoin(eventId: string, user_id: string): Observable<boolean> {
+    var url = this.postJoinUrl + "/" + eventId + "/" + user_id;
+    let headers = new Headers({ 'Content-Type': 'application/json' });
+    let options = new RequestOptions({ headers: headers });
+    return this.http.post(url, {}, options)
+      .map((res:Response) => {
+        console.log(res);
+        if (res) {
+          return true;
+        }
+        return false;
+      });
+      //TODO: how the fuck do these catches work
+      /*
+      .catch(err => {
+        console.log(err);
+        return false;
+      });*/
+  }
+  postDecline(eventId: string, access_token: string): Observable<boolean> {
+    var url = this.postDeclineUrl + "/" + eventId + "/" + access_token;
+    let headers = new Headers({ 'Content-Type': 'application/json' });
+    let options = new RequestOptions({ headers: headers });
+    return this.http.post(url, {}, options)
+      .map((res:Response) => {
+        console.log(res);
+        if (res) {
+          return true;
+        }
+        return false;
+      });
+      //TODO: how the fuck do these catches work
+      /*
+      .catch(err => {
+        console.log(err);
+        return false;
+      });*/
+  }
+  postInterested(eventId: string, access_token: string): Observable<boolean> {
+    var url = this.postInterestedUrl + "/" + eventId + "/" + access_token;
+    let headers = new Headers({ 'Content-Type': 'application/json' });
+    let options = new RequestOptions({ headers: headers });
+    return this.http.post(url, {}, options)
+      .map((res:Response) => {
+        console.log(res);
+        if (res) {
+          return true;
+        }
+        return false;
+      });
+  }
+
 }

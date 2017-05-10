@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService }      from './../api.service';
+import { AuthService }      from './../auth.service';
+import {EventComponent}				from './../event/event.component'
 
 
 @Component({
@@ -10,12 +12,16 @@ import { ApiService }      from './../api.service';
 export class EventsComponent implements OnInit {
 
   private events = [];
+  private userAccessToken = "";
+  private user: any;
 
-  constructor(private apiService: ApiService) {
-  	//hit the backend path (via an observer) to get the events from mongo
-  	apiService.getEvents().subscribe(response => { 
-      this.events = response; 
-    });
+  constructor(private apiService: ApiService, private authService: AuthService) {
+    // authService.getUser().subscribe(response => {
+    //   this.user = response;
+    // });
+  	// apiService.getEvents().subscribe(response => { 
+   //    this.events = response; 
+   //  });
   }
 
   ngOnInit() {

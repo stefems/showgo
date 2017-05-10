@@ -1,0 +1,13 @@
+<div data>
+	<ul>
+		<li>{{event.name}}</li>
+		<li>{{event.fbId}}</li>
+		<li>{{event.dbId}}</li>
+		<li>{{event.venue}}</li>
+		<li>{{event.location}}</li>
+		<li>{{event.timeString}}</li>
+	</ul>
+	<button (click)="ignore()" [disabled]="!buttonsEnabled" [ngClass]="{'clicked': ignored }">Ignore Event</button>
+	<button (click)="join()" [disabled]="!buttonsEnabled" [ngClass]="{'clicked': joined }">Join Event</button>
+	<button (click)="interested()" [disabled]="!buttonsEnabled" [ngClass]="{'clicked': interest }">Interested In Event</button>
+</div>

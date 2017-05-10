@@ -3,16 +3,18 @@
 // load all the things we need
 var LocalStrategy    = require('passport-local').Strategy;
 var FacebookStrategy = require('passport-facebook').Strategy;
-const env = require("./.env/.env.js");
 
 // load up the user model
-var User       = require('../../models/user');
+var User = require("./models/user");
+
+// load the auth variables
+const env = require("./.env/.env.js");
 
 module.exports = function(passport) {
 
     // used to serialize the user for the session
     passport.serializeUser(function(user, done) {
-        done(null, user.id);
+        done(null, user._id);
     });
 
     // used to deserialize the user
@@ -21,7 +23,7 @@ module.exports = function(passport) {
             done(err, user);
         });
     });
-    
+
     // code for login (use('local-login', new LocalStategy))
     // code for signup (use('local-signup', new LocalStategy))
 
@@ -33,7 +35,7 @@ module.exports = function(passport) {
         // pull in our app id and secret from our auth.js file
         clientID        : env.facebookAppId,
         clientSecret    : env.facebookAppSecret,
-        callbackURL     : env.facebookAppCallbackUrl
+        callbackURL     : env.facebookCallbackUrl
 
     },
 
@@ -44,7 +46,7 @@ module.exports = function(passport) {
         process.nextTick(function() {
 
             // find the user in the database based on their facebook id
-            User.findOne({ oauthID: profile.id }, function(err, user) {
+            User.findOne({ 'id' : profile.id }, function(err, user) {
 
                 // if there is an error, stop everything and return that
                 // ie an error connecting to the database
@@ -55,20 +57,21 @@ module.exports = function(passport) {
                 if (user) {
                     return done(null, user); // user found, return that user
                 } else {
-                  var user = new User({
-                    oauthID: profile.id,
-                    name: profile.displayName,
-                    created: Date.now(),
-                  });
-                  user.save(function(err) {
-                    if(err) {
-                      throw err;
-                    } else {
-                      console.log("saving new user");
-                      return done(null, user);
-                    }
-                  });
-                        
+                    // if there is no user found with that facebook id, create them
+                    var newUser            = new User();
+
+                    // set all of the facebook information in our user model
+                    newUser.id    = profile.id; // set the users facebook id                   
+                    newUser.access_token = token; // we will save the token that facebook provides to the user                    
+                    newUser.name  = profile.displayName + ' ' + profile.name.familyName; // look at the passport user profile to see how names are returned
+                    // save our user to the database
+                    newUser.save(function(err) {
+                        if (err)
+                            throw err;
+
+                        // if successful, return the new user
+                        return done(null, newUser);
+                    });
                 }
 
             });
@@ -77,3 +80,4 @@ module.exports = function(passport) {
     }));
 
 };
+
