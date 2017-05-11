@@ -1,5 +1,4 @@
-<h1>
-	<span>{{title}}</span><span><button (click)="logout()">Log out</button></span>
-</h1>
-<h2>{{welcomeMessage}}</h2>
+<h1>{{title}}</h1>
+<button (click)="logout()">Log out</button>
+<h2>{{user.displayName}}</h2>
 <router-outlet></router-outlet>

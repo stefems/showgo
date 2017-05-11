@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 var User = require("./../models/user");
-mongoose.connect('mongodb://localhost/users');
 
 var passport = require("passport");
 var env = require("./../.env/.env.js");
@@ -18,6 +17,7 @@ var userController = {
   // 	response.json({secret: "Woooah secret!"});
   // },
   getUser: function(req, res) {
+    mongoose.connect('mongodb://localhost/users');
     console.log("getUser() in controller");
     //get the two vals from the params
     var fbId = req.params.fbId;
@@ -39,6 +39,7 @@ var userController = {
           if(err) {
             console.log("mongo find error");
             console.log(err);  // handle errors!
+            mongoose.connection.close();
             res.json({"error":"error"});
           }
           if (!err && user !== null) {
@@ -47,10 +48,12 @@ var userController = {
             user.access_token = access_token;
             user.save(function(err) {
               if(err) {
+                mongoose.connection.close();
                 console.log("mongo save error");
                 console.log(err);  // handle errors!
                 res.json({"error":"error"});
               } else {
+                mongoose.connection.close();
                 console.log("updating existing user's access token");
                 res.json(user);
               }
@@ -70,10 +73,12 @@ var userController = {
             });
             user.save(function(err) {
               if(err) {
+                mongoose.connection.close();
                 console.log("mongo new user save error");
                 console.log(err);  // handle errors!
                 res.json({"error":"error"});
               } else {
+                mongoose.connection.close();
                 console.log("saving new user");
                 res.json(user);
               }
@@ -82,6 +87,7 @@ var userController = {
         });
       }
       else {
+        mongoose.connection.close();
         console.log("access token is invalid");
         res.json({"error": "invalid"});
       }

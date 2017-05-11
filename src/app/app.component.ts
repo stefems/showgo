@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { AuthService }      from './auth.service';
 import { Subscription } from 'rxjs/Subscription';
 import {User} from './user';
+import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -14,27 +15,21 @@ export class AppComponent {
   subscription = Subscription;
   loginStatusObservable: boolean = false;
   user: any;
-  welcomeMessage = "";
+
   
-  constructor(private authService: AuthService){
-    this.user = this.authService.getUser("", "");
-    this.user.displayName = "please login!";
-    this.welcomeMessage = "Hello, " + this.user.displayName;
+  constructor(private authService: AuthService, private router: Router){    
+    this.authService.user().subscribe(response => {
+      console.log("app constructor()");
+      console.log(response);
+      this.user = response;
+    });
   }
-  // constructor(private authService: AuthService) {
-  // 	authService.login().subscribe(response => { 
-  //     this.loginStatus = response; 
-  //     if (this.loginStatus) {
-  //       authService.getUser().subscribe(response => {
-  //         console.log(response);
-  //         this.user = response;
-  //         this.welcomeMessage = "Hi, " + this.user.displayName;
-  //       });
-  //     }
-  //   });
-  // }
   
   ngOnInit(){
 
+  }
+  logout(){
+    this.authService.logout();
+    this.router.navigate(['/']);
   }
 }

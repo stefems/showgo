@@ -32,6 +32,7 @@ export class EventComponent implements OnInit {
 		if (!this.joined) {
 			//subscribe w/ event id in order to hit the backend w/ id for joining	
 			this.apiService.postJoin(this.event.fbId, this.user.dbId).subscribe(response => {
+				console.log(response);
 				if(response) {
 					//show that the RSVP has happened
 					this.joined = true;

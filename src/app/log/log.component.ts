@@ -15,7 +15,6 @@ import {
   styleUrls: ['./log.component.css']
 })
 export class LogComponent implements OnInit {
-
   user = null;
   message = "Please login!";
   constructor(private authService: AuthService, private router: Router, private fb: FacebookService, private fbloginService: FbloginService) {
@@ -29,22 +28,23 @@ export class LogComponent implements OnInit {
  
     this.fb.login()
       .then((response: LoginResponse) => {
-      	console.log("login()");
-      	if (response.authResponse) {
-      		let access_token = response.authResponse.accessToken;
-      		let fbId = response.authResponse.userID;
-	        this.authService.getUser(fbId, access_token).then(authResponse => {
-      		  console.log("getUser()");
-      		  if (authResponse.id != "1") {
-      		  	this.router.navigate(['/events']);
-      		  }
+        console.log("login()");
+        console.log(response);
+        if (response.authResponse) {
+          let access_token = response.authResponse.accessToken;
+          let fbId = response.authResponse.userID;
+          this.authService.getUser(fbId, access_token).subscribe(res => {
+            console.log("getUser()");
+            console.log(res);
+            if (res) {
+              this.router.navigate(['/events']);
+            }
             else {
               this.message = "Failed to log into facebook. Can you try again?";
             }
-	        });
-	    }
+          });
+        }
       })
       .catch((error: any) => console.error(error));
- 
   }
 }

@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService }      from './../api.service';
 import { AuthService }      from './../auth.service';
-import {EventComponent}				from './../event/event.component'
+import {EventComponent}				from './../event/event.component';
+import {User} from '../user';
 
 
 @Component({
@@ -16,12 +17,12 @@ export class EventsComponent implements OnInit {
   private user: any;
 
   constructor(private apiService: ApiService, private authService: AuthService) {
-    // authService.getUser().subscribe(response => {
-    //   this.user = response;
-    // });
-  	// apiService.getEvents().subscribe(response => { 
-   //    this.events = response; 
-   //  });
+    this.authService.user().subscribe(response => {
+      this.user = response;
+    });
+    this.apiService.getEvents().subscribe(response => {
+      this.events = response;
+    });
   }
 
   ngOnInit() {

@@ -21,20 +21,4 @@ export class FbloginService {
 
     fb.init(initParams);
   }
-
-  // isLoggedIn(): Observable<boolean> {
-
-
-  //   return this.http.get(this.getEventsUrl)
-  //     .map((res:Response) => {
-  //       let eventArray = [];
-  //       for (let i = 0; i < res.json().length; i++) {
-  //         let newEvent = new Event(res.json()[i]);
-  //         eventArray.push(newEvent);
-  //       }
-  //       res.json()
-  //       return eventArray;
-  //     });
-  // }
-
 }
