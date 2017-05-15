@@ -8,10 +8,11 @@ var UserSchema = new mongoose.Schema({
   created: Date,
   access_token: String,
   friends: [String],
+  events: [{
+    eventId: String,
+    actionType: String
+  }],
   venue_pages: [String],
-  shows_going: [String],
-  shows_interested: [String],
-  shows_ignored: [String],
   id: String
 });
 // define the model

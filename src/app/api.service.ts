@@ -16,6 +16,7 @@ export class ApiService {
   private eventsObservableSource = new Subject<Event[]>(); 
   eventsObservable = this.eventsObservableSource.asObservable();
   private getEventsUrl = "http://45.55.156.114:3000/api/events";
+  private postEventActionUrl = "http://45.55.156.114:3000/api/eventAction";
   private postJoinUrl = "http://45.55.156.114:3000/api/join";
   private postDeclineUrl = "http://45.55.156.114:3000/api/decline";
   private postInterestedUrl = "http://45.55.156.114:3000/api/interested";
@@ -32,6 +33,26 @@ export class ApiService {
   //     .then(response => response.json().status)
   //     .catch(err => console.log(err));
   // }
+  eventPost(eventType: string, eventId: string, userId: string): Observable<boolean> {
+    var url = this.postEventActionUrl + "/" + eventType + "/" + eventId + "/" + userId;
+    let headers = new Headers({ 'Content-Type': 'application/json' });
+    let options = new RequestOptions({ headers: headers });
+    console.log(url);
+    return this.http.post(url, {}, options)
+      .map((res:Response) => {
+        console.log(res);
+        if (res) {
+          return true;
+        }
+        return false;
+      });
+      //TODO: how the fuck do these catches work
+      /*
+      .catch(err => {
+        console.log(err);
+        return false;
+      });*/
+  }
   getEvents(): Observable<Event[]> {
     return this.http.get(this.getEventsUrl)
       .map((res:Response) => {

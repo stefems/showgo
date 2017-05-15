@@ -24,6 +24,74 @@ export class EventComponent implements OnInit {
 	ngOnInit() {
 	}
 
+	public eventAction(eventType: string) {
+		//disable the buttons
+		this.buttonsEnabled = false;
+		let undo = false;
+		switch (eventType) {
+			case "join":
+				if (this.joined) {
+					undo = true;
+				}
+				break;
+			case "interested":
+				if (this.interest) {
+					undo = true;
+				}
+				break;
+			case "ignore":
+				if (this.ignored) {
+					undo = true;
+				}
+				break;
+		}
+		if (undo) {
+			//by default we need to add the event to ignore
+			this.apiService.eventPost("ignore", this.event.fbId, this.user.dbId).subscribe(response => {
+				console.log("eventPost() ignore in ts");
+				console.log(response);
+				if(response) {
+					//show that the ignore has happened
+					this.joined = false;
+					this.interest = false;
+					this.ignored = true;
+					//after button changes have been made
+					this.buttonsEnabled = true;
+				}
+				else {
+					//make note that the action has not happened
+				}
+			});
+		}
+		else {
+			//otherwise we'll need to add the event to the corresponding listing
+			this.apiService.eventPost(eventType, this.event.fbId, this.user.dbId).subscribe(response => {
+				console.log("eventPost() post in ts");
+				console.log(response);
+				if(response) {
+					if (eventType === "join") {
+						//show that the RSVP has happened
+						this.joined = true;
+						this.interest = false;
+						this.ignored = false;
+					}
+					else {
+						//show that the interested has happened
+						this.joined = false;
+						this.interest = true;
+						this.ignored = false;
+					}
+					//after button changes have been made
+					this.buttonsEnabled = true;
+				}
+				else {
+					//make note that the action has not happened
+				}
+			});
+		}
+
+	}
+	/*
 	public join() {
 		console.log("join()");
 		//disable the buttons
@@ -31,7 +99,7 @@ export class EventComponent implements OnInit {
 		//if we haven't yet joined
 		if (!this.joined) {
 			//subscribe w/ event id in order to hit the backend w/ id for joining	
-			this.apiService.postJoin(this.event.fbId, this.user.dbId).subscribe(response => {
+			this.apiService.eventAction("join", this.event.fbId, this.user.dbId).subscribe(response => {
 				console.log(response);
 				if(response) {
 					//show that the RSVP has happened
@@ -97,5 +165,5 @@ export class EventComponent implements OnInit {
 			}
 		});
 	}
-
+	*/
 }

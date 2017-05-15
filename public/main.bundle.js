@@ -138,6 +138,7 @@ var ApiService = (function () {
         this.eventsObservableSource = new __WEBPACK_IMPORTED_MODULE_6_rxjs_Subject__["Subject"]();
         this.eventsObservable = this.eventsObservableSource.asObservable();
         this.getEventsUrl = "http://45.55.156.114:3000/api/events";
+        this.postEventActionUrl = "http://45.55.156.114:3000/api/eventAction";
         this.postJoinUrl = "http://45.55.156.114:3000/api/join";
         this.postDeclineUrl = "http://45.55.156.114:3000/api/decline";
         this.postInterestedUrl = "http://45.55.156.114:3000/api/interested";
@@ -148,6 +149,26 @@ var ApiService = (function () {
     //     .then(response => response.json().status)
     //     .catch(err => console.log(err));
     // }
+    ApiService.prototype.eventPost = function (eventType, eventId, userId) {
+        var url = this.postEventActionUrl + "/" + eventType + "/" + eventId + "/" + userId;
+        var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["c" /* Headers */]({ 'Content-Type': 'application/json' });
+        var options = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["d" /* RequestOptions */]({ headers: headers });
+        console.log(url);
+        return this.http.post(url, {}, options)
+            .map(function (res) {
+            console.log(res);
+            if (res) {
+                return true;
+            }
+            return false;
+        });
+        //TODO: how the fuck do these catches work
+        /*
+        .catch(err => {
+          console.log(err);
+          return false;
+        });*/
+    };
     ApiService.prototype.getEvents = function () {
         return this.http.get(this.getEventsUrl)
             .map(function (res) {
@@ -577,45 +598,38 @@ var EventComponent = (function () {
     }
     EventComponent.prototype.ngOnInit = function () {
     };
-    EventComponent.prototype.join = function () {
+    EventComponent.prototype.eventAction = function (eventType) {
         var _this = this;
-        console.log("join()");
         //disable the buttons
         this.buttonsEnabled = false;
-        //if we haven't yet joined
-        if (!this.joined) {
-            //subscribe w/ event id in order to hit the backend w/ id for joining	
-            this.apiService.postJoin(this.event.fbId, this.user.dbId).subscribe(function (response) {
+        var undo = false;
+        switch (eventType) {
+            case "join":
+                if (this.joined) {
+                    undo = true;
+                }
+                break;
+            case "interested":
+                if (this.interest) {
+                    undo = true;
+                }
+                break;
+            case "ignore":
+                if (this.ignored) {
+                    undo = true;
+                }
+                break;
+        }
+        if (undo) {
+            //by default we need to add the event to ignore
+            this.apiService.eventPost("ignore", this.event.fbId, this.user.dbId).subscribe(function (response) {
+                console.log("eventPost() ignore in ts");
                 console.log(response);
                 if (response) {
-                    //show that the RSVP has happened
-                    _this.joined = true;
-                    _this.interest = false;
-                    _this.ignored = false;
-                    //after button changes have been made
-                    _this.buttonsEnabled = true;
-                }
-                else {
-                }
-            });
-        }
-        else {
-            this.ignore();
-        }
-    };
-    EventComponent.prototype.interested = function () {
-        var _this = this;
-        console.log("interested()");
-        //disable the buttons
-        this.buttonsEnabled = false;
-        if (!this.interest) {
-            //subscribe w/ event id in order to hit the backend w/ id for joining	
-            this.apiService.postInterested(this.event.fbId, this.user.accessToken).subscribe(function (response) {
-                if (response) {
-                    //show that the interested has happened
-                    _this.interest = true;
-                    _this.ignored = false;
+                    //show that the ignore has happened
                     _this.joined = false;
+                    _this.interest = false;
+                    _this.ignored = true;
                     //after button changes have been made
                     _this.buttonsEnabled = true;
                 }
@@ -624,24 +638,30 @@ var EventComponent = (function () {
             });
         }
         else {
-            this.ignore();
+            //otherwise we'll need to add the event to the corresponding listing
+            this.apiService.eventPost(eventType, this.event.fbId, this.user.dbId).subscribe(function (response) {
+                console.log("eventPost() post in ts");
+                console.log(response);
+                if (response) {
+                    if (eventType === "join") {
+                        //show that the RSVP has happened
+                        _this.joined = true;
+                        _this.interest = false;
+                        _this.ignored = false;
+                    }
+                    else {
+                        //show that the interested has happened
+                        _this.joined = false;
+                        _this.interest = true;
+                        _this.ignored = false;
+                    }
+                    //after button changes have been made
+                    _this.buttonsEnabled = true;
+                }
+                else {
+                }
+            });
         }
-    };
-    EventComponent.prototype.ignore = function () {
-        var _this = this;
-        //subscribe w/ event id in order to hit the backend w/ id for joining	
-        this.apiService.postDecline(this.event.fbId, this.user.accessToken).subscribe(function (response) {
-            if (response) {
-                //show that the RSVP has happened
-                _this.joined = false;
-                _this.interest = false;
-                _this.ignored = true;
-                //after button changes have been made
-                _this.buttonsEnabled = true;
-            }
-            else {
-            }
-        });
     };
     __decorate([
         __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["h" /* Input */])("event"), 
@@ -963,7 +983,7 @@ module.exports = "<h1>{{title}}</h1>\n<button (click)=\"logout()\">Log out</butt
 /***/ 738:
 /***/ (function(module, exports) {
 
-module.exports = "<div data>\n\t<ul>\n\t\t<li>{{event.name}}</li>\n\t\t<li>{{event.fbId}}</li>\n\t\t<li>{{event.dbId}}</li>\n\t\t<li>{{event.venue}}</li>\n\t\t<li>{{event.location}}</li>\n\t\t<li>{{event.timeString}}</li>\n\t</ul>\n\t<button (click)=\"ignore()\" [disabled]=\"!buttonsEnabled\" [ngClass]=\"{'clicked': ignored }\">Ignore Event</button>\n\t<button (click)=\"join()\" [disabled]=\"!buttonsEnabled\" [ngClass]=\"{'clicked': joined }\">Join Event</button>\n\t<button (click)=\"interested()\" [disabled]=\"!buttonsEnabled\" [ngClass]=\"{'clicked': interest }\">Interested In Event</button>\n</div>\n"
+module.exports = "<div data>\n\t<ul>\n\t\t<li>{{event.name}}</li>\n\t\t<li>{{event.fbId}}</li>\n\t\t<li>{{event.dbId}}</li>\n\t\t<li>{{event.venue}}</li>\n\t\t<li>{{event.location}}</li>\n\t\t<li>{{event.timeString}}</li>\n\t</ul>\n\t<button (click)=\"eventAction('ignore')\" [disabled]=\"!buttonsEnabled\" [ngClass]=\"{'clicked': ignored }\">Ignore Event</button>\n\t<button (click)=\"eventAction('join')\" [disabled]=\"!buttonsEnabled\" [ngClass]=\"{'clicked': joined }\">Join Event</button>\n\t<button (click)=\"eventAction('interested')\" [disabled]=\"!buttonsEnabled\" [ngClass]=\"{'clicked': interest }\">Interested In Event</button>\n</div>\n"
 
 /***/ }),
 

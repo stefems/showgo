@@ -7,7 +7,7 @@
 		<li>{{event.location}}</li>
 		<li>{{event.timeString}}</li>
 	</ul>
-	<button (click)="ignore()" [disabled]="!buttonsEnabled" [ngClass]="{'clicked': ignored }">Ignore Event</button>
-	<button (click)="join()" [disabled]="!buttonsEnabled" [ngClass]="{'clicked': joined }">Join Event</button>
-	<button (click)="interested()" [disabled]="!buttonsEnabled" [ngClass]="{'clicked': interest }">Interested In Event</button>
+	<button (click)="eventAction('ignore')" [disabled]="!buttonsEnabled" [ngClass]="{'clicked': ignored }">Ignore Event</button>
+	<button (click)="eventAction('join')" [disabled]="!buttonsEnabled" [ngClass]="{'clicked': joined }">Join Event</button>
+	<button (click)="eventAction('interested')" [disabled]="!buttonsEnabled" [ngClass]="{'clicked': interest }">Interested In Event</button>
 </div>

@@ -3,11 +3,9 @@ var request = require('request');
 //TODO: consider removal
 var OAuth2 = require('oauth').OAuth2;
 
-mongoose.connect('mongodb://localhost/events');
+mongoose.connect('mongodb://localhost/users');
 var User = require("./models/user");
 var Event = require("./models/event");
-
-getEvents();
 
 //todo: fix date issues (not getting most recent events)
 function getEvents(url) {
@@ -67,4 +65,49 @@ function getEvents(url) {
 	});
 }
 
+// FindUser();
+addUser();
+function FindUser() {
+	User.findOne({ "id": "", "events.eventId": "efeafeaf"}, function(err, userFound) {
+      if(err) {
+        mongoose.connection.close();
+        console.log(err);  // handle errors!
+        res.json({error: "mongoose connection error"});
+      }
+      //event is already in user's events list, let's change the action type on the event
+      if (!err && userFound !== null) {
+        console.log("found the user by the event in their list");
+        
+      }
+      //event is not in user's list. Let's create that object and add it.
+      else {
+      	console.log("event not found in user");
+      }
+  });
+}
 
+function addUser() {
+	let newUser = new User({
+	  oauthID: 21412515,
+	  name: "events user",
+	  created: new Date(),
+	  access_token: "wsefe",
+	  friends: [],
+	  events: [{
+	    "eventId": "efeafeaf",
+	    "actionType": "join"
+	  }, {"eventId": "1232",
+	    "actionType": "join"}, {"eventId": "12144",
+	    "actionType": "join"}],
+	  venue_pages: [],
+	  shows_going: [],
+	  shows_interested: [],
+	  shows_ignored: [],
+	  id: "1241421"
+	});
+	newUser.save(function(err) {
+	  if(err) {
+	    console.log(err);  // handle errors!
+	  }
+	});
+}

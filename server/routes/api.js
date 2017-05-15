@@ -16,6 +16,8 @@ router.get('/', (req, res) => {
 router.get('/events', apiGeneralController.getEvents);
 
 router.get('/getUser/:fbId/:access_token', userController.getUser);
+router.post('/eventAction/:actionType/:eventId/:userId', apiGeneralController.eventPost);
+router.delete('/eventAction/:actionType/:eventId/:userId', apiGeneralController.eventDelete);
 
 router.post('/join/:eventId/:user_id', apiGeneralController.postJoin);
 router.post('/interested/:eventId/:access_token', apiGeneralController.postInterested);

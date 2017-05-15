@@ -66,10 +66,9 @@ var userController = {
               name: JSON.parse(body).name,
               created: Date.now(),
               access_token: access_token,
-              shows_going: [],
-              shows_interested: [],
               friends: [],
-              venue_pages: []
+              venue_pages: [],
+              events: []
             });
             user.save(function(err) {
               if(err) {
