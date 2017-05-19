@@ -6,19 +6,17 @@ var env = require("./../.env/.env.js");
 var request = require("request");
 
 var userController = {
-  // index: function(req, res) {
-  // 	res.send("/user/index");
-  //   // Reminder.find({}, function(err, docs) {
-  //   //   res.render("api/index", {reminders: docs});
-  //   // });
-  // },
-  // secret: function(request, response, next) {
-  // 	console.log("/secret");
-  // 	response.json({secret: "Woooah secret!"});
-  // },
+  /*
+  1. tests the received fb access token again by sending to facebook
+  2. On pass, find our user or make a new one. Send the user back as response data.
+  Failure or error states will return {error: message}
+  */
   getUser: function(req, res) {
     mongoose.connect('mongodb://localhost/users');
     console.log("getUser() in controller");
+    //==================================================================
+    //PART 1
+    //==================================================================
     //get the two vals from the params
     var fbId = req.params.fbId;
     var access_token = req.params.access_token;
@@ -27,10 +25,10 @@ var userController = {
     let appSecret = env.facebookAppSecret;
     let url = "https://graph.facebook.com/me?access_token="+access_token;
     //send the request to fb graph
-    request(url, function (error, response, body) {
-      //confirm the info
-      console.log("get name request has been sent.");
-      console.log(JSON.parse(body));
+    request(url, function (error, response, body) {      
+      //==================================================================
+      //PART 2
+      //==================================================================
       if (!error && JSON.parse(body).name && JSON.parse(body).id === fbId) {
         //get the user from our db that matches
         console.log("get name request was true");
@@ -61,6 +59,7 @@ var userController = {
           } else {
             console.log("new user found.");
             user = new User({
+              //todo: remove the oauthid user field
               oauthID: 0,
               id: fbId,
               name: JSON.parse(body).name,

@@ -14,6 +14,8 @@ import { ApiService }      from './api.service';
 import { EventComponent } from './event/event.component';
 import {FbloginService}  from './fblogin.service';
 import { FacebookModule } from 'ngx-facebook';
+import { AddFriendsComponent } from './add-friends/add-friends.component';
+import { FriendBubbleComponent } from './friend-bubble/friend-bubble.component';
 
 
 
@@ -43,7 +45,9 @@ const ROUTES = [
     LoginComponent,
     PostsComponent,
     EventsComponent,
-    EventComponent
+    EventComponent,
+    AddFriendsComponent,
+    FriendBubbleComponent
   ],
   imports: [
     BrowserModule,

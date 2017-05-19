@@ -15,7 +15,12 @@ var EventSchema = new mongoose.Schema({
 		eventMonth: String
 	},
 	eventCancelled: Boolean,
-	eventVenue: String
+	eventVenue: String,
+	social: [{
+		name: String,
+		picture: String,
+		fbId: String
+	}]
 });
 // define the model
 var Event = mongoose.model("Event", EventSchema);

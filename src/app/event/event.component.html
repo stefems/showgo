@@ -10,4 +10,7 @@
 	<button (click)="eventAction('ignore')" [disabled]="!buttonsEnabled" [ngClass]="{'clicked': ignored }">Ignore Event</button>
 	<button (click)="eventAction('join')" [disabled]="!buttonsEnabled" [ngClass]="{'clicked': joined }">Join Event</button>
 	<button (click)="eventAction('interested')" [disabled]="!buttonsEnabled" [ngClass]="{'clicked': interest }">Interested In Event</button>
+	<ul *ngFor="let friend of event.social">
+		<friend-bubble (idSender)="addFriend($event)" [friend]="friend"></friend-bubble>
+	</ul>
 </div>

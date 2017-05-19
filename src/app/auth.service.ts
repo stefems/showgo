@@ -38,18 +38,19 @@ export class AuthService {
 
   getUser(fbId: string, access_token: string): any {
     return this.http.get(this.getUserUrl+"/"+fbId+"/"+access_token)
-      .map((res:Response) => {
+      .flatMap((res:Response) => {
         console.log("getUser() in auth service");
         console.log(res.json());
-        //TODO: unhappy path
-        // if (!res.json().error) {
+        //TODO: unhappy path CURRENTLY TESTING HERE
+        if (!res.json().error) {
           this.currentUser.next(new User(res.json()));
           this.isLoggedIn = true;
           return this.currentUser.asObservable();
-        //}
-        // else {
-        //   return this....;
-        // }
+        }
+        else {
+          console.log("user login failed.");
+          return this.currentUser.asObservable();
+        }
       });
   }
   loggedIn(): boolean {

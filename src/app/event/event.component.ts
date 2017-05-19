@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ApiService }      from './../api.service';
+import { FriendBubbleComponent }      from './../friend-bubble/friend-bubble.component';
 
 
 @Component({
@@ -22,6 +23,17 @@ export class EventComponent implements OnInit {
 		//  joined/interested/ignored booleans appropriately
 	}
 	ngOnInit() {
+	}
+	public addFriend(eventTriggered){
+		//use the api service to add this friend id to the user's friends list
+		this.apiService.friendPost(eventTriggered, this.user.accessToken).subscribe(response => {
+			if(response) {
+				console.log(response);
+			}
+			else {
+			}
+		});
+
 	}
 
 	public eventAction(eventType: string) {
@@ -89,81 +101,6 @@ export class EventComponent implements OnInit {
 				}
 			});
 		}
-
 	}
-	/*
-	public join() {
-		console.log("join()");
-		//disable the buttons
-		this.buttonsEnabled = false;
-		//if we haven't yet joined
-		if (!this.joined) {
-			//subscribe w/ event id in order to hit the backend w/ id for joining	
-			this.apiService.eventAction("join", this.event.fbId, this.user.dbId).subscribe(response => {
-				console.log(response);
-				if(response) {
-					//show that the RSVP has happened
-					this.joined = true;
-					this.interest = false;
-					this.ignored = false;
-
-					//after button changes have been made
-					this.buttonsEnabled = true;
-				}
-				else {
-					//make note that the RSVP has not happened
-				}
-			});
-		}
-		else {
-			this.ignore();
-		}
-	}
-
-	public interested() {
-		console.log("interested()");
-		//disable the buttons
-		this.buttonsEnabled = false;
-		if (!this.interest) {
-			//subscribe w/ event id in order to hit the backend w/ id for joining	
-			this.apiService.postInterested(this.event.fbId, this.user.accessToken).subscribe(response => {
-				if(response) {
-					//show that the interested has happened
-					this.interest = true;
-					this.ignored = false;
-					this.joined = false;
-
-					//after button changes have been made
-					this.buttonsEnabled = true;
-					//hit the db to update the value
-				}
-				else {
-					//make note that the RSVP has not happened
-				}
-			});
-		}
-		else {
-			this.ignore();
-		}
-	}
-
-	public ignore() {
-		//subscribe w/ event id in order to hit the backend w/ id for joining	
-		this.apiService.postDecline(this.event.fbId, this.user.accessToken).subscribe(response => {
-			if(response) {
-				//show that the RSVP has happened
-				this.joined = false;
-				this.interest = false;
-				this.ignored = true;
-
-				//after button changes have been made
-				this.buttonsEnabled = true;
-				//hit the db to update the value
-			}
-			else {
-				//make note that the RSVP has not happened
-			}
-		});
-	}
-	*/
+	
 }
