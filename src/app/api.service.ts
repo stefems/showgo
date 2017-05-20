@@ -35,7 +35,7 @@ export class ApiService {
     let url = this.postFriend + "/" + access_token + "/" + friendId;
     return this.http.post(url, {}, this.options)
       .map((res:Response) => {
-        console.log(res);
+        // console.log(res);
         if (res.status) {
           return true;
         }
@@ -46,10 +46,9 @@ export class ApiService {
   //todo: ERROR HANDLING?
   eventPost(eventType: string, eventId: string, userId: string): Observable<boolean> {
     var url = this.postEventActionUrl + "/" + eventType + "/" + eventId + "/" + userId;
-    console.log(url);
     return this.http.post(url, {}, this.options)
       .map((res:Response) => {
-        console.log(res);
+        //console.log(res);
         if (res) {
           return true;
         }
@@ -74,56 +73,4 @@ export class ApiService {
         return eventArray;
       });
   }
-
-  //ARE THESE USED ANYMORE? SHOULD BE DELETED?
-  // postJoin(eventId: string, user_id: string): Observable<boolean> {
-  //   var url = this.postJoinUrl + "/" + eventId + "/" + user_id;
-  //   return this.http.post(url, {}, this.options)
-  //     .map((res:Response) => {
-  //       console.log(res);
-  //       if (res) {
-  //         return true;
-  //       }
-  //       return false;
-  //     });
-  //     //TODO: how the fuck do these catches work
-  //     /*
-  //     .catch(err => {
-  //       console.log(err);
-  //       return false;
-  //     });*/
-  // }
-  // postDecline(eventId: string, access_token: string): Observable<boolean> {
-  //   var url = this.postDeclineUrl + "/" + eventId + "/" + access_token;
-  //   let headers = new Headers({ 'Content-Type': 'application/json' });
-  //   let options = new RequestOptions({ headers: headers });
-  //   return this.http.post(url, {}, options)
-  //     .map((res:Response) => {
-  //       console.log(res);
-  //       if (res) {
-  //         return true;
-  //       }
-  //       return false;
-  //     });
-  //     //TODO: how the fuck do these catches work
-  //     /*
-  //     .catch(err => {
-  //       console.log(err);
-  //       return false;
-  //     });*/
-  // }
-  // postInterested(eventId: string, access_token: string): Observable<boolean> {
-  //   var url = this.postInterestedUrl + "/" + eventId + "/" + access_token;
-  //   let headers = new Headers({ 'Content-Type': 'application/json' });
-  //   let options = new RequestOptions({ headers: headers });
-  //   return this.http.post(url, {}, options)
-  //     .map((res:Response) => {
-  //       console.log(res);
-  //       if (res) {
-  //         return true;
-  //       }
-  //       return false;
-  //     });
-  // }
-
 }

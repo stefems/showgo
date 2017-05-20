@@ -16,7 +16,7 @@ import {FbloginService}  from './fblogin.service';
 import { FacebookModule } from 'ngx-facebook';
 import { AddFriendsComponent } from './add-friends/add-friends.component';
 import { FriendBubbleComponent } from './friend-bubble/friend-bubble.component';
-
+import {EventsFilterPipe}  from './pipes/events-filter.pipe';
 
 
 
@@ -47,7 +47,8 @@ const ROUTES = [
     EventsComponent,
     EventComponent,
     AddFriendsComponent,
-    FriendBubbleComponent
+    FriendBubbleComponent,
+    EventsFilterPipe
   ],
   imports: [
     BrowserModule,

@@ -1,6 +1,6 @@
 webpackJsonp([1,4],{
 
-/***/ 1010:
+/***/ 1011:
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(449);
@@ -13,7 +13,7 @@ module.exports = __webpack_require__(449);
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs_Rx__ = __webpack_require__(750);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs_Rx__ = __webpack_require__(751);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs_Rx___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_rxjs_Rx__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_http__ = __webpack_require__(166);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_ngx_facebook__ = __webpack_require__(183);
@@ -25,7 +25,7 @@ module.exports = __webpack_require__(449);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs_add_operator_delay___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_rxjs_add_operator_delay__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_rxjs_add_operator_toPromise__ = __webpack_require__(188);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_rxjs_add_operator_toPromise___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7_rxjs_add_operator_toPromise__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__user__ = __webpack_require__(577);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__user__ = __webpack_require__(578);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AuthService; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -66,8 +66,8 @@ var AuthService = (function () {
         var _this = this;
         return this.http.get(this.getUserUrl + "/" + fbId + "/" + access_token)
             .flatMap(function (res) {
-            console.log("getUser() in auth service");
-            console.log(res.json());
+            // console.log("getUser() in auth service");
+            // console.log(res.json());
             //TODO: unhappy path CURRENTLY TESTING HERE
             if (!res.json().error) {
                 _this.currentUser.next(new __WEBPACK_IMPORTED_MODULE_8__user__["a" /* User */](res.json()));
@@ -151,7 +151,7 @@ var ApiService = (function () {
         var url = this.postFriend + "/" + access_token + "/" + friendId;
         return this.http.post(url, {}, this.options)
             .map(function (res) {
-            console.log(res);
+            // console.log(res);
             if (res.status) {
                 return true;
             }
@@ -161,10 +161,9 @@ var ApiService = (function () {
     //todo: ERROR HANDLING?
     ApiService.prototype.eventPost = function (eventType, eventId, userId) {
         var url = this.postEventActionUrl + "/" + eventType + "/" + eventId + "/" + userId;
-        console.log(url);
         return this.http.post(url, {}, this.options)
             .map(function (res) {
-            console.log(res);
+            //console.log(res);
             if (res) {
                 return true;
             }
@@ -275,7 +274,7 @@ webpackEmptyContext.id = 448;
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__ = __webpack_require__(536);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__environments_environment__ = __webpack_require__(578);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__environments_environment__ = __webpack_require__(579);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__app_app_module__ = __webpack_require__(568);
 
 
@@ -313,8 +312,8 @@ var AddFriendsComponent = (function () {
     AddFriendsComponent = __decorate([
         __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["e" /* Component */])({
             selector: 'app-add-friends',
-            template: __webpack_require__(741),
-            styles: [__webpack_require__(733)]
+            template: __webpack_require__(742),
+            styles: [__webpack_require__(734)]
         }), 
         __metadata('design:paramtypes', [])
     ], AddFriendsComponent);
@@ -357,8 +356,8 @@ var AppComponent = (function () {
         this.subscription = __WEBPACK_IMPORTED_MODULE_2_rxjs_Subscription__["Subscription"];
         this.loginStatusObservable = false;
         this.authService.user().subscribe(function (response) {
-            console.log("app constructor()");
-            console.log(response);
+            // console.log("app constructor()");
+            // console.log(response);
             _this.user = response;
         });
     }
@@ -371,8 +370,8 @@ var AppComponent = (function () {
     AppComponent = __decorate([
         __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["e" /* Component */])({
             selector: 'app-root',
-            template: __webpack_require__(742),
-            styles: [__webpack_require__(734)]
+            template: __webpack_require__(743),
+            styles: [__webpack_require__(735)]
         }), 
         __metadata('design:paramtypes', [(typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__auth_service__["a" /* AuthService */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_1__auth_service__["a" /* AuthService */]) === 'function' && _a) || Object, (typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_3__angular_router__["b" /* Router */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_3__angular_router__["b" /* Router */]) === 'function' && _b) || Object])
     ], AppComponent);
@@ -395,7 +394,7 @@ var AppComponent = (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__app_component__ = __webpack_require__(567);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__login_login_component__ = __webpack_require__(575);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__log_log_component__ = __webpack_require__(574);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__posts_posts_component__ = __webpack_require__(576);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__posts_posts_component__ = __webpack_require__(577);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__events_events_component__ = __webpack_require__(572);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__auth_guard_service__ = __webpack_require__(569);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__auth_service__ = __webpack_require__(119);
@@ -405,6 +404,7 @@ var AppComponent = (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_15_ngx_facebook__ = __webpack_require__(183);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__add_friends_add_friends_component__ = __webpack_require__(566);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__friend_bubble_friend_bubble_component__ = __webpack_require__(573);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__pipes_events_filter_pipe__ = __webpack_require__(576);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppModule; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -415,6 +415,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+
 
 
 
@@ -463,7 +464,8 @@ var AppModule = (function () {
                 __WEBPACK_IMPORTED_MODULE_9__events_events_component__["a" /* EventsComponent */],
                 __WEBPACK_IMPORTED_MODULE_13__event_event_component__["a" /* EventComponent */],
                 __WEBPACK_IMPORTED_MODULE_16__add_friends_add_friends_component__["a" /* AddFriendsComponent */],
-                __WEBPACK_IMPORTED_MODULE_17__friend_bubble_friend_bubble_component__["a" /* FriendBubbleComponent */]
+                __WEBPACK_IMPORTED_MODULE_17__friend_bubble_friend_bubble_component__["a" /* FriendBubbleComponent */],
+                __WEBPACK_IMPORTED_MODULE_18__pipes_events_filter_pipe__["a" /* EventsFilterPipe */]
             ],
             imports: [
                 __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__["a" /* BrowserModule */],
@@ -579,6 +581,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var EventComponent = (function () {
     function EventComponent(apiService) {
         this.apiService = apiService;
+        this.showFriends = false;
         this.joined = false;
         this.interest = false;
         this.ignored = false;
@@ -588,11 +591,13 @@ var EventComponent = (function () {
     }
     EventComponent.prototype.ngOnInit = function () {
     };
+    EventComponent.prototype.toggleFriends = function () {
+        this.showFriends = !this.showFriends;
+    };
     EventComponent.prototype.addFriend = function (eventTriggered) {
         //use the api service to add this friend id to the user's friends list
         this.apiService.friendPost(eventTriggered, this.user.accessToken).subscribe(function (response) {
             if (response) {
-                console.log(response);
             }
             else {
             }
@@ -600,6 +605,7 @@ var EventComponent = (function () {
     };
     EventComponent.prototype.eventAction = function (eventType) {
         var _this = this;
+        console.log(eventType);
         //disable the buttons
         this.buttonsEnabled = false;
         var undo = false;
@@ -615,16 +621,14 @@ var EventComponent = (function () {
                 }
                 break;
             case "ignore":
-                if (this.ignored) {
-                    undo = true;
-                }
+                undo = true;
                 break;
         }
         if (undo) {
+            console.log("undoing/ignoring");
             //by default we need to add the event to ignore
             this.apiService.eventPost("ignore", this.event.fbId, this.user.dbId).subscribe(function (response) {
-                console.log("eventPost() ignore in ts");
-                console.log(response);
+                //console.log(response);
                 if (response) {
                     //show that the ignore has happened
                     _this.joined = false;
@@ -640,8 +644,7 @@ var EventComponent = (function () {
         else {
             //otherwise we'll need to add the event to the corresponding listing
             this.apiService.eventPost(eventType, this.event.fbId, this.user.dbId).subscribe(function (response) {
-                console.log("eventPost() post in ts");
-                console.log(response);
+                // console.log(response);
                 if (response) {
                     if (eventType === "join") {
                         //show that the RSVP has happened
@@ -674,8 +677,8 @@ var EventComponent = (function () {
     EventComponent = __decorate([
         __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["e" /* Component */])({
             selector: 'event',
-            template: __webpack_require__(743),
-            styles: [__webpack_require__(735)]
+            template: __webpack_require__(744),
+            styles: [__webpack_require__(736)]
         }), 
         __metadata('design:paramtypes', [(typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__api_service__["a" /* ApiService */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_1__api_service__["a" /* ApiService */]) === 'function' && _a) || Object])
     ], EventComponent);
@@ -722,11 +725,23 @@ var EventsComponent = (function () {
     }
     EventsComponent.prototype.ngOnInit = function () {
     };
+    EventsComponent.prototype.filterFriends = function () {
+        //set the filter args to friends
+        this.filterArgs = { type: "friends", friends: this.user.friends };
+    };
+    EventsComponent.prototype.filterNone = function () {
+        //set the filter args to friends
+        this.filterArgs = null;
+    };
+    EventsComponent.prototype.filterMine = function () {
+        //set the filter args to friends
+        this.filterArgs = { type: "mine", events: this.user.events };
+    };
     EventsComponent = __decorate([
         __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["e" /* Component */])({
             selector: 'app-events',
-            template: __webpack_require__(744),
-            styles: [__webpack_require__(736)]
+            template: __webpack_require__(745),
+            styles: [__webpack_require__(737)]
         }), 
         __metadata('design:paramtypes', [(typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__api_service__["a" /* ApiService */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_1__api_service__["a" /* ApiService */]) === 'function' && _a) || Object, (typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__auth_service__["a" /* AuthService */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_2__auth_service__["a" /* AuthService */]) === 'function' && _b) || Object])
     ], EventsComponent);
@@ -774,8 +789,8 @@ var FriendBubbleComponent = (function () {
     FriendBubbleComponent = __decorate([
         __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["e" /* Component */])({
             selector: 'friend-bubble',
-            template: __webpack_require__(745),
-            styles: [__webpack_require__(737)]
+            template: __webpack_require__(746),
+            styles: [__webpack_require__(738)]
         }), 
         __metadata('design:paramtypes', [])
     ], FriendBubbleComponent);
@@ -827,12 +842,10 @@ var LogComponent = (function () {
         this.fb.getLoginStatus()
             .then(function (response) {
             if (response.status === 'connected') {
-                console.log("already logged in");
                 var access_token = response.authResponse.accessToken;
                 var fbId = response.authResponse.userID;
                 _this.authService.getUser(fbId, access_token).subscribe(function (res) {
-                    console.log("getUser()");
-                    console.log(res);
+                    // console.log(res);
                     //RES received isn't been handled...
                     if (res.dbId !== "") {
                         _this.router.navigate(['/events']);
@@ -870,8 +883,8 @@ var LogComponent = (function () {
     LogComponent = __decorate([
         __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["e" /* Component */])({
             selector: 'app-log',
-            template: __webpack_require__(746),
-            styles: [__webpack_require__(738)]
+            template: __webpack_require__(747),
+            styles: [__webpack_require__(739)]
         }), 
         __metadata('design:paramtypes', [(typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__auth_service__["a" /* AuthService */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_2__auth_service__["a" /* AuthService */]) === 'function' && _a) || Object, (typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_4__angular_router__["b" /* Router */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_4__angular_router__["b" /* Router */]) === 'function' && _b) || Object, (typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_3_ngx_facebook__["b" /* FacebookService */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_3_ngx_facebook__["b" /* FacebookService */]) === 'function' && _c) || Object, (typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_1__fblogin_service__["a" /* FbloginService */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_1__fblogin_service__["a" /* FbloginService */]) === 'function' && _d) || Object])
     ], LogComponent);
@@ -906,8 +919,8 @@ var LoginComponent = (function () {
     LoginComponent = __decorate([
         __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["e" /* Component */])({
             selector: 'app-login',
-            template: __webpack_require__(747),
-            styles: [__webpack_require__(739)]
+            template: __webpack_require__(748),
+            styles: [__webpack_require__(740)]
         }), 
         __metadata('design:paramtypes', [])
     ], LoginComponent);
@@ -918,6 +931,88 @@ var LoginComponent = (function () {
 /***/ }),
 
 /***/ 576:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return EventsFilterPipe; });
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+var EventsFilterPipe = (function () {
+    function EventsFilterPipe() {
+    }
+    /*
+ * Usage:
+ *   value | exponentialStrength:exponent
+ * Example:
+ *   {{ 2 |  exponentialStrength:10}}
+ *   formats to: 1024
+*/
+    EventsFilterPipe.prototype.transform = function (events, filter) {
+        //if no filter nor events
+        if (!events || !filter) {
+            console.log('no filter args');
+            return events;
+        }
+        switch (filter.type) {
+            //if the filter arg is friends
+            case "friends":
+                return events.filter(function (event) {
+                    for (var i = 0; i < filter.friends.length; i++) {
+                        for (var eventPerson = 0; eventPerson < event.social.length; eventPerson++) {
+                            if (event.social[eventPerson].fbId === filter.friends[i]) {
+                                return true;
+                            }
+                        }
+                    }
+                    return false;
+                });
+            case "mine":
+                return events.filter(function (event) {
+                    // console.log(event);
+                    //for each user event
+                    for (var i = 0; i < filter.events.length; i++) {
+                        //is the current event on that list?
+                        // console.log(filter.events[i]);
+                        if ((event.fbId === filter.events[i].eventId) && (filter.events[i].actionType !== "ignore")) {
+                            return true;
+                        }
+                    }
+                    return false;
+                });
+        }
+        //         //go through the friends list
+        //         for (let i = 0; i < filter.friends.length; i++) {
+        //             for (let eventIndex = 0; eventIndex < events.length; eventIndex++) {
+        //                 if (events[eventIndex].social.indexOf(filter.friends[i]) !== -1) {
+        //                     filtered.push(events)
+        //                 }
+        //             }
+        //         }
+        // }	
+    };
+    EventsFilterPipe = __decorate([
+        __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["v" /* Pipe */])({
+            name: 'eventsFilter',
+            pure: false
+        }), 
+        __metadata('design:paramtypes', [])
+    ], EventsFilterPipe);
+    return EventsFilterPipe;
+}());
+//# sourceMappingURL=/home/stefan/showstopper/showgo/mean-app/src/events-filter.pipe.js.map
+
+/***/ }),
+
+/***/ 577:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -941,8 +1036,8 @@ var PostsComponent = (function () {
     PostsComponent = __decorate([
         __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["e" /* Component */])({
             selector: 'app-posts',
-            template: __webpack_require__(748),
-            styles: [__webpack_require__(740)]
+            template: __webpack_require__(749),
+            styles: [__webpack_require__(741)]
         }), 
         __metadata('design:paramtypes', [])
     ], PostsComponent);
@@ -952,7 +1047,7 @@ var PostsComponent = (function () {
 
 /***/ }),
 
-/***/ 577:
+/***/ 578:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -963,6 +1058,8 @@ var User = (function () {
         this.accessToken = "";
         this.displayName = "";
         this.ignoredList = [];
+        this.friends = [];
+        this.events = [];
         if (inputJson !== 0) {
             this.dbId = inputJson._id;
             this.displayName = inputJson.name;
@@ -970,6 +1067,7 @@ var User = (function () {
             this.venues = inputJson.venue_pages;
             this.accessToken = inputJson.access_token;
             this.friends = inputJson.friends;
+            this.events = inputJson.events;
         }
         else {
             this.dbId = "";
@@ -988,7 +1086,7 @@ var User = (function () {
 
 /***/ }),
 
-/***/ 578:
+/***/ 579:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1004,13 +1102,6 @@ var environment = {
 
 /***/ }),
 
-/***/ 733:
-/***/ (function(module, exports) {
-
-module.exports = ""
-
-/***/ }),
-
 /***/ 734:
 /***/ (function(module, exports) {
 
@@ -1021,28 +1112,28 @@ module.exports = ""
 /***/ 735:
 /***/ (function(module, exports) {
 
-module.exports = ".clicked {\r\n\tbackground-color: green;\r\n}\r\n"
+module.exports = ""
 
 /***/ }),
 
 /***/ 736:
 /***/ (function(module, exports) {
 
-module.exports = ""
+module.exports = ".clicked {\r\n\tbackground-color: green;\r\n}\r\n"
 
 /***/ }),
 
 /***/ 737:
 /***/ (function(module, exports) {
 
-module.exports = "\r\nspan {\r\n\tcursor: pointer;\r\n\tbackground-color: red;\r\n}"
+module.exports = ""
 
 /***/ }),
 
 /***/ 738:
 /***/ (function(module, exports) {
 
-module.exports = ""
+module.exports = "\r\nspan {\r\n\tcursor: pointer;\r\n\tbackground-color: red;\r\n}"
 
 /***/ }),
 
@@ -1063,58 +1154,65 @@ module.exports = ""
 /***/ 741:
 /***/ (function(module, exports) {
 
-module.exports = "<p>\n  add-friends works!\n</p>\n"
+module.exports = ""
 
 /***/ }),
 
 /***/ 742:
 /***/ (function(module, exports) {
 
-module.exports = "<h1>{{title}}</h1>\n<button (click)=\"logout()\">Log out</button>\n<h2>{{user.displayName}}</h2>\n<router-outlet></router-outlet>"
+module.exports = "<p>\n  add-friends works!\n</p>\n"
 
 /***/ }),
 
 /***/ 743:
 /***/ (function(module, exports) {
 
-module.exports = "<div data>\n\t<ul>\n\t\t<li>{{event.name}}</li>\n\t\t<li>{{event.fbId}}</li>\n\t\t<li>{{event.dbId}}</li>\n\t\t<li>{{event.venue}}</li>\n\t\t<li>{{event.location}}</li>\n\t\t<li>{{event.timeString}}</li>\n\t</ul>\n\t<button (click)=\"eventAction('ignore')\" [disabled]=\"!buttonsEnabled\" [ngClass]=\"{'clicked': ignored }\">Ignore Event</button>\n\t<button (click)=\"eventAction('join')\" [disabled]=\"!buttonsEnabled\" [ngClass]=\"{'clicked': joined }\">Join Event</button>\n\t<button (click)=\"eventAction('interested')\" [disabled]=\"!buttonsEnabled\" [ngClass]=\"{'clicked': interest }\">Interested In Event</button>\n\t<ul *ngFor=\"let friend of event.social\">\n\t\t<friend-bubble (idSender)=\"addFriend($event)\" [friend]=\"friend\"></friend-bubble>\n\t</ul>\n</div>\n"
+module.exports = "<h1>{{title}}</h1>\n<button (click)=\"logout()\">Log out</button>\n<h2>{{user.displayName}}</h2>\n<router-outlet></router-outlet>"
 
 /***/ }),
 
 /***/ 744:
 /***/ (function(module, exports) {
 
-module.exports = "<h1>Events</h1>\n<ul *ngFor=\"let event of events\">\n\t<event [event]=\"event\" [user]=\"user\"></event>\n</ul>\n"
+module.exports = "<div data>\n\t<ul>\n\t\t<li>{{event.name}}</li>\n\t\t<li>{{event.fbId}}</li>\n\t\t<li>{{event.dbId}}</li>\n\t\t<li>{{event.venue}}</li>\n\t\t<li>{{event.location}}</li>\n\t\t<li>{{event.timeString}}</li>\n\t</ul>\n\t<button (click)=\"eventAction('ignore')\" [disabled]=\"!buttonsEnabled\" [ngClass]=\"{'clicked': ignored }\">Ignore Event</button>\n\t<button (click)=\"eventAction('join')\" [disabled]=\"!buttonsEnabled\" [ngClass]=\"{'clicked': joined }\">Join Event</button>\n\t<button (click)=\"eventAction('interested')\" [disabled]=\"!buttonsEnabled\" [ngClass]=\"{'clicked': interest }\">Interested In Event</button>\n\t<button (click)=\"toggleFriends()\">Show Attendence</button>\n\t<div *ngIf=\"showFriends\" >\n\t<ul *ngFor=\"let friend of event.social\">\n\t\t<friend-bubble (idSender)=\"addFriend($event)\" [friend]=\"friend\"></friend-bubble>\n\t</ul>\n\t</div>\n</div>\n"
 
 /***/ }),
 
 /***/ 745:
 /***/ (function(module, exports) {
 
-module.exports = "<span (click)=\"addFriend()\">{{friend.name}} <img src={{friend.picture}}/> </span>\n"
+module.exports = "<h1>Events</h1>\n<button (click)=\"filterFriends()\">friends filter</button>\n<button (click)=\"filterNone()\">no filter</button>\n<button (click)=\"filterMine()\">my events</button>\n<event *ngFor=\"let event of events | eventsFilter:filterArgs\" [event]=\"event\" [user]=\"user\"></event>\n"
 
 /***/ }),
 
 /***/ 746:
 /***/ (function(module, exports) {
 
-module.exports = "<h2>{{message}}</h2>\n<button (click)=\"loginWithFacebook()\">Log in via facebook, please!</button>\n"
+module.exports = "<span (click)=\"addFriend()\">{{friend.name}} <img src={{friend.picture}}/> </span>\n"
 
 /***/ }),
 
 /***/ 747:
 /***/ (function(module, exports) {
 
-module.exports = "<p>\n  Login:\n</p>\n <a href=\"/auth/facebook\">Sign in with Facebook</a>\n"
+module.exports = "<h2>{{message}}</h2>\n<button (click)=\"loginWithFacebook()\">Log in via facebook, please!</button>\n"
 
 /***/ }),
 
 /***/ 748:
 /***/ (function(module, exports) {
 
+module.exports = "<p>\n  Login:\n</p>\n <a href=\"/auth/facebook\">Sign in with Facebook</a>\n"
+
+/***/ }),
+
+/***/ 749:
+/***/ (function(module, exports) {
+
 module.exports = "<p>\n  posts works!\n</p>\n"
 
 /***/ })
 
-},[1010]);
+},[1011]);
 //# sourceMappingURL=main.bundle.map

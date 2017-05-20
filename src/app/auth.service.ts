@@ -39,8 +39,8 @@ export class AuthService {
   getUser(fbId: string, access_token: string): any {
     return this.http.get(this.getUserUrl+"/"+fbId+"/"+access_token)
       .flatMap((res:Response) => {
-        console.log("getUser() in auth service");
-        console.log(res.json());
+        // console.log("getUser() in auth service");
+        // console.log(res.json());
         //TODO: unhappy path CURRENTLY TESTING HERE
         if (!res.json().error) {
           this.currentUser.next(new User(res.json()));

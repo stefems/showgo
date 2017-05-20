@@ -13,6 +13,7 @@ export class EventComponent implements OnInit {
 	@Input("event") event;
 	@Input("user") user;
 
+	private showFriends = false;
 	private joined = false
 	private interest = false;
 	private ignored = false;
@@ -24,19 +25,24 @@ export class EventComponent implements OnInit {
 	}
 	ngOnInit() {
 	}
+
+	public toggleFriends() {
+		this.showFriends = !this.showFriends;
+	}
+
 	public addFriend(eventTriggered){
 		//use the api service to add this friend id to the user's friends list
 		this.apiService.friendPost(eventTriggered, this.user.accessToken).subscribe(response => {
 			if(response) {
-				console.log(response);
+				//console.log(response);
 			}
 			else {
 			}
 		});
-
 	}
 
 	public eventAction(eventType: string) {
+		console.log(eventType);
 		//disable the buttons
 		this.buttonsEnabled = false;
 		let undo = false;
@@ -52,16 +58,14 @@ export class EventComponent implements OnInit {
 				}
 				break;
 			case "ignore":
-				if (this.ignored) {
-					undo = true;
-				}
+				undo = true;
 				break;
 		}
 		if (undo) {
+			console.log("undoing/ignoring");
 			//by default we need to add the event to ignore
 			this.apiService.eventPost("ignore", this.event.fbId, this.user.dbId).subscribe(response => {
-				console.log("eventPost() ignore in ts");
-				console.log(response);
+				//console.log(response);
 				if(response) {
 					//show that the ignore has happened
 					this.joined = false;
@@ -78,8 +82,7 @@ export class EventComponent implements OnInit {
 		else {
 			//otherwise we'll need to add the event to the corresponding listing
 			this.apiService.eventPost(eventType, this.event.fbId, this.user.dbId).subscribe(response => {
-				console.log("eventPost() post in ts");
-				console.log(response);
+				// console.log(response);
 				if(response) {
 					if (eventType === "join") {
 						//show that the RSVP has happened

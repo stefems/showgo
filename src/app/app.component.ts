@@ -19,8 +19,8 @@ export class AppComponent {
   
   constructor(private authService: AuthService, private router: Router){    
     this.authService.user().subscribe(response => {
-      console.log("app constructor()");
-      console.log(response);
+      // console.log("app constructor()");
+      // console.log(response);
       this.user = response;
     });
   }

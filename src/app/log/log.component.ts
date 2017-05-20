@@ -29,12 +29,10 @@ export class LogComponent implements OnInit {
     this.fb.getLoginStatus()
     .then((response: LoginResponse) => {
       if (response.status === 'connected') {
-        console.log("already logged in");
         let access_token = response.authResponse.accessToken;
         let fbId = response.authResponse.userID;
         this.authService.getUser(fbId, access_token).subscribe(res => {
-          console.log("getUser()");
-          console.log(res);
+          // console.log(res);
           //RES received isn't been handled...
           if (res.dbId !== "") {
             this.router.navigate(['/events']);
