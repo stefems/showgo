@@ -5,6 +5,7 @@ import {BehaviorSubject} from "rxjs/Rx";
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { FacebookService, LoginResponse } from 'ngx-facebook';
 
+
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/delay';
@@ -30,6 +31,7 @@ export class AuthService {
   redirectUrl: string;
 
   constructor (private fb: FacebookService, private http: Http) {
+    
   }
 
   user() {

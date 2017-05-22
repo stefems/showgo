@@ -35,8 +35,7 @@ export class ApiService {
     let url = this.postFriend + "/" + access_token + "/" + friendId;
     return this.http.post(url, {}, this.options)
       .map((res:Response) => {
-        // console.log(res);
-        if (res.status) {
+        if (!res.json().error) {
           return true;
         }
         return false;
@@ -48,8 +47,7 @@ export class ApiService {
     var url = this.postEventActionUrl + "/" + eventType + "/" + eventId + "/" + userId;
     return this.http.post(url, {}, this.options)
       .map((res:Response) => {
-        //console.log(res);
-        if (res) {
+        if (!res.json().error) {
           return true;
         }
         return false;

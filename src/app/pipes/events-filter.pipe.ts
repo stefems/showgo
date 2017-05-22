@@ -15,7 +15,6 @@ export class EventsFilterPipe implements PipeTransform {
   transform(events: any[], filter): any {
     //if no filter nor events
     if (!events || !filter) {
-    	console.log('no filter args');
         return events;
     }
     switch (filter.type) {

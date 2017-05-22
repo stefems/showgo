@@ -24,6 +24,7 @@ export class EventComponent implements OnInit {
 		//  joined/interested/ignored booleans appropriately
 	}
 	ngOnInit() {
+
 	}
 
 	public toggleFriends() {
@@ -33,16 +34,36 @@ export class EventComponent implements OnInit {
 	public addFriend(eventTriggered){
 		//use the api service to add this friend id to the user's friends list
 		this.apiService.friendPost(eventTriggered, this.user.accessToken).subscribe(response => {
+			//response will be true or false based on success
 			if(response) {
-				//console.log(response);
+				console.log("friend added");
+				this.user.friends.push(eventTriggered);
 			}
 			else {
+				console.log("friend not added");
 			}
 		});
 	}
+	public changeUser(actionType) {
+		console.log("adding/updating user event: " + actionType + " " + this.event.fbId);
+		let found = false;
+		//find the event that needs to be changed
+		for (let i = 0; i < this.user.events.length; i++) {
+			if (this.user.events[i].eventId === this.event.fbId) {
+				this.user.events[i].actionType = actionType;
+				found = true;
+			}
+		}
+		if (!found) {
+			//add the new event to the user
+			this.user.events.push({
+				eventId: this.event.fbId,
+				actionType: actionType,
+			});
+		}
+	}
 
 	public eventAction(eventType: string) {
-		console.log(eventType);
 		//disable the buttons
 		this.buttonsEnabled = false;
 		let undo = false;
@@ -65,7 +86,6 @@ export class EventComponent implements OnInit {
 			console.log("undoing/ignoring");
 			//by default we need to add the event to ignore
 			this.apiService.eventPost("ignore", this.event.fbId, this.user.dbId).subscribe(response => {
-				//console.log(response);
 				if(response) {
 					//show that the ignore has happened
 					this.joined = false;
@@ -73,8 +93,11 @@ export class EventComponent implements OnInit {
 					this.ignored = true;
 					//after button changes have been made
 					this.buttonsEnabled = true;
+					//make changes to the user ... is this sent to all users?
+					this.changeUser(eventType);
 				}
 				else {
+					console.log("event post failed.");
 					//make note that the action has not happened
 				}
 			});
@@ -82,7 +105,6 @@ export class EventComponent implements OnInit {
 		else {
 			//otherwise we'll need to add the event to the corresponding listing
 			this.apiService.eventPost(eventType, this.event.fbId, this.user.dbId).subscribe(response => {
-				// console.log(response);
 				if(response) {
 					if (eventType === "join") {
 						//show that the RSVP has happened
@@ -98,6 +120,7 @@ export class EventComponent implements OnInit {
 					}
 					//after button changes have been made
 					this.buttonsEnabled = true;
+					this.changeUser(eventType);
 				}
 				else {
 					//make note that the action has not happened

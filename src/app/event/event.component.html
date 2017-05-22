@@ -16,4 +16,5 @@
 		<friend-bubble (idSender)="addFriend($event)" [friend]="friend"></friend-bubble>
 	</ul>
 	</div>
+	<div *ngFor="let embed of event.embeds"><div [innerHTML]="embed"></div></div>
 </div>

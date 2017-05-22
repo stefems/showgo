@@ -1,12 +1,15 @@
 var mongoose = require('mongoose');
 var request = require('request');
+const jsdom = require('jsdom');
+const { JSDOM } = jsdom;
 //TODO: consider removal
 var OAuth2 = require('oauth').OAuth2;
 
 mongoose.connect('mongodb://localhost/events');
 var User = require("./models/user");
 var Event = require("./models/event");
-var access_token = "EAACEdEose0cBACM6kRnBvqAHHK6ZCbZCdwQpLfBkt4eSZCYvp2DwWVViEMXP5mLNLfsZAG4McLENVs9pefZCYpFR83Cxk3bu2iwGGR96OLmZABlnZCuDU1uPEfzqUtv47nGVo6trDkjq3CzrhcKAbldQHl26zC9i5vitOBAKoM1hNSd66JIPTUU";
+var access_token = "EAACEdEose0cBAL9rZAl36FaHNVktkDXMzPiFo3jJqEIHNoRuHmjLTIUFJ8rZChXe6U1aKvDfu7HIXm8xXPZChIzownIw7D0KgJIgPdiHVJOOEPPPErksmZA40gu5ssFrYxpKeFItq3FDKKnOSsZBkZADAxm2WPcw5WmibZAFZAiSFwErXX5r9f0OpvhW7G0oF8YZD";
+
 
 Event.remove({}, function(err, book) {
   if (err) { return console.log(err); };
@@ -58,41 +61,20 @@ function getEvents(url) {
 				eventTime: eventTime,
 				eventCancelled: false,
 				eventVenue: events[i].place.name,
-				social: []
+				social: [],
+				embeds: []
 			});
 			getAttending(newEvent);
-			// newEvent.save(function(err) {
-   //            if(err) {
-   //            	console.log("event save error");
-   //              console.log(err);  // handle errors!
-   //            }
-   //            else {
-   //            }
-
-   //          });
+			acquireURL(newEvent);
 		}
 		//if we need to page to get more events
 		if (response.paging) {
 	    	getEvents(response.paging.next);         
 	    }
-	    else {
-	    	//beginAttendenceAcquisition();
-	    }
+
 	});
 }
-function beginAttendenceAcquisition() {
-	//get events from mongo
-	Event.find({}, function(err, found) {
-		if (err){
-			console.log("beginAttendenceAcquisition() mongo find error");
-		}
-		else {
-			for (let i = 0; i < found.length; i++) {
-				getAttending(found[i].eventId);
-			}
-		}
-	});
-}
+
 function getAttending(event, urlGiven) {
 	let url = urlGiven || "https://graph.facebook.com/" + event.eventId + "/attending?access_token=" + access_token;
 	request(url, function (error, response, body) {
@@ -126,12 +108,97 @@ function getAttending(event, urlGiven) {
   	});
 }
 
+//TODO: pagination happens here, might need to change this later (but honestly how many roles max will there be?)
+function acquireURL(eventPassedIn) {
+	let facebookEventURL = "https://graph.facebook.com/v2.9/" + eventPassedIn.eventId + "/roles?access_token=" + access_token;
+	request(facebookEventURL, function (error, response, body) {
+  		response = JSON.parse(body).data;
+	  	for (let i = 0; i < response.length; i++) {
+	  		//console.log(response[i].name);
+	  		//get the id from each role and get their about string
+	  		getAboutString(response[i].id, eventPassedIn);
+	  	}
+	});
+}
+
+function getAboutString(facebookPageId, event) {
+	let facebookAboutURL = "https://graph.facebook.com/v2.9/" + facebookPageId + "?fields=website&access_token=" + access_token;
+	request(facebookAboutURL, function (error, response, body) {
+  		response = JSON.parse(body);
+  		let website = response.website;
+  		if (website && website.indexOf("bandcamp") !== -1) {
+  			// console.log(website);
+  			//run function to acquire the embed
+ 			getbandcampEmbed(response.website, event);
+  		}
+  		else {
+  			// console.log("non-bandcamp site found");
+  		}
+	});
+}
+
+//TODO NEXT: modify the embed to contain the album url and track/album
+function getbandcampEmbed(url, event) {
+	var options = {
+		url: url,
+		headers: {
+			"user-agent": "Chrome/51.0.2704.103"
+		}
+	};
+	request(options, function (error, response, body) {
+		if (!error) {
+			const dom = new JSDOM(body);
+			var metaTags = dom.window.document.getElementsByTagName("meta");
+			let content = "";
+			for (var i = 0; i < metaTags.length; i++) {
+			    if (metaTags[i].getAttribute("property") == "og:video") {
+			        content = metaTags[i].getAttribute("content");
+			    }
+			}
+			let albumId = "";
+			if (content !== "" && content.indexOf("track=") === -1) {
+				let albumURL = content.split("album=")[1];
+				if (albumURL) {
+					albumId = "album=" + albumURL.split("/")[0];
+				}
+			}
+			else if (content.indexOf("track") !== -1) {
+				let albumURL = content.split("track=")[1];
+				if (albumURL) {
+					albumId = "album=" + albumURL.split("/")[0];
+				}
+			}
+			else {
+				let div = dom.window.document.getElementsByClassName("leftMiddleColumns")[0];
+				let liList = div.getElementsByTagName("li");
+				albumId = "track=" + liList[0].getAttribute("data-item-id").split("-")[1];
+			}
+			event.embeds.push('<iframe style="border: 0; width: 100%; height: 42px;" src="https://bandcamp.com/EmbeddedPlayer/' + albumId + '/size=small/bgcol=ffffff/linkcol=0687f5/transparent=true/" seamless></iframe>');
+			//console.log('\n<iframe style="border: 0; width: 100%; height: 42px;" src="https://bandcamp.com/EmbeddedPlayer/' + albumId + '/size=small/bgcol=ffffff/linkcol=0687f5/transparent=true/" seamless></iframe>');
+			event.save(function(err) {
+				if (err) {
+					console.log("failed to save embed");
+					console.log(err);
+				}
+				else {
+					console.log(event.embeds);
+				}
+			});
+		}
+		else {
+			// console.log("URL error from website");
+			//use same url but replace the album= with track=
+		}
+	});	
+}
+
 function getProfileImages(event) {
 	for (let i = 0; i < event.social.length; i ++) {
 		let currentPerson = event.social[i];
 		getImage(event, currentPerson);
 	}
 }
+
 function getImage(event, person) {
 	request("https://graph.facebook.com/"+person.fbId + "/picture?redirect=0", function(err, res, bod){
 		let pictureUrl = JSON.parse(bod).data.url;
@@ -143,9 +210,7 @@ function getImage(event, person) {
 				console.log(err);
 			}
 			else {
-				console.log("--------------------");
-				console.log(event);
-				console.log("--------------------");
+
 			}
 		});
 	});

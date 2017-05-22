@@ -151,8 +151,7 @@ var ApiService = (function () {
         var url = this.postFriend + "/" + access_token + "/" + friendId;
         return this.http.post(url, {}, this.options)
             .map(function (res) {
-            // console.log(res);
-            if (res.status) {
+            if (!res.json().error) {
                 return true;
             }
             return false;
@@ -163,8 +162,7 @@ var ApiService = (function () {
         var url = this.postEventActionUrl + "/" + eventType + "/" + eventId + "/" + userId;
         return this.http.post(url, {}, this.options)
             .map(function (res) {
-            //console.log(res);
-            if (res) {
+            if (!res.json().error) {
                 return true;
             }
             return false;
@@ -552,6 +550,7 @@ var Event = (function () {
         this.location = inputJson.eventPlace;
         this.timeString = inputJson.eventTime.eventMonth + " " + inputJson.eventTime.eventDay + " at " + inputJson.eventTime.eventHour;
         this.social = inputJson.social;
+        this.embeds = inputJson.embeds;
         //use the id to get from DB to populate other data
     }
     return Event;
@@ -595,17 +594,39 @@ var EventComponent = (function () {
         this.showFriends = !this.showFriends;
     };
     EventComponent.prototype.addFriend = function (eventTriggered) {
+        var _this = this;
         //use the api service to add this friend id to the user's friends list
         this.apiService.friendPost(eventTriggered, this.user.accessToken).subscribe(function (response) {
+            //response will be true or false based on success
             if (response) {
+                console.log("friend added");
+                _this.user.friends.push(eventTriggered);
             }
             else {
+                console.log("friend not added");
             }
         });
     };
+    EventComponent.prototype.changeUser = function (actionType) {
+        console.log("adding/updating user event: " + actionType + " " + this.event.fbId);
+        var found = false;
+        //find the event that needs to be changed
+        for (var i = 0; i < this.user.events.length; i++) {
+            if (this.user.events[i].eventId === this.event.fbId) {
+                this.user.events[i].actionType = actionType;
+                found = true;
+            }
+        }
+        if (!found) {
+            //add the new event to the user
+            this.user.events.push({
+                eventId: this.event.fbId,
+                actionType: actionType,
+            });
+        }
+    };
     EventComponent.prototype.eventAction = function (eventType) {
         var _this = this;
-        console.log(eventType);
         //disable the buttons
         this.buttonsEnabled = false;
         var undo = false;
@@ -628,7 +649,6 @@ var EventComponent = (function () {
             console.log("undoing/ignoring");
             //by default we need to add the event to ignore
             this.apiService.eventPost("ignore", this.event.fbId, this.user.dbId).subscribe(function (response) {
-                //console.log(response);
                 if (response) {
                     //show that the ignore has happened
                     _this.joined = false;
@@ -636,15 +656,17 @@ var EventComponent = (function () {
                     _this.ignored = true;
                     //after button changes have been made
                     _this.buttonsEnabled = true;
+                    //make changes to the user ... is this sent to all users?
+                    _this.changeUser(eventType);
                 }
                 else {
+                    console.log("event post failed.");
                 }
             });
         }
         else {
             //otherwise we'll need to add the event to the corresponding listing
             this.apiService.eventPost(eventType, this.event.fbId, this.user.dbId).subscribe(function (response) {
-                // console.log(response);
                 if (response) {
                     if (eventType === "join") {
                         //show that the RSVP has happened
@@ -660,6 +682,7 @@ var EventComponent = (function () {
                     }
                     //after button changes have been made
                     _this.buttonsEnabled = true;
+                    _this.changeUser(eventType);
                 }
                 else {
                 }
@@ -959,7 +982,6 @@ var EventsFilterPipe = (function () {
     EventsFilterPipe.prototype.transform = function (events, filter) {
         //if no filter nor events
         if (!events || !filter) {
-            console.log('no filter args');
             return events;
         }
         switch (filter.type) {
@@ -1175,7 +1197,7 @@ module.exports = "<h1>{{title}}</h1>\n<button (click)=\"logout()\">Log out</butt
 /***/ 744:
 /***/ (function(module, exports) {
 
-module.exports = "<div data>\n\t<ul>\n\t\t<li>{{event.name}}</li>\n\t\t<li>{{event.fbId}}</li>\n\t\t<li>{{event.dbId}}</li>\n\t\t<li>{{event.venue}}</li>\n\t\t<li>{{event.location}}</li>\n\t\t<li>{{event.timeString}}</li>\n\t</ul>\n\t<button (click)=\"eventAction('ignore')\" [disabled]=\"!buttonsEnabled\" [ngClass]=\"{'clicked': ignored }\">Ignore Event</button>\n\t<button (click)=\"eventAction('join')\" [disabled]=\"!buttonsEnabled\" [ngClass]=\"{'clicked': joined }\">Join Event</button>\n\t<button (click)=\"eventAction('interested')\" [disabled]=\"!buttonsEnabled\" [ngClass]=\"{'clicked': interest }\">Interested In Event</button>\n\t<button (click)=\"toggleFriends()\">Show Attendence</button>\n\t<div *ngIf=\"showFriends\" >\n\t<ul *ngFor=\"let friend of event.social\">\n\t\t<friend-bubble (idSender)=\"addFriend($event)\" [friend]=\"friend\"></friend-bubble>\n\t</ul>\n\t</div>\n</div>\n"
+module.exports = "<div data>\n\t<ul>\n\t\t<li>{{event.name}}</li>\n\t\t<li>{{event.fbId}}</li>\n\t\t<li>{{event.dbId}}</li>\n\t\t<li>{{event.venue}}</li>\n\t\t<li>{{event.location}}</li>\n\t\t<li>{{event.timeString}}</li>\n\t</ul>\n\t<button (click)=\"eventAction('ignore')\" [disabled]=\"!buttonsEnabled\" [ngClass]=\"{'clicked': ignored }\">Ignore Event</button>\n\t<button (click)=\"eventAction('join')\" [disabled]=\"!buttonsEnabled\" [ngClass]=\"{'clicked': joined }\">Join Event</button>\n\t<button (click)=\"eventAction('interested')\" [disabled]=\"!buttonsEnabled\" [ngClass]=\"{'clicked': interest }\">Interested In Event</button>\n\t<button (click)=\"toggleFriends()\">Show Attendence</button>\n\t<div *ngIf=\"showFriends\" >\n\t<ul *ngFor=\"let friend of event.social\">\n\t\t<friend-bubble (idSender)=\"addFriend($event)\" [friend]=\"friend\"></friend-bubble>\n\t</ul>\n\t</div>\n\t<div *ngFor=\"let embed of event.embeds\"><div [inner-html]=\"embed\"></div></div>\n</div>\n"
 
 /***/ }),
 

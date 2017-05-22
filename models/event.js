@@ -20,7 +20,8 @@ var EventSchema = new mongoose.Schema({
 		name: String,
 		picture: String,
 		fbId: String
-	}]
+	}],
+	embeds: [String]
 });
 // define the model
 var Event = mongoose.model("Event", EventSchema);
