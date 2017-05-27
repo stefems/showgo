@@ -1,6 +1,6 @@
 webpackJsonp([1,4],{
 
-/***/ 1011:
+/***/ 1021:
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(449);
@@ -8,14 +8,14 @@ module.exports = __webpack_require__(449);
 
 /***/ }),
 
-/***/ 119:
+/***/ 120:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs_Rx__ = __webpack_require__(751);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs_Rx__ = __webpack_require__(761);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs_Rx___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_rxjs_Rx__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_http__ = __webpack_require__(166);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_http__ = __webpack_require__(167);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_ngx_facebook__ = __webpack_require__(183);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_add_observable_of__ = __webpack_require__(185);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_add_observable_of___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_rxjs_add_observable_of__);
@@ -25,7 +25,7 @@ module.exports = __webpack_require__(449);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs_add_operator_delay___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_rxjs_add_operator_delay__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_rxjs_add_operator_toPromise__ = __webpack_require__(188);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_rxjs_add_operator_toPromise___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7_rxjs_add_operator_toPromise__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__user__ = __webpack_require__(578);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__user__ = __webpack_require__(582);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AuthService; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -103,7 +103,7 @@ var AuthService = (function () {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__(166);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__(167);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_observable_of__ = __webpack_require__(185);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_observable_of___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs_add_observable_of__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_do__ = __webpack_require__(187);
@@ -114,7 +114,7 @@ var AuthService = (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_add_operator_toPromise___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_rxjs_add_operator_toPromise__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs_Subject__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs_Subject___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_rxjs_Subject__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__event__ = __webpack_require__(570);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__event__ = __webpack_require__(572);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ApiService; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -202,7 +202,7 @@ var ApiService = (function () {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__(166);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__(167);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ngx_facebook__ = __webpack_require__(183);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_observable_of__ = __webpack_require__(185);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_observable_of___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_add_observable_of__);
@@ -272,7 +272,7 @@ webpackEmptyContext.id = 448;
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__ = __webpack_require__(536);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__environments_environment__ = __webpack_require__(579);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__environments_environment__ = __webpack_require__(583);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__app_app_module__ = __webpack_require__(568);
 
 
@@ -310,8 +310,8 @@ var AddFriendsComponent = (function () {
     AddFriendsComponent = __decorate([
         __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["e" /* Component */])({
             selector: 'app-add-friends',
-            template: __webpack_require__(742),
-            styles: [__webpack_require__(734)]
+            template: __webpack_require__(749),
+            styles: [__webpack_require__(738)]
         }), 
         __metadata('design:paramtypes', [])
     ], AddFriendsComponent);
@@ -326,7 +326,7 @@ var AddFriendsComponent = (function () {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__auth_service__ = __webpack_require__(119);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__auth_service__ = __webpack_require__(120);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_Subscription__ = __webpack_require__(20);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_Subscription___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs_Subscription__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_router__ = __webpack_require__(172);
@@ -368,8 +368,8 @@ var AppComponent = (function () {
     AppComponent = __decorate([
         __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["e" /* Component */])({
             selector: 'app-root',
-            template: __webpack_require__(743),
-            styles: [__webpack_require__(735)]
+            template: __webpack_require__(750),
+            styles: [__webpack_require__(739)]
         }), 
         __metadata('design:paramtypes', [(typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__auth_service__["a" /* AuthService */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_1__auth_service__["a" /* AuthService */]) === 'function' && _a) || Object, (typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_3__angular_router__["b" /* Router */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_3__angular_router__["b" /* Router */]) === 'function' && _b) || Object])
     ], AppComponent);
@@ -384,25 +384,29 @@ var AppComponent = (function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__ = __webpack_require__(170);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__ = __webpack_require__(117);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_forms__ = __webpack_require__(527);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_http__ = __webpack_require__(166);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_http__ = __webpack_require__(167);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_router__ = __webpack_require__(172);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__app_component__ = __webpack_require__(567);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__login_login_component__ = __webpack_require__(575);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__log_log_component__ = __webpack_require__(574);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__posts_posts_component__ = __webpack_require__(577);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__events_events_component__ = __webpack_require__(572);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__login_login_component__ = __webpack_require__(577);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__log_log_component__ = __webpack_require__(576);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__posts_posts_component__ = __webpack_require__(580);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__events_events_component__ = __webpack_require__(574);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__auth_guard_service__ = __webpack_require__(569);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__auth_service__ = __webpack_require__(119);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__auth_service__ = __webpack_require__(120);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__api_service__ = __webpack_require__(252);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__event_event_component__ = __webpack_require__(571);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__event_event_component__ = __webpack_require__(573);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__fblogin_service__ = __webpack_require__(368);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_15_ngx_facebook__ = __webpack_require__(183);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__add_friends_add_friends_component__ = __webpack_require__(566);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__friend_bubble_friend_bubble_component__ = __webpack_require__(573);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__pipes_events_filter_pipe__ = __webpack_require__(576);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__friend_bubble_friend_bubble_component__ = __webpack_require__(575);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__pipes_events_filter_pipe__ = __webpack_require__(578);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__pipes_safe_pipe__ = __webpack_require__(579);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__bc_player_bc_player_component__ = __webpack_require__(571);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_21__sc_player_sc_player_component__ = __webpack_require__(581);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_22__band_band_component__ = __webpack_require__(570);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppModule; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -413,6 +417,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+
+
+
+
 
 
 
@@ -463,7 +471,11 @@ var AppModule = (function () {
                 __WEBPACK_IMPORTED_MODULE_13__event_event_component__["a" /* EventComponent */],
                 __WEBPACK_IMPORTED_MODULE_16__add_friends_add_friends_component__["a" /* AddFriendsComponent */],
                 __WEBPACK_IMPORTED_MODULE_17__friend_bubble_friend_bubble_component__["a" /* FriendBubbleComponent */],
-                __WEBPACK_IMPORTED_MODULE_18__pipes_events_filter_pipe__["a" /* EventsFilterPipe */]
+                __WEBPACK_IMPORTED_MODULE_18__pipes_events_filter_pipe__["a" /* EventsFilterPipe */],
+                __WEBPACK_IMPORTED_MODULE_19__pipes_safe_pipe__["a" /* SafePipe */],
+                __WEBPACK_IMPORTED_MODULE_20__bc_player_bc_player_component__["a" /* BcPlayerComponent */],
+                __WEBPACK_IMPORTED_MODULE_21__sc_player_sc_player_component__["a" /* ScPlayerComponent */],
+                __WEBPACK_IMPORTED_MODULE_22__band_band_component__["a" /* BandComponent */]
             ],
             imports: [
                 __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__["a" /* BrowserModule */],
@@ -489,7 +501,7 @@ var AppModule = (function () {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__(172);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__auth_service__ = __webpack_require__(119);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__auth_service__ = __webpack_require__(120);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map__ = __webpack_require__(421);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_add_operator_catch__ = __webpack_require__(420);
@@ -539,6 +551,118 @@ var AuthGuard = (function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return BandComponent; });
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+var BandComponent = (function () {
+    function BandComponent() {
+        this.scReady = false;
+        this.playing = false;
+    }
+    BandComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        if (this.band.bcUrl !== "") {
+            this.bc = true;
+            this.scReady = false;
+        }
+        else {
+            this.widget = SC.Widget("soundcloud_widget");
+            this.widget.bind(SC.Widget.Events.READY, function () {
+                _this.scReady = true;
+                _this.widget.play();
+            });
+        }
+    };
+    BandComponent.prototype.playTrack = function () {
+        var _this = this;
+        if (this.playing) {
+            ////change button to play
+            this.widget.pause();
+        }
+        else {
+            this.widget.load('https://api.soundcloud.com/tracks/' + this.band.scId);
+            this.widget.bind(SC.Widget.Events.READY, function () {
+                //change button to pause
+                _this.widget.play();
+                _this.playing = true;
+            });
+        }
+    };
+    __decorate([
+        __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["h" /* Input */])("band"), 
+        __metadata('design:type', Object)
+    ], BandComponent.prototype, "band", void 0);
+    BandComponent = __decorate([
+        __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["e" /* Component */])({
+            selector: 'band',
+            template: __webpack_require__(751),
+            styles: [__webpack_require__(740)]
+        }), 
+        __metadata('design:paramtypes', [])
+    ], BandComponent);
+    return BandComponent;
+}());
+//# sourceMappingURL=/home/stefan/showstopper/showgo/mean-app/src/band.component.js.map
+
+/***/ }),
+
+/***/ 571:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return BcPlayerComponent; });
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+var BcPlayerComponent = (function () {
+    function BcPlayerComponent() {
+    }
+    BcPlayerComponent.prototype.ngOnInit = function () {
+    };
+    __decorate([
+        __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_7" /* ViewChild */])('iframe'), 
+        __metadata('design:type', (typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["f" /* ElementRef */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_0__angular_core__["f" /* ElementRef */]) === 'function' && _a) || Object)
+    ], BcPlayerComponent.prototype, "iframe", void 0);
+    __decorate([
+        __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["h" /* Input */])("embed"), 
+        __metadata('design:type', Object)
+    ], BcPlayerComponent.prototype, "embed", void 0);
+    BcPlayerComponent = __decorate([
+        __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["e" /* Component */])({
+            selector: 'bc-player',
+            template: __webpack_require__(752),
+            styles: [__webpack_require__(741)]
+        }), 
+        __metadata('design:paramtypes', [])
+    ], BcPlayerComponent);
+    return BcPlayerComponent;
+    var _a;
+}());
+//# sourceMappingURL=/home/stefan/showstopper/showgo/mean-app/src/bc-player.component.js.map
+
+/***/ }),
+
+/***/ 572:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Event; });
 var Event = (function () {
     //TODO: add this shit, yo
@@ -550,7 +674,9 @@ var Event = (function () {
         this.location = inputJson.eventPlace;
         this.timeString = inputJson.eventTime.eventMonth + " " + inputJson.eventTime.eventDay + " at " + inputJson.eventTime.eventHour;
         this.social = inputJson.social;
-        this.embeds = inputJson.embeds;
+        this.bcEmbeds = inputJson.bcEmbeds;
+        this.scEmbeds = inputJson.scEmbeds;
+        this.bands = inputJson.bands;
         //use the id to get from DB to populate other data
     }
     return Event;
@@ -559,7 +685,7 @@ var Event = (function () {
 
 /***/ }),
 
-/***/ 571:
+/***/ 573:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -700,8 +826,8 @@ var EventComponent = (function () {
     EventComponent = __decorate([
         __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["e" /* Component */])({
             selector: 'event',
-            template: __webpack_require__(744),
-            styles: [__webpack_require__(736)]
+            template: __webpack_require__(753),
+            styles: [__webpack_require__(742)]
         }), 
         __metadata('design:paramtypes', [(typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__api_service__["a" /* ApiService */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_1__api_service__["a" /* ApiService */]) === 'function' && _a) || Object])
     ], EventComponent);
@@ -712,13 +838,13 @@ var EventComponent = (function () {
 
 /***/ }),
 
-/***/ 572:
+/***/ 574:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__api_service__ = __webpack_require__(252);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__auth_service__ = __webpack_require__(119);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__auth_service__ = __webpack_require__(120);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return EventsComponent; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -748,6 +874,15 @@ var EventsComponent = (function () {
     }
     EventsComponent.prototype.ngOnInit = function () {
     };
+    EventsComponent.prototype.ngAfterViewInit = function () {
+        var newsong = 'https://api.soundcloud.com/tracks/311739465';
+        var scId = this.soundcloudWidget.nativeElement.id;
+        var widget = SC.Widget(scId);
+        widget.bind(SC.Widget.Events.READY, function () {
+            //widget.pause();
+            widget.load(newsong);
+        });
+    };
     EventsComponent.prototype.filterFriends = function () {
         //set the filter args to friends
         this.filterArgs = { type: "friends", friends: this.user.friends };
@@ -760,22 +895,26 @@ var EventsComponent = (function () {
         //set the filter args to friends
         this.filterArgs = { type: "mine", events: this.user.events };
     };
+    __decorate([
+        __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_7" /* ViewChild */])('soundcloudWidget'), 
+        __metadata('design:type', (typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["f" /* ElementRef */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_0__angular_core__["f" /* ElementRef */]) === 'function' && _a) || Object)
+    ], EventsComponent.prototype, "soundcloudWidget", void 0);
     EventsComponent = __decorate([
         __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["e" /* Component */])({
             selector: 'app-events',
-            template: __webpack_require__(745),
-            styles: [__webpack_require__(737)]
+            template: __webpack_require__(754),
+            styles: [__webpack_require__(743)]
         }), 
-        __metadata('design:paramtypes', [(typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__api_service__["a" /* ApiService */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_1__api_service__["a" /* ApiService */]) === 'function' && _a) || Object, (typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__auth_service__["a" /* AuthService */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_2__auth_service__["a" /* AuthService */]) === 'function' && _b) || Object])
+        __metadata('design:paramtypes', [(typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__api_service__["a" /* ApiService */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_1__api_service__["a" /* ApiService */]) === 'function' && _b) || Object, (typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_2__auth_service__["a" /* AuthService */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_2__auth_service__["a" /* AuthService */]) === 'function' && _c) || Object])
     ], EventsComponent);
     return EventsComponent;
-    var _a, _b;
+    var _a, _b, _c;
 }());
 //# sourceMappingURL=/home/stefan/showstopper/showgo/mean-app/src/events.component.js.map
 
 /***/ }),
 
-/***/ 573:
+/***/ 575:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -812,8 +951,8 @@ var FriendBubbleComponent = (function () {
     FriendBubbleComponent = __decorate([
         __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["e" /* Component */])({
             selector: 'friend-bubble',
-            template: __webpack_require__(746),
-            styles: [__webpack_require__(738)]
+            template: __webpack_require__(755),
+            styles: [__webpack_require__(744)]
         }), 
         __metadata('design:paramtypes', [])
     ], FriendBubbleComponent);
@@ -824,13 +963,13 @@ var FriendBubbleComponent = (function () {
 
 /***/ }),
 
-/***/ 574:
+/***/ 576:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__fblogin_service__ = __webpack_require__(368);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__auth_service__ = __webpack_require__(119);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__auth_service__ = __webpack_require__(120);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_ngx_facebook__ = __webpack_require__(183);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_router__ = __webpack_require__(172);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LogComponent; });
@@ -906,8 +1045,8 @@ var LogComponent = (function () {
     LogComponent = __decorate([
         __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["e" /* Component */])({
             selector: 'app-log',
-            template: __webpack_require__(747),
-            styles: [__webpack_require__(739)]
+            template: __webpack_require__(756),
+            styles: [__webpack_require__(745)]
         }), 
         __metadata('design:paramtypes', [(typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__auth_service__["a" /* AuthService */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_2__auth_service__["a" /* AuthService */]) === 'function' && _a) || Object, (typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_4__angular_router__["b" /* Router */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_4__angular_router__["b" /* Router */]) === 'function' && _b) || Object, (typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_3_ngx_facebook__["b" /* FacebookService */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_3_ngx_facebook__["b" /* FacebookService */]) === 'function' && _c) || Object, (typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_1__fblogin_service__["a" /* FbloginService */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_1__fblogin_service__["a" /* FbloginService */]) === 'function' && _d) || Object])
     ], LogComponent);
@@ -918,7 +1057,7 @@ var LogComponent = (function () {
 
 /***/ }),
 
-/***/ 575:
+/***/ 577:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -942,8 +1081,8 @@ var LoginComponent = (function () {
     LoginComponent = __decorate([
         __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["e" /* Component */])({
             selector: 'app-login',
-            template: __webpack_require__(748),
-            styles: [__webpack_require__(740)]
+            template: __webpack_require__(757),
+            styles: [__webpack_require__(746)]
         }), 
         __metadata('design:paramtypes', [])
     ], LoginComponent);
@@ -953,7 +1092,7 @@ var LoginComponent = (function () {
 
 /***/ }),
 
-/***/ 576:
+/***/ 578:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1034,7 +1173,43 @@ var EventsFilterPipe = (function () {
 
 /***/ }),
 
-/***/ 577:
+/***/ 579:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_platform_browser__ = __webpack_require__(117);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SafePipe; });
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+var SafePipe = (function () {
+    function SafePipe(sanitizer) {
+        this.sanitizer = sanitizer;
+    }
+    SafePipe.prototype.transform = function (url) {
+        return this.sanitizer.bypassSecurityTrustResourceUrl(url);
+    };
+    SafePipe = __decorate([
+        __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["v" /* Pipe */])({ name: 'safe' }), 
+        __metadata('design:paramtypes', [(typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_platform_browser__["c" /* DomSanitizer */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_1__angular_platform_browser__["c" /* DomSanitizer */]) === 'function' && _a) || Object])
+    ], SafePipe);
+    return SafePipe;
+    var _a;
+}());
+//# sourceMappingURL=/home/stefan/showstopper/showgo/mean-app/src/safe.pipe.js.map
+
+/***/ }),
+
+/***/ 580:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1058,8 +1233,8 @@ var PostsComponent = (function () {
     PostsComponent = __decorate([
         __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["e" /* Component */])({
             selector: 'app-posts',
-            template: __webpack_require__(749),
-            styles: [__webpack_require__(741)]
+            template: __webpack_require__(758),
+            styles: [__webpack_require__(747)]
         }), 
         __metadata('design:paramtypes', [])
     ], PostsComponent);
@@ -1069,7 +1244,70 @@ var PostsComponent = (function () {
 
 /***/ }),
 
-/***/ 578:
+/***/ 581:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ScPlayerComponent; });
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+var ScPlayerComponent = (function () {
+    function ScPlayerComponent() {
+        this.scReady = false;
+        this.playing = false;
+    }
+    ScPlayerComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        var scId = "soundcloud_widget";
+        this.widget = SC.Widget(scId);
+        var ready = this.scReady;
+        this.widget.bind(SC.Widget.Events.READY, function () {
+            _this.scReady = true;
+            _this.widget.play();
+        });
+    };
+    ScPlayerComponent.prototype.playTrack = function () {
+        var _this = this;
+        if (this.playing) {
+            ////change button to play
+            this.widget.pause();
+        }
+        else {
+            this.widget.load('https://api.soundcloud.com/tracks/' + this.track);
+            this.widget.bind(SC.Widget.Events.READY, function () {
+                //change button to pause
+                _this.widget.play();
+            });
+        }
+    };
+    __decorate([
+        __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["h" /* Input */])("trackId"), 
+        __metadata('design:type', Object)
+    ], ScPlayerComponent.prototype, "track", void 0);
+    ScPlayerComponent = __decorate([
+        __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["e" /* Component */])({
+            selector: 'sc-player',
+            template: __webpack_require__(759),
+            styles: [__webpack_require__(748)]
+        }), 
+        __metadata('design:paramtypes', [])
+    ], ScPlayerComponent);
+    return ScPlayerComponent;
+}());
+//# sourceMappingURL=/home/stefan/showstopper/showgo/mean-app/src/sc-player.component.js.map
+
+/***/ }),
+
+/***/ 582:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1108,7 +1346,7 @@ var User = (function () {
 
 /***/ }),
 
-/***/ 579:
+/***/ 583:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1124,38 +1362,10 @@ var environment = {
 
 /***/ }),
 
-/***/ 734:
-/***/ (function(module, exports) {
-
-module.exports = ""
-
-/***/ }),
-
-/***/ 735:
-/***/ (function(module, exports) {
-
-module.exports = ""
-
-/***/ }),
-
-/***/ 736:
-/***/ (function(module, exports) {
-
-module.exports = ".clicked {\r\n\tbackground-color: green;\r\n}\r\n"
-
-/***/ }),
-
-/***/ 737:
-/***/ (function(module, exports) {
-
-module.exports = ""
-
-/***/ }),
-
 /***/ 738:
 /***/ (function(module, exports) {
 
-module.exports = "\r\nspan {\r\n\tcursor: pointer;\r\n\tbackground-color: red;\r\n}"
+module.exports = ""
 
 /***/ }),
 
@@ -1183,58 +1393,128 @@ module.exports = ""
 /***/ 742:
 /***/ (function(module, exports) {
 
-module.exports = "<p>\n  add-friends works!\n</p>\n"
+module.exports = ".clicked {\r\n\tbackground-color: green;\r\n}\r\n"
 
 /***/ }),
 
 /***/ 743:
 /***/ (function(module, exports) {
 
-module.exports = "<h1>{{title}}</h1>\n<button (click)=\"logout()\">Log out</button>\n<h2>{{user.displayName}}</h2>\n<router-outlet></router-outlet>"
+module.exports = "#soundcloud_widget {\r\n\tdisplay: none;\r\n}"
 
 /***/ }),
 
 /***/ 744:
 /***/ (function(module, exports) {
 
-module.exports = "<div data>\n\t<ul>\n\t\t<li>{{event.name}}</li>\n\t\t<li>{{event.fbId}}</li>\n\t\t<li>{{event.dbId}}</li>\n\t\t<li>{{event.venue}}</li>\n\t\t<li>{{event.location}}</li>\n\t\t<li>{{event.timeString}}</li>\n\t</ul>\n\t<button (click)=\"eventAction('ignore')\" [disabled]=\"!buttonsEnabled\" [ngClass]=\"{'clicked': ignored }\">Ignore Event</button>\n\t<button (click)=\"eventAction('join')\" [disabled]=\"!buttonsEnabled\" [ngClass]=\"{'clicked': joined }\">Join Event</button>\n\t<button (click)=\"eventAction('interested')\" [disabled]=\"!buttonsEnabled\" [ngClass]=\"{'clicked': interest }\">Interested In Event</button>\n\t<button (click)=\"toggleFriends()\">Show Attendence</button>\n\t<div *ngIf=\"showFriends\" >\n\t<ul *ngFor=\"let friend of event.social\">\n\t\t<friend-bubble (idSender)=\"addFriend($event)\" [friend]=\"friend\"></friend-bubble>\n\t</ul>\n\t</div>\n\t<div *ngFor=\"let embed of event.embeds\"><div [inner-html]=\"embed\"></div></div>\n</div>\n"
+module.exports = "\r\nspan {\r\n\tcursor: pointer;\r\n\tbackground-color: red;\r\n}"
 
 /***/ }),
 
 /***/ 745:
 /***/ (function(module, exports) {
 
-module.exports = "<h1>Events</h1>\n<button (click)=\"filterFriends()\">friends filter</button>\n<button (click)=\"filterNone()\">no filter</button>\n<button (click)=\"filterMine()\">my events</button>\n<event *ngFor=\"let event of events | eventsFilter:filterArgs\" [event]=\"event\" [user]=\"user\"></event>\n"
+module.exports = ""
 
 /***/ }),
 
 /***/ 746:
 /***/ (function(module, exports) {
 
-module.exports = "<span (click)=\"addFriend()\">{{friend.name}} <img src={{friend.picture}}/> </span>\n"
+module.exports = ""
 
 /***/ }),
 
 /***/ 747:
 /***/ (function(module, exports) {
 
-module.exports = "<h2>{{message}}</h2>\n<button (click)=\"loginWithFacebook()\">Log in via facebook, please!</button>\n"
+module.exports = ""
 
 /***/ }),
 
 /***/ 748:
 /***/ (function(module, exports) {
 
-module.exports = "<p>\n  Login:\n</p>\n <a href=\"/auth/facebook\">Sign in with Facebook</a>\n"
+module.exports = ""
 
 /***/ }),
 
 /***/ 749:
 /***/ (function(module, exports) {
 
+module.exports = "<p>\n  add-friends works!\n</p>\n"
+
+/***/ }),
+
+/***/ 750:
+/***/ (function(module, exports) {
+
+module.exports = "<h1>{{title}}</h1>\n<button (click)=\"logout()\">Log out</button>\n<h2>{{user.displayName}}</h2>\n<router-outlet></router-outlet>"
+
+/***/ }),
+
+/***/ 751:
+/***/ (function(module, exports) {
+
+module.exports = "<button *ngIf=\"scReady\" (click)=\"playTrack()\">play track</button>\n<iframe *ngIf=\"bc\" style=\"border: 0; width: 100%; height: 42px;\" [src]=\"band.bcUrl | safe\" seamless></iframe>\n\n"
+
+/***/ }),
+
+/***/ 752:
+/***/ (function(module, exports) {
+
+module.exports = "<p>{{embed}}</p>\n<iframe #iframe style=\"border: 0; width: 100%; height: 42px;\" [src]=\"embed | safe\" seamless></iframe>\n\n"
+
+/***/ }),
+
+/***/ 753:
+/***/ (function(module, exports) {
+
+module.exports = "<div data>\n\t<ul>\n\t\t<li>{{event.name}}</li>\n\t\t<li>{{event.fbId}}</li>\n\t\t<li>{{event.dbId}}</li>\n\t\t<li>{{event.venue}}</li>\n\t\t<li>{{event.location}}</li>\n\t\t<li>{{event.timeString}}</li>\n\t</ul>\n\t<button (click)=\"eventAction('ignore')\" [disabled]=\"!buttonsEnabled\" [ngClass]=\"{'clicked': ignored }\">Ignore Event</button>\n\t<button (click)=\"eventAction('join')\" [disabled]=\"!buttonsEnabled\" [ngClass]=\"{'clicked': joined }\">Join Event</button>\n\t<button (click)=\"eventAction('interested')\" [disabled]=\"!buttonsEnabled\" [ngClass]=\"{'clicked': interest }\">Interested In Event</button>\n\t<button (click)=\"toggleFriends()\">Show Attendence</button>\n\t<div *ngIf=\"showFriends\" >\n\t<ul *ngFor=\"let friend of event.social\">\n\t\t<friend-bubble (idSender)=\"addFriend($event)\" [friend]=\"friend\"></friend-bubble>\n\t</ul>\n\t</div>\n\t<!--div *ngFor=\"let embed of event.bcEmbeds\">\n\t\t<bc-player [embed]=\"embed\"></bc-player>\n\t</div>\n\t<div *ngFor=\"let trackId of event.scEmbeds\">\n\t\t<sc-player [trackId]=\"trackId\"></sc-player>\n\t</div-->\n\t<div *ngFor=\"let band of event.bands\">\n\t\t<band [band]=\"band\"></band>\n\t\t<!--bc-player [embed]=\"embed\"></bc-player-->\n\t</div>\n</div>\n"
+
+/***/ }),
+
+/***/ 754:
+/***/ (function(module, exports) {
+
+module.exports = "<h1>Events</h1>\n<button (click)=\"filterFriends()\">friends filter</button>\n<button (click)=\"filterNone()\">no filter</button>\n<button (click)=\"filterMine()\">my events</button>\n<event *ngFor=\"let event of events | eventsFilter:filterArgs\" [event]=\"event\" [user]=\"user\"></event>\n\n<iframe #soundcloudWidget id=\"soundcloud_widget\"\n  src=\"https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/317619385&auto_play=false\"\n  width=\"420\"\n  height=\"120\"\n  frameborder=\"no\">\n</iframe>\n"
+
+/***/ }),
+
+/***/ 755:
+/***/ (function(module, exports) {
+
+module.exports = "<span (click)=\"addFriend()\">{{friend.name}} <img src={{friend.picture}}/> </span>\n"
+
+/***/ }),
+
+/***/ 756:
+/***/ (function(module, exports) {
+
+module.exports = "<h2>{{message}}</h2>\n<button (click)=\"loginWithFacebook()\">Log in via facebook, please!</button>\n"
+
+/***/ }),
+
+/***/ 757:
+/***/ (function(module, exports) {
+
+module.exports = "<p>\n  Login:\n</p>\n <a href=\"/auth/facebook\">Sign in with Facebook</a>\n"
+
+/***/ }),
+
+/***/ 758:
+/***/ (function(module, exports) {
+
 module.exports = "<p>\n  posts works!\n</p>\n"
+
+/***/ }),
+
+/***/ 759:
+/***/ (function(module, exports) {
+
+module.exports = "\r\n<button *ngIf=\"scReady\" (click)=\"playTrack()\">play track</button>"
 
 /***/ })
 
-},[1011]);
+},[1021]);
 //# sourceMappingURL=main.bundle.map

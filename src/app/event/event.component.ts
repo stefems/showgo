@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ApiService }      from './../api.service';
 import { FriendBubbleComponent }      from './../friend-bubble/friend-bubble.component';
+import {BcPlayerComponent} from './../bc-player/bc-player.component';
 
 
 @Component({
@@ -44,6 +45,7 @@ export class EventComponent implements OnInit {
 			}
 		});
 	}
+	
 	public changeUser(actionType) {
 		console.log("adding/updating user event: " + actionType + " " + this.event.fbId);
 		let found = false;

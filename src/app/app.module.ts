@@ -17,6 +17,11 @@ import { FacebookModule } from 'ngx-facebook';
 import { AddFriendsComponent } from './add-friends/add-friends.component';
 import { FriendBubbleComponent } from './friend-bubble/friend-bubble.component';
 import {EventsFilterPipe}  from './pipes/events-filter.pipe';
+import {SafePipe}  from './pipes/safe.pipe';
+
+import { BcPlayerComponent } from './bc-player/bc-player.component';
+import { ScPlayerComponent } from './sc-player/sc-player.component';
+import { BandComponent } from './band/band.component';
 
 
 
@@ -48,7 +53,11 @@ const ROUTES = [
     EventComponent,
     AddFriendsComponent,
     FriendBubbleComponent,
-    EventsFilterPipe
+    EventsFilterPipe,
+    SafePipe,
+    BcPlayerComponent,
+    ScPlayerComponent,
+    BandComponent
   ],
   imports: [
     BrowserModule,

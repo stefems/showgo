@@ -16,5 +16,14 @@
 		<friend-bubble (idSender)="addFriend($event)" [friend]="friend"></friend-bubble>
 	</ul>
 	</div>
-	<div *ngFor="let embed of event.embeds"><div [innerHTML]="embed"></div></div>
+	<!--div *ngFor="let embed of event.bcEmbeds">
+		<bc-player [embed]="embed"></bc-player>
+	</div>
+	<div *ngFor="let trackId of event.scEmbeds">
+		<sc-player [trackId]="trackId"></sc-player>
+	</div-->
+	<div *ngFor="let band of event.bands">
+		<band [band]="band"></band>
+		<!--bc-player [embed]="embed"></bc-player-->
+	</div>
 </div>

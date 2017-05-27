@@ -1,9 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ApiService }      from './../api.service';
 import { AuthService }      from './../auth.service';
 import {EventComponent}				from './../event/event.component';
 import {User} from '../user';
 import {EventsFilterPipe} from './../pipes/events-filter.pipe';
+
+
+declare var SC:any;
 
 
 @Component({
@@ -18,6 +21,9 @@ export class EventsComponent implements OnInit {
   private user: any;
   private filterArgs;
 
+  @ViewChild('soundcloudWidget') soundcloudWidget: ElementRef;
+
+
   constructor(private apiService: ApiService, private authService: AuthService) {
     this.authService.user().subscribe(response => {
       this.user = response;
@@ -26,8 +32,17 @@ export class EventsComponent implements OnInit {
       this.events = response;
     });
   }
-
   ngOnInit() {
+    
+  }
+  ngAfterViewInit() {
+    let newsong = 'https://api.soundcloud.com/tracks/311739465';
+    let scId = this.soundcloudWidget.nativeElement.id;
+    let widget = SC.Widget(scId);
+    widget.bind(SC.Widget.Events.READY, function() {
+      //widget.pause();
+      widget.load(newsong);
+    });
   }
 
   public filterFriends(): void {

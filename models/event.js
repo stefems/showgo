@@ -1,5 +1,6 @@
 // requiring mongoose dependency
 var mongoose = require('mongoose');
+var Band = require('./band.js');
 // defining schema for reminders
 var EventSchema = new mongoose.Schema({
 	eventId: String,
@@ -21,7 +22,9 @@ var EventSchema = new mongoose.Schema({
 		picture: String,
 		fbId: String
 	}],
-	embeds: [String]
+	bcEmbeds: [String],
+	scEmbeds: [String],
+	bands: [Band.schema]
 });
 // define the model
 var Event = mongoose.model("Event", EventSchema);
