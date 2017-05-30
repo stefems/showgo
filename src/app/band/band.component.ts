@@ -10,8 +10,8 @@ declare var SC:any;
 export class BandComponent implements OnInit {
 
   private widget;
-  private scReady = false;
-  private bc;
+  public scReady = false;
+  public bc;
   private playing = false;
   @Input("band") band;
 

@@ -10,7 +10,7 @@ declare var SC:any;
 })
 export class ScPlayerComponent implements OnInit {
   private widget;
-  private scReady = false;
+  public scReady = false;
   private playing = false;
 
   @Input("trackId") track;

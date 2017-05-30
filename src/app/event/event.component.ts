@@ -14,11 +14,11 @@ export class EventComponent implements OnInit {
 	@Input("event") event;
 	@Input("user") user;
 
-	private showFriends = false;
-	private joined = false
-	private interest = false;
-	private ignored = false;
-	private buttonsEnabled: boolean = true;
+	public showFriends = false;
+	public joined = false
+	public interest = false;
+	public ignored = false;
+	public buttonsEnabled: boolean = true;
 
 	constructor(private apiService: ApiService) {
 		//TODO: when the event component is being generated we need to look at the user's shows in order to set the

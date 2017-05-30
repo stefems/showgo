@@ -16,10 +16,10 @@ declare var SC:any;
 })
 export class EventsComponent implements OnInit {
 
-  private events = [];
+  public events = [];
   private userAccessToken = "";
   private user: any;
-  private filterArgs;
+  public filterArgs;
 
   @ViewChild('soundcloudWidget') soundcloudWidget: ElementRef;
 
