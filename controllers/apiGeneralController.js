@@ -138,7 +138,7 @@ var generalApiController = {
   },
   //will need a function for sending delete request for any kind of event (because they can't have an event in multiple categories)
   getEvents: function(req, res) {
-    mongoose.connect('mongodb://localhost/events');
+    mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/events');
   	//get events from db
   	Event.find({}, function(err, docs) {
   		res.json(docs);
@@ -146,7 +146,7 @@ var generalApiController = {
     mongoose.connection.close();
   },
   friendPost: function(req, res) {
-    mongoose.connect('mongodb://localhost/users');
+    mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/users');
     //get the access_token and friend id from params
     let access_token = req.params.access_token;
     let friendId = req.params.friendId;
