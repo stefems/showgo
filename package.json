@@ -5,7 +5,7 @@
   "angular-cli": {},
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng build && node server.js",
     "test": "ng test",
     "pree2e": "webdriver-manager update --standalone false --gecko false",
     "e2e": "protractor",
@@ -21,7 +21,8 @@
     "@angular/platform-browser": "^2.3.1",
     "@angular/platform-browser-dynamic": "^2.3.1",
     "@angular/router": "^3.3.1",
-    "angular-cli": "^1.0.0-beta.28.3",
+    "@angular/compiler-cli": "2.2.3",
+    "angular-cli": "1.0.0-beta.22-1",
     "body-parser": "^1.17.1",
     "cheerio": "^0.22.0",
     "cookie-parser": "^1.4.3",
