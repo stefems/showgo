@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 var User = require("./../models/user");
 
 var passport = require("passport");
-var env = require("./../.env/.env.js");
+// var env = require("./../.env/.env.js");
 var request = require("request");
 
 var userController = {
@@ -21,8 +21,8 @@ var userController = {
     var fbId = req.params.fbId;
     var access_token = req.params.access_token;
     //get the two app vals from env
-    let appId = env.facebookAppId;
-    let appSecret = env.facebookAppSecret;
+    let appId = process.env.facebookAppId;
+    let appSecret = process.env.facebookAppSecret;
     let url = "https://graph.facebook.com/me?access_token="+access_token;
     //send the request to fb graph
     request(url, function (error, response, body) {      

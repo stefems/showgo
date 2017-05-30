@@ -8,8 +8,8 @@ var FacebookStrategy = require('passport-facebook').Strategy;
 var User = require("./models/user");
 
 // load the auth variables
-const env = require("./.env/.env.js");
-
+// const env = require("./.env/.env.js");
+/*
 module.exports = function(passport) {
 
     // used to serialize the user for the session
@@ -79,5 +79,5 @@ module.exports = function(passport) {
 
     }));
 
-};
+};*/
 
