@@ -4,7 +4,6 @@
 /dist
 /tmp
 
-.angular-cli.json
 
 # dependencies
 /node_modules
