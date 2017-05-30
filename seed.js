@@ -9,7 +9,7 @@ var Event = require("./models/event");
 var Band = require("./models/band");
 
 //TODO: systematic way to get access token for when this is scheduled
-var access_token = "EAACEdEose0cBAJcZCBs3x8g0F9hzhfjrXLFBuoZB4ZCcEDYHnnrLLGCZCSz0hJ5LoUXZBjZB1MbIoiNQxGDP9fxP8krrZBOuDmAAAMa0XjZBJBEKKmM3Xgh5yZAFZC6gQIaEF4arcQZBFMsMliqHcoUwyZAP3a2nZC4oKNOqyZAZAulArL1ROWNIn7wWQ1D";
+var access_token = "EAACEdEose0cBALFN37bcf7T5ZAtslw2MSwvv1aS0HvEEmxs7JoZAnkIu0FclW6pfErbZC034pZBp0zK8wir8rebZBQRZAv1EBz0VSlGY4TVs0CjmFMfVXblH1aFJAzyxGJwevGw3iTCXOKFJh50ym3BbcbeZAiGKBsCnyyGl40GIl38gZCZCr1YLH";
 //TODO: replace with DB venues
 var venues = [];
 
