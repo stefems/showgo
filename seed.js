@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-const env = require("./.env/.env.js");
+//const env = require("./.env/.env.js");
 var request = require('request');
 const jsdom = require('jsdom');
 const { JSDOM } = jsdom;
@@ -9,26 +9,12 @@ var Event = require("./models/event");
 var Band = require("./models/band");
 
 //TODO: systematic way to get access token for when this is scheduled
-var access_token = "EAACEdEose0cBAPEsY7PZBzWdfhFxnNed2G3yxNQmPeJKuDbA4uhFSE8Wc3g6nh6NxfPjzCemeCLHOZCdxa5USBmdsSudd9YZBfRovDg6mABeliZB4yy0gFKXARa0U8rHAY9no7IDkySVWuQVF1cauKTskR1EuflI7EhvREga5YsvPSoxsERL";
+var access_token = "EAACEdEose0cBAJcZCBs3x8g0F9hzhfjrXLFBuoZB4ZCcEDYHnnrLLGCZCSz0hJ5LoUXZBjZB1MbIoiNQxGDP9fxP8krrZBOuDmAAAMa0XjZBJBEKKmM3Xgh5yZAFZC6gQIaEF4arcQZBFMsMliqHcoUwyZAP3a2nZC4oKNOqyZAZAulArL1ROWNIn7wWQ1D";
 //TODO: replace with DB venues
 var venues = [];
 
-mongoose.connect('mongodb://localhost/events');
-Event.remove({}, function(err, wut) {
-	if (err) {
-		return console.log(err); 
-	}
-	console.log("removal of events.");
-	Band.remove({}, function(error, huh) {
-		if (!error) {
-			getEvents();
-		}
-		else {
-			console.log(error);
-		}
-	});
-	
-});
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/events');
+getEvents();
 
 //todo: fix date issues (not getting most recent events)
 function getEvents(url) {
@@ -278,7 +264,7 @@ function websiteLinkSearch(bandId, url, event, bandName) {
 
 function googleSearchBand(bandId, event, bandName) {
 	let options = {
-		url: "https://www.googleapis.com/customsearch/v1?key=" + env.googleKey + "&cx=" + env.googleId + "&q=" + bandName + "+bandcamp",
+		url: "https://www.googleapis.com/customsearch/v1?key=" + process.env.googleKey + "&cx=" + process.env.googleId + "&q=" + bandName + "+bandcamp",
 		headers: {
 			"user-agent": "Chrome/51.0.2704.103"
 		}
@@ -293,7 +279,7 @@ function googleSearchBand(bandId, event, bandName) {
 				}
 			}
 			options = {
-				url: "https://www.googleapis.com/customsearch/v1?key=" + env.googleKey + "&cx=" + env.googleId + "&q=" + bandName + "+soundcloud",
+				url: "https://www.googleapis.com/customsearch/v1?key=" + process.env.googleKey + "&cx=" + process.env.googleId + "&q=" + bandName + "+soundcloud",
 				headers: {
 					"user-agent": "Chrome/51.0.2704.103"
 				}
@@ -316,7 +302,7 @@ function googleSearchBand(bandId, event, bandName) {
 function getsoundcloudEmbed(bandId, url, event) {
 	//send request to get the user's id
 	let options = {
-		url: "https://api.soundcloud.com/resolve/?url=" + url + "&client_id=" + env.soundcloudSecret,
+		url: "https://api.soundcloud.com/resolve/?url=" + url + "&client_id=" + process.env.soundcloudSecret,
 		headers: {
 			"user-agent": "Chrome/51.0.2704.103"
 		}
@@ -327,7 +313,7 @@ function getsoundcloudEmbed(bandId, url, event) {
 			let id = JSON.parse(body).id;
 			//send request to get a track
 			let options = {
-				url: "https://api.soundcloud.com/users/" + id + "/tracks?client_id=" + env.soundcloudSecret,
+				url: "https://api.soundcloud.com/users/" + id + "/tracks?client_id=" + process.env.soundcloudSecret,
 				headers: {
 					"user-agent": "Chrome/51.0.2704.103"
 				}

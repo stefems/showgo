@@ -24,7 +24,7 @@ var generalApiController = {
     let eventId = req.params.eventId;
     let userId = req.params.userId;
     console.log(actionType + " eventId: " + eventId + " user: " + userId);
-    mongoose.connect('mongodb://localhost/users');
+    mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/users');
     //---------------------------------------------------------------------
     //get the access_token from the user's db record using the params
     //---------------------------------------------------------------------

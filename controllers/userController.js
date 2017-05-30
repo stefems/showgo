@@ -12,7 +12,7 @@ var userController = {
   Failure or error states will return {error: message}
   */
   getUser: function(req, res) {
-    mongoose.connect('mongodb://localhost/users');
+    mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/users');
     console.log("getUser() in controller");
     //==================================================================
     //PART 1
