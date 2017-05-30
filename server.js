@@ -21,6 +21,19 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // Point static path to public
 app.use(express.static(path.join(__dirname, 'public')));
 
+const forceSSL = function() {
+  return function (req, res, next) {
+    if (req.headers['x-forwarded-proto'] !== 'https') {
+      return res.redirect(
+       ['https://', req.get('Host'), req.url].join('')
+      );
+    }
+    next();
+  }
+}
+
+app.use(forceSSL());
+
 // Set our api routes
 app.use('/api', api);
 
@@ -28,6 +41,8 @@ app.use('/api', api);
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public/index.html'));
 });
+
+
 
 /**
  * Get port from environment and store in Express.

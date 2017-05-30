@@ -65,6 +65,6 @@ export class LogComponent implements OnInit {
         })
         .catch((error: any) => console.error(error));
       }
-    });    
+    }).catch((error: any) => console.error(error));    
   }
 }
