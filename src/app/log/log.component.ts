@@ -28,7 +28,6 @@ export class LogComponent implements OnInit {
     //todo: use this to prevent error:
     this.fb.getLoginStatus()
     .then((response: LoginResponse) => {
-      console.log(response);
       if (response.status === 'connected') {
         let access_token = response.authResponse.accessToken;
         let fbId = response.authResponse.userID;

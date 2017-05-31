@@ -15,12 +15,12 @@ export class ApiService {
 
   private eventsObservableSource = new Subject<Event[]>(); 
   eventsObservable = this.eventsObservableSource.asObservable();
-  private getEventsUrl = "http://45.55.156.114:3000/api/events";
-  private postEventActionUrl = "http://45.55.156.114:3000/api/eventAction";
-  private postJoinUrl = "http://45.55.156.114:3000/api/join";
-  private postDeclineUrl = "http://45.55.156.114:3000/api/decline";
-  private postInterestedUrl = "http://45.55.156.114:3000/api/interested";
-  private postFriend = "http://45.55.156.114:3000/api/friend";
+  private getEventsUrl = "https://salty-citadel-53279.herokuapp.com/api/events";
+  private postEventActionUrl = "https://salty-citadel-53279.herokuapp.com/api/eventAction";
+  private postJoinUrl = "https://salty-citadel-53279.herokuapp.com/api/join";
+  private postDeclineUrl = "https://salty-citadel-53279.herokuapp.com/api/decline";
+  private postInterestedUrl = "https://salty-citadel-53279.herokuapp.com/api/interested";
+  private postFriend = "https://salty-citadel-53279.herokuapp.com/api/friend";
 
   public headers = new Headers({ 'Content-Type': 'application/json' });
   public options = new RequestOptions({ headers: this.headers });
