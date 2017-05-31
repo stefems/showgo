@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
-declare var SC:any;
+
+declare var SC:any = {};
 
 @Component({
   selector: 'band',
