@@ -1,4 +1,39 @@
-<h1>{{title}}</h1>
-<button (click)="logout()">Log out</button>
-<h2>{{user.displayName}}</h2>
-<router-outlet></router-outlet>
+<div class="demo-layout-transparent mdl-layout mdl-js-layout">
+  <header class="mdl-layout__header mdl-layout__header--transparent">
+    <div class="mdl-layout__header-row">
+      <!-- Title -->
+      <span (click)="home()" class="mdl-layout-title">{{title}}</span>
+      <!-- Add spacer, to align navigation to the right -->
+      <div class="mdl-layout-spacer"></div>
+      <!-- Navigation -->
+      <nav class="mdl-navigation">
+        <a *ngIf="!user.dbId" class="mdl-navigation__link" (click)="login()">Signup</a>
+        <a *ngIf="!user.dbId" class="mdl-navigation__link" (click)="login()">Login</a>
+        <a *ngIf="user.dbId" class="mdl-navigation__link" (click)="logout()">Logout</a>
+        <a *ngIf="user.dbId" class="mdl-navigation__link" href="">{{user.displayName}}</a>
+      </nav>
+    </div>
+  </header>
+  <header class="mdl-layout__header--small-screen-only mdl-layout__header--transparent--small-screen-only mdl-layout--small-screen-only">
+    <div class="mdl-layout__header-row">
+      <span (click)="home()" class="mdl-layout-title">{{title}}</span>
+      <!-- Add spacer, to align navigation to the right -->
+      <div class="mdl-layout-spacer"></div>
+      <button id="demo-menu-lower-right"
+          class="mdl-button mdl-js-button mdl-button--icon">
+          <i class="material-icons myIcon">menu</i>
+      </button>
+      <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
+      for="demo-menu-lower-right">
+        <li *ngIf="user.dbId" class="mdl-menu__item">{{user.displayName}}</li>
+        <li *ngIf="!user.dbId" class="mdl-menu__item" (click)="login()">Signup</li>
+        <li *ngIf="!user.dbId" (click)="login()" class="mdl-menu__item">Login</li>
+        <li *ngIf="user.dbId" (click)="logout()" class="mdl-menu__item">Logout</li>
+      </ul>
+    </div>
+  </header>
+  <main class="mdl-layout__content">
+    <router-outlet></router-outlet>
+  </main>
+</div>
+

@@ -1,1 +1,8 @@
-/* You can add global styles to this file, and also import other style files */
+*:not(.myIcon){
+	font-family: 'Ubuntu Condensed', sans-serif;
+}
+.text-center  {
+	width: 100%;
+	margin: auto;
+	text-align: center;
+}

@@ -26,7 +26,6 @@ export class BandComponent implements OnInit {
 		this.widget = SC.Widget("soundcloud_widget");
 		this.widget.bind(SC.Widget.Events.READY, () => {
 			this.scReady = true;
-			this.widget.play();
 		});
   	}
   }

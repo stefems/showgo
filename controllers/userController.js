@@ -40,7 +40,7 @@ var userController = {
             mongoose.connection.close();
             res.json({"error":"error"});
           }
-          if (!err && user !== null) {
+          else if (!err && user !== null) {
             console.log("existing user found.");
             //update user's access token
             user.access_token = access_token;
@@ -53,10 +53,12 @@ var userController = {
               } else {
                 mongoose.connection.close();
                 console.log("updating existing user's access token");
+                console.log(user.name);
                 res.json(user);
               }
             });
-          } else {
+          }
+          else {
             console.log("new user found.");
             user = new User({
               //todo: remove the oauthid user field

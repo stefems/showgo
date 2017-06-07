@@ -22,6 +22,12 @@ export class EventsComponent implements OnInit {
   private filterArgs;
 
   @ViewChild('soundcloudWidget') soundcloudWidget: ElementRef;
+  @ViewChild('filterFriend') filterFriend: ElementRef;
+  @ViewChild('filterMe') filterMe: ElementRef;
+  @ViewChild('filterAll') filterAll: ElementRef;
+  @ViewChild('filterFriend2') filterFriend2: ElementRef;
+  @ViewChild('filterMe2') filterMe2: ElementRef;
+  @ViewChild('filterAll2') filterAll2: ElementRef;
 
 
   constructor(private apiService: ApiService, private authService: AuthService) {
@@ -45,16 +51,30 @@ export class EventsComponent implements OnInit {
     });
   }
 
-  public filterFriends(): void {
-    //set the filter args to friends
-    this.filterArgs = {type: "friends", friends: this.user.friends};
-  }
-  public filterNone(): void {
-    //set the filter args to friends
-    this.filterArgs = null;
-  }
-  public filterMine(): void {
-    //set the filter args to friends
-    this.filterArgs = {type: "mine", events: this.user.events};
+  public filter(type): void {
+    this.filterAll.nativeElement.style.textDecoration = 'none';
+    this.filterAll2.nativeElement.style.textDecoration = 'none';
+    this.filterMe.nativeElement.style.textDecoration = 'none';
+    this.filterMe2.nativeElement.style.textDecoration = 'none';
+    this.filterFriend.nativeElement.style.textDecoration = 'none';
+    this.filterFriend2.nativeElement.style.textDecoration = 'none';
+
+    switch (type) {
+      case "all":
+        this.filterAll.nativeElement.style.textDecoration = 'underline';
+        this.filterAll2.nativeElement.style.textDecoration = 'underline';
+        this.filterArgs = null;
+        break;
+      case "me":
+        this.filterMe.nativeElement.style.textDecoration = 'underline';
+        this.filterMe2.nativeElement.style.textDecoration = 'underline';
+        this.filterArgs = {type: "mine", events: this.user.events};
+        break;
+      case "friends":
+        this.filterFriend.nativeElement.style.textDecoration = 'underline';
+        this.filterFriend2.nativeElement.style.textDecoration = 'underline';
+        this.filterArgs = {type: "friends", friends: this.user.friends};
+        break;
+    }
   }
 }

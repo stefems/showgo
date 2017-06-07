@@ -12,24 +12,23 @@ import { AuthGuard }                from './auth-guard.service';
 import { AuthService }      from './auth.service';
 import { ApiService }      from './api.service';
 import { EventComponent } from './event/event.component';
-import {FbloginService}  from './fblogin.service';
+import { FbloginService}  from './fblogin.service';
 import { FacebookModule } from 'ngx-facebook';
 import { AddFriendsComponent } from './add-friends/add-friends.component';
 import { FriendBubbleComponent } from './friend-bubble/friend-bubble.component';
-import {EventsFilterPipe}  from './pipes/events-filter.pipe';
-import {SafePipe}  from './pipes/safe.pipe';
+import { EventsFilterPipe}  from './pipes/events-filter.pipe';
+import { SafePipe}  from './pipes/safe.pipe';
 
 import { BcPlayerComponent } from './bc-player/bc-player.component';
 import { ScPlayerComponent } from './sc-player/sc-player.component';
 import { BandComponent } from './band/band.component';
-
-
+import { SplashComponent } from './splash/splash.component';
 
 // Define the routes
 const ROUTES = [
   {
     path: '',
-    redirectTo: 'log',
+    redirectTo: 'events',
     pathMatch: "full"
   },
   {
@@ -40,6 +39,10 @@ const ROUTES = [
   {
     path: 'log',
     component: LogComponent
+  },
+  {
+    path: 'splash',
+    component: SplashComponent
   }
 ];
 
@@ -57,15 +60,16 @@ const ROUTES = [
     SafePipe,
     BcPlayerComponent,
     ScPlayerComponent,
-    BandComponent
+    BandComponent,
+    SplashComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpModule,
     FacebookModule.forRoot(),
-    RouterModule.forRoot(ROUTES) // Add routes to the app
-  ],
+    RouterModule.forRoot(ROUTES) // Add routes to the app,
+    ],
   providers: [AuthGuard, AuthService, ApiService, FbloginService],
   bootstrap: [AppComponent]
 })

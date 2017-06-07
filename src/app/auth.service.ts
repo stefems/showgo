@@ -12,6 +12,7 @@ import 'rxjs/add/operator/delay';
 import 'rxjs/add/operator/toPromise';
 import {User} from './user';
 
+
 @Injectable()
 export class AuthService {
 
@@ -21,7 +22,8 @@ export class AuthService {
   // userObservable = this.userObservableSource.asObservable();
   // private user = this.userObservableSource.asObservable();
   // private checkLoginUrl = "http://45.55.156.114:3000/loginCheck";
-  private getUserUrl = "http://45.55.156.114:3000/api/getUser";
+
+  private getUserUrl = "http://45.55.156.114:4200/api/getUser";
   isLoggedIn: boolean = false;
 
   private currentUser: BehaviorSubject<User> = new BehaviorSubject(new User(0));
@@ -39,14 +41,16 @@ export class AuthService {
   }
 
   getUser(fbId: string, access_token: string): any {
+
     return this.http.get(this.getUserUrl+"/"+fbId+"/"+access_token)
-      .flatMap((res:Response) => {
-        // console.log("getUser() in auth service");
-        // console.log(res.json());
+      .map((res:Response) => {
+        console.log("getUser() in auth service");
+        console.log(res);
         //TODO: unhappy path CURRENTLY TESTING HERE
         if (!res.json().error) {
           this.currentUser.next(new User(res.json()));
           this.isLoggedIn = true;
+          console.log("user ought to be logged in...");
           return this.currentUser.asObservable();
         }
         else {

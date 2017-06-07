@@ -1,16 +1,30 @@
-<!doctype html>
+<!doctype html style="width: 100%; height: 100%;">
 <html>
 <head>
   <meta charset="utf-8">
-  <title>showgo</title>
+  <title>ShowGo</title>
   <base href="/">
   <script type="text/javascript" src="https://connect.facebook.net/en_US/sdk.js"></script>
   <script src="http://w.soundcloud.com/player/api.js"></script>
-
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link href="https://fonts.googleapis.com/css?family=Ubuntu+Condensed" rel="stylesheet">
+<!--   <script src="https://use.fontawesome.com/f699d519fc.js"></script>
+ -->  
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="../assets/favicon-headphones.ico">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+<script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
 </head>
-<body>
-  <app-root>Loading...</app-root>
+
+<body style="width: 100%; height: 100%;">
+<!--Maybe use this: https://www.npmjs.com/package/ng2-loading-animate
+ <div class="mdl-spinner mdl-spinner--single-color mdl-js-spinner is-active"></div>-->
+  <app-root>
+  	<div class="text-center">
+        <i id="loading" class="fa fa-headphones fa-spin fa-5x"></i>
+        <div>Welcome to ShowGo! We've gotta load some stuffs.</div>
+    </div>
+  </app-root>
+
 </body>
 </html>

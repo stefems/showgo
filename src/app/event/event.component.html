@@ -1,3 +1,42 @@
+<div class="eventContainer">
+	<div class="mdl-grid">
+	  <div class="mdl-cell mdl-cell--2-col eventLeft">
+	  	<div>
+	  		<p>{{event.timeString}}</p>
+	  	</div>
+	  	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" (click)="eventAction('join')" [disabled]="!buttonsEnabled" [ngClass]="{'clicked': joined }">
+	  		<i class="material-icons myIcon">event_available</i>
+	  		RSVP
+	  	</button>
+	  	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" (click)="eventAction('interested')" [disabled]="!buttonsEnabled" [ngClass]="{'clicked': interest }">Maybe</button>
+	  	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" (click)="eventAction('ignore')" [disabled]="!buttonsEnabled" [ngClass]="{'clicked': ignored }">
+	  		<i class="material-icons myIcon">event_busy</i>
+	  		Nah
+	  	</button>
+	  </div>
+	  <div class="mdl-cell mdl-cell--10-col">
+	  	<h4>{{event.name}}</h4>
+	  	<hr>
+	  	<h5>{{event.venue}} - {{event.location}}</h5>
+	  	<hr>
+	  	<div class="buttonDiv">
+	  		<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent listenButton">Listen</button>
+	  		<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent peopleButton" (click)="toggleFriends()">See People</button>
+	  	</div>
+	  </div>
+	</div>
+	<div *ngIf="showFriends" >
+		<ul *ngFor="let friend of event.social">
+			<friend-bubble (idSender)="addFriend($event)" [friend]="friend"></friend-bubble>
+		</ul>
+	</div>
+	<div *ngFor="let band of event.bands">
+		<band [band]="band"></band>
+	</div>
+</div>
+
+
+<!-- 
 <div data>
 	<ul>
 		<li>{{event.name}}</li>
@@ -16,14 +55,7 @@
 		<friend-bubble (idSender)="addFriend($event)" [friend]="friend"></friend-bubble>
 	</ul>
 	</div>
-	<!--div *ngFor="let embed of event.bcEmbeds">
-		<bc-player [embed]="embed"></bc-player>
-	</div>
-	<div *ngFor="let trackId of event.scEmbeds">
-		<sc-player [trackId]="trackId"></sc-player>
-	</div-->
 	<div *ngFor="let band of event.bands">
 		<band [band]="band"></band>
-		<!--bc-player [embed]="embed"></bc-player-->
 	</div>
-</div>
+</div> -->

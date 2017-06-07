@@ -1,3 +1,50 @@
+:host {
+	overflow: hidden;
+}
+
 #soundcloud_widget {
 	display: none;
+}
+
+.mdl-layout__header-row{
+    position: fixed;
+    background-color: black;
+    width: 100%;
+    z-index: 10;
+}
+.mdl-layout__header--small-screen-only {
+	z-index: 10;
+}
+.mdl-layout-title{
+	margin: auto;
+	font-size: 4vw;
+}
+
+.mdl-layout__header--small-screen-only .mdl-layout__header-row {
+	padding-left: 16px;
+}
+.showgoHeader {
+	height: 65px;
+	-webkit-overflow-scrolling: touch;
+}
+
+.eventsContainer {
+	margin-top: 5px;
+	overflow: scroll;
+	height: 100%;
+}
+
+.eventsFilter {
+	font-size: 4vw;
+	padding-right: 0;
+	padding-left: 0;
+	margin: auto;
+}
+
+.mdl-navigation__link {
+	cursor: pointer;
+}
+
+.filterActive {
+	text-decoration: underline;
 }

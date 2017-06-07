@@ -8,11 +8,9 @@ var User = require("./models/user");
 var Event = require("./models/event");
 var Band = require("./models/band");
 
-//TODO: systematic way to get access token for when this is scheduled
-var access_token = "EAACEdEose0cBAPEsY7PZBzWdfhFxnNed2G3yxNQmPeJKuDbA4uhFSE8Wc3g6nh6NxfPjzCemeCLHOZCdxa5USBmdsSudd9YZBfRovDg6mABeliZB4yy0gFKXARa0U8rHAY9no7IDkySVWuQVF1cauKTskR1EuflI7EhvREga5YsvPSoxsERL";
+var access_token = env.facebookAppId + "|" + env.facebookAppSecret;
 //TODO: replace with DB venues
 var venues = [];
-
 mongoose.connect('mongodb://localhost/events');
 Event.remove({}, function(err, wut) {
 	if (err) {
@@ -20,19 +18,16 @@ Event.remove({}, function(err, wut) {
 	}
 	console.log("removal of events.");
 	Band.remove({}, function(error, huh) {
-		if (!error) {
-			getEvents();
+		if (err) {
+			return console.log(err); 
 		}
-		else {
-			console.log(error);
-		}
+		getEvents();
 	});
-	
 });
 
 //todo: fix date issues (not getting most recent events)
 function getEvents(url) {
-	let facebookEventURL = url || "https://graph.facebook.com/HiDiveDenver/events?fields=name,place,owner,description&access_token=" + access_token;
+	let facebookEventURL = url || "https://graph.facebook.com/HiDiveDenver/events?fields=name,place,owner,start_time,description&access_token=" + access_token;
 	//send request to api
 	request(facebookEventURL, function (error, response, body) {
 		let events = JSON.parse(body).data;
@@ -41,8 +36,8 @@ function getEvents(url) {
 			Event.findOne({eventId: events[i].id}, function(error, found) {
 				//event exists
 				if (!error && found) {
+					console.log("event already in db");
 					//Update the event
-
 				}
 				//create new event
 				else {
@@ -71,7 +66,7 @@ function createEvent(eventPassedIn) {
 	if (currentDate.getDate() > eventDay) {
 		if ((currentDate.getMonth() + 1) >= month ) {
 			if (currentDate.getFullYear() >= eventYear) {
-				console.log("reached upcoming.");
+				// console.log("reached upcoming.");
 				return;
 			}
 		}
@@ -83,6 +78,7 @@ function createEvent(eventPassedIn) {
 		eventYear: eventYear,
 		eventMonth: eventMonth
 	};
+	//NEXT REMOVE THE SCHEMAS AND ASSIGN LATER
 	let newEvent = new Event({
 		eventId: eventPassedIn.id,
 		eventName: eventPassedIn.name,
@@ -98,9 +94,16 @@ function createEvent(eventPassedIn) {
 		scEmbeds: [],
 		bands: []
 	});
-	getAttending(newEvent);
-	acquireBands(newEvent);
-
+	newEvent.save(function(error, saved) {
+		if (!error) {
+			getAttending(newEvent);
+			acquireBands(saved);
+		}
+		else {
+			console.log("new event save error");
+			console.log(error);
+		}
+	});
 }
 
 function getAttending(event, urlGiven) {
@@ -121,17 +124,17 @@ function getAttending(event, urlGiven) {
 			getAttending(event, response.next);  
 	    }
 	    else {
-	    	event.save(function(err){
+	    	//replacing save with update
+			Event.findOneAndUpdate({eventId: event.eventId}, {$set:{social: event.social}}, function(err, doc){
 				if (err) {
-					console.log("event save error in get attending");
+					console.log("event update error in get attending");
 					console.log(err);
 				}
 				else {
 					//launch the get profile image portion
 	    			getProfileImages(event);
 				}
-			}); 
-	    	
+	    	});
 	    }
   	});
 }
@@ -139,42 +142,83 @@ function getAttending(event, urlGiven) {
 function acquireBands(eventPassedIn) {
 	let facebookEventURL = "https://graph.facebook.com/v2.9/" + eventPassedIn.eventId + "/roles?access_token=" + access_token;
 	request(facebookEventURL, function (error, response, body) {
-  		let roles = JSON.parse(body).data;
-  		//for each role
-	  	for (let i = 0; i < roles.length; i++) {
-	  		//search for band with same ID
-	  		Band.findOne({fbId: roles[i].id}, function(err, found) {
-	  			//band found
-	  			if (!err && found) {
-	  				addBandToEvent(found, eventPassedIn);
-	  			}
-	  			else {
-	  				createNewBand(roles[i].id, eventPassedIn);
-	  			}
-	  		});
-	  	}
-	  	if (roles.length === 0) {
-	  		//get links from description
-	  		getLinksFromDescription(eventPassedIn);
-
-	  	}
+		if (!error){ 
+	  		let roles = JSON.parse(body).data;
+	  		//for each role
+		  	for (let i = 0; i < roles.length; i++) {
+		  		if (roles[i].role_type === "PERFORMER" || roles[i].role_type === "PRIMARY_PERFORMER") {
+			  		//search for band with same ID
+			  		Band.findOne({fbId: roles[i].id}, function(err, found) {
+			  			//band found
+			  			if (!err && found) {
+			  				addBandToEvent(found, eventPassedIn);
+			  			}
+			  			else if (!err && !found){
+			  				createNewBand(roles[i].id, eventPassedIn);
+			  			}
+			  			else {
+			  				console.log(err);
+			  			}
+			  		});
+			  	}
+		  	}
+		}
+		else {
+			console.log(error);
+		}
 	});
+	let facebookAdminUrl = "https://graph.facebook.com/v2.9/" + eventPassedIn.eventId + "/admins?access_token=" + access_token;
+	request(facebookEventURL, function (error, response, body) {
+		if (!error) {
+			let admins = JSON.parse(body).data;
+	  		//for each role
+		  	for (let i = 0; i < admins.length; i++) {
+		  		//search for band with same ID
+		  		Band.findOne({fbId: admins[i].id}, function(err, found) {
+		  			//band found
+		  			if (!err && found) {
+		  				addBandToEvent(found, eventPassedIn);
+		  			}
+		  			else {
+		  				createNewBand(admins[i].id, eventPassedIn);
+		  			}
+		  		});
+			}
+		}
+		else {
+			console.log(error);
+		}
+	});
+	//get links from description
+  	//getLinksFromDescription(eventPassedIn);
+
 }
 
 function addBandToEvent(band, event) {
-	for (let i = 0; i < event.bands.length; i++) {
-		if (event.bands[i].fbId === band.fbId) {
-			return;
-		}
-	}
-	event.bands.push(band);
-	event.save(function(err) {
-		if (err) {
-			console.log(err);
-			console.log("failed to save band " + band.fbId + " to event " + event.eventId);
+	//ensures duplicates aren't added
+	Event.findOne({eventId: event.eventId}, function(error, found) {
+		if (!error && found) {
+			// console.log("trying to add band: " + band.fbId);
+			for (let i = 0; i < found.bands.length; i++) {
+				// console.log("event has band " + found.bands[i].fbId);
+				if (found.bands[i].fbId === band.fbId) {
+					console.log("band already in event");
+					return;
+				}
+			}
+			event.bands.push(band);
+			Event.findOneAndUpdate({eventId: event.eventId}, {$set:{bands: event.bands}}, function(err, doc){
+				if (err) {
+					console.log("event update error in get attending");
+					console.log(err);
+				}
+				else {
+					console.log("band " + band.fbId + " saved to event");
+				}
+	    	});
 		}
 		else {
-
+			console.log(error);
 		}
 	});
 }
@@ -184,33 +228,31 @@ function createNewBand(bandId, event) {
 }
 
 function getLinksFromDescription(eventArg) {
-	//WILL NEED TO SEARCH FOR FB URLS AND SEE IF WE HAVE THOSE BANDS, OTHERWISE BEGIN THE SHIT
-
-	// if (eventArg.eventDescription && eventArg.eventDescription.indexOf("bandcamp.com") !== -1) {
-	// 	//get url
-	// 	let beforeBC = eventArg.eventDescription.split("bandcamp.com")[0];
-	// 	let urls = beforeBC.split("http");
-	// 	let website = "http" + urls[urls.length-1] + "bandcamp.com";
-	// 	//run function to acquire the embed
-	// 	getbandcampEmbed(website, eventArg);
-	// }
-	// else if (eventArg.eventDescription && eventArg.eventDescription.indexOf("soundcloud.com") !== -1) {
-	// 	//get url
-	// 	let afterSC = eventArg.eventDescription.split("soundcloud.com/")[1];
-	// 	let website = "https://soundcloud.com/" + afterSC.split(" ")[0];
-	// 	console.log("soundcloud: " + website + "\n");
-	// 	getsoundcloudEmbed(website, eventArg);
-	// }
-	// else {
-	// 	//will need to search for facebook urls
-
-	// }
+	let splitDesc = eventArg.eventDescription.split("facebook.com");
+	for (let i = 1; i < splitDesc.length; i++) {
+		// asf |facebook.com| /bandname whatever |facebook.com| /bandname asdf 
+		let pageUrl = splitDesc[i].split(" ")[0];
+		pageUrl = "https://www.facebook.com/" + pageUrl;
+		request(pageUrl, function (error, response, body) {
+			if (!error && JSON.parse(body).id) {
+				Band.findOne({fbId: JSON.parse(body).id}, function(err, found) {
+		  			//band found
+		  			if (!err && found) {
+		  				addBandToEvent(found, eventArg);
+		  			}
+		  			else {
+		  				createNewBand(JSON.parse(body).id, eventArg);
+		  			}
+	  			});
+			}
+		});
+	}
 }
 
 function getWebsite(facebookPageId, event) {
-	let facebookAboutURL = "https://graph.facebook.com/v2.9/" + facebookPageId + "?fields=website,name&access_token=" + access_token;
+	let facebookAboutURL = "https://graph.facebook.com/v2.9/" + facebookPageId + "?fields=website,name,category&access_token=" + access_token;
 	request(facebookAboutURL, function (error, response, body) {
-		if (!error) {
+		if (!error && JSON.parse(body).category === "Musician/Band") {
 	  		response = JSON.parse(body);
 	  		let website = response.website;
 	  		let bandName = response.name;
@@ -222,19 +264,19 @@ function getWebsite(facebookPageId, event) {
 	  			//run function to acquire the embed
 	 			getbandcampEmbed(facebookPageId, website, event);
 	  		}
-	  		//soundcloud
-	  		else if (website && website.indexOf("soundcloud") !== -1)  {
-	  			let afterSC = website.split("soundcloud.com/")[1];
-	  			website = "https://soundcloud.com/" + afterSC.split(" ")[0];
-	  			getsoundcloudEmbed(facebookPageId, website, event);
-	  		}
+	  		// //soundcloud
+	  		// else if (website && website.indexOf("soundcloud") !== -1)  {
+	  		// 	let afterSC = website.split("soundcloud.com/")[1];
+	  		// 	website = "https://soundcloud.com/" + afterSC.split(" ")[0];
+	  		// 	getsoundcloudEmbed(facebookPageId, website, event);
+	  		// }
 	  		//custom website
 	  		else if (website) {
 	  			websiteLinkSearch(facebookPageId, response.website, event, bandName);
 	  		}
 	  		else {
 	  			//no links were found, search google!
-				googleSearchBand(facebookPageId, event, bandName);
+				// googleSearchBand(facebookPageId, event, bandName);
 	  		}
 	  	}
 	  	else {
@@ -261,13 +303,13 @@ function websiteLinkSearch(bandId, url, event, bandName) {
 						getbandcampEmbed(bandId, aTags[i].getAttribute("href"), event);
 						return;
 					}
-					else if (aTags[i].getAttribute("href") && aTags[i].getAttribute("href").indexOf("soundcloud") !== -1) {
-						getsoundcloudEmbed(bandId, aTags[i].getAttribute("href"), event);
-						return;
-					}
+					// else if (aTags[i].getAttribute("href") && aTags[i].getAttribute("href").indexOf("soundcloud") !== -1) {
+					// 	getsoundcloudEmbed(bandId, aTags[i].getAttribute("href"), event);
+					// 	return;
+					// }
 				}
 				//no links were found, search google!
-				googleSearchBand(bandId, event, bandName);
+				//googleSearchBand(bandId, event, bandName);
 			}
 			catch (e) {
 				console.log("JSDOM error " + options.url);
@@ -277,6 +319,7 @@ function websiteLinkSearch(bandId, url, event, bandName) {
 }
 
 function googleSearchBand(bandId, event, bandName) {
+	console.log("google searching");
 	let options = {
 		url: "https://www.googleapis.com/customsearch/v1?key=" + env.googleKey + "&cx=" + env.googleId + "&q=" + bandName + "+bandcamp",
 		headers: {
@@ -307,12 +350,12 @@ function googleSearchBand(bandId, event, bandName) {
 							return;
 						}
 					}
-
 				}
 			});
 		}
 	});
 }
+
 function getsoundcloudEmbed(bandId, url, event) {
 	//send request to get the user's id
 	let options = {
@@ -337,17 +380,6 @@ function getsoundcloudEmbed(bandId, url, event) {
 					let track = JSON.parse(bod)[0].id;
 					//event.scEmbeds.push(track);
 					saveNewBandUpdateEvent(bandId, event, "", track);
-					// mongoose.connect('mongodb://localhost/events');
-					// event.save(function(e) {
-					// 	mongoose.connection.close();
-					// 	if (!e) {
-					// 		console.log(e);
-					// 	}
-					// 	else {
-					// 		saveBand(track);
-					// 	}
-
-					// });
 				}
 			});
 		}
@@ -364,15 +396,15 @@ function getbandcampEmbed(bandId, url, event) {
 	request(options, function (error, response, body) {
 		if (!error) {
 			try {
-				const dom = new JSDOM(body);
-				var metaTags = dom.window.document.getElementsByTagName("meta");
+				let dom = new JSDOM(body);
+				let metaTags = dom.window.document.getElementsByTagName("meta");
 				let content = "";
 				for (var i = 0; i < metaTags.length; i++) {
 				    if (metaTags[i].getAttribute("property") == "og:video") {
 				        content = metaTags[i].getAttribute("content");
 				    }
 				}
-				let albumId = "";
+				var albumId = "";
 				if (content !== "" && content.indexOf("track=") === -1) {
 					let albumURL = content.split("album=")[1];
 					if (albumURL) {
@@ -389,19 +421,9 @@ function getbandcampEmbed(bandId, url, event) {
 				else {
 					let div = dom.window.document.getElementsByClassName("leftMiddleColumns")[0];
 					let liList = div.getElementsByTagName("li");
-					albumId = "album=" + liList[0].getAttribute("data-item-id").split("-")[1];
+					let data = liList[0].getAttribute("data-item-id").split("-");
+					albumId = data[0] + "=" + data[1];
 				}
-				//event.bcEmbeds.push("https://bandcamp.com/EmbeddedPlayer/" + albumId + "/size=small/bgcol=ffffff/linkcol=0687f5/transparent=true/");
-				// mongoose.connect('mongodb://localhost/events');
-				// event.save(function(err) {
-				// 	if (err) {
-				// 		console.log("failed to save embed");
-				// 		console.log(err);
-				// 	}
-				// 	else {
-				// 		saveBand(bandId, "https://bandcamp.com/EmbeddedPlayer/" + albumId + "/size=small/bgcol=ffffff/linkcol=0687f5/transparent=true/");
-				// 	}
-				// });
 				saveNewBandUpdateEvent(bandId, event, "https://bandcamp.com/EmbeddedPlayer/" + albumId + "/size=small/bgcol=ffffff/linkcol=0687f5/transparent=true/");
 			}
 			catch (e) {
@@ -428,16 +450,21 @@ function saveNewBandUpdateEvent(bandId, event, bcEmbed, scEmbed) {
 		bcUrl: bcEmbed || "",
 		scId: scEmbed || ""
 	});
-	newBand.save(function(err) {
-		if (!err) {
-			event.bands.push(newBand);
-			event.save(function(error) {
-				if (!error) {
-					console.log("saved band " + newBand.fbId + " to event " + event.eventId);
-				}
-			});
+	Band.findOne({fbId: newBand.fbId}, function(error, found) {
+		if (found) {
+			addBandToEvent(event, newBand);
+		}
+		else if (error) {
+			console.log(error);
 		}
 		else {
+			newBand.save(function(err) {
+				if (!err) {
+					addBandToEvent(event, newBand);
+				}
+				else {
+				}
+			});
 		}
 	});
 }
@@ -448,15 +475,26 @@ function getImage(event, person) {
 			let pictureUrl = JSON.parse(bod).data.url;
 			//find in array
 			person.picture = pictureUrl;
-			event.save(function(err) {
+			Event.findOneAndUpdate({eventId: event.eventId}, {$set:{social: event.social}}, function(err, doc){
 				if (err) {
-					console.log("failed to save image");
-					// console.log(err);
+					console.log("event update error in get attending");
+					console.log(err);
 				}
 				else {
-
 				}
-			});
+	    	});
+			// event.save(function(err) {
+			// 	if (err) {
+			// 		console.log("failed to save image");
+			// 		console.log(err);
+			// 	}
+			// 	else {
+
+			// 	}
+			// });
+		}
+		else {
+			console.log(err);
 		}
 	});
 }

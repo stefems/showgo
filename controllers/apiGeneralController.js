@@ -24,7 +24,7 @@ var generalApiController = {
     let eventId = req.params.eventId;
     let userId = req.params.userId;
     console.log(actionType + " eventId: " + eventId + " user: " + userId);
-    mongoose.connect('mongodb://localhost/users');
+    mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/events');
     //---------------------------------------------------------------------
     //get the access_token from the user's db record using the params
     //---------------------------------------------------------------------
@@ -138,7 +138,7 @@ var generalApiController = {
   },
   //will need a function for sending delete request for any kind of event (because they can't have an event in multiple categories)
   getEvents: function(req, res) {
-    mongoose.connect('mongodb://localhost/events');
+    mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/events');
   	//get events from db
   	Event.find({}, function(err, docs) {
   		res.json(docs);
