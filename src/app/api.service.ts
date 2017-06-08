@@ -15,12 +15,12 @@ export class ApiService {
 
   private eventsObservableSource = new Subject<Event[]>(); 
   eventsObservable = this.eventsObservableSource.asObservable();
-  private getEventsUrl = "http://45.55.156.114:4200/api/events";
-  private postEventActionUrl = "http://45.55.156.114:4200/api/eventAction";
-  private postJoinUrl = "http://45.55.156.114:4200/api/join";
-  private postDeclineUrl = "http://45.55.156.114:4200/api/decline";
-  private postInterestedUrl = "lhttp://45.55.156.114:4200/api/interested";
-  private postFriend = "http://45.55.156.114:4200/api/friend";
+  private getEventsUrl = "/api/events";
+  private postEventActionUrl = "/api/eventAction";
+  private postJoinUrl = "/api/join";
+  private postDeclineUrl = "/api/decline";
+  private postInterestedUrl = "/api/interested";
+  private postFriend = "/api/friend";
 
   public headers = new Headers({ 'Content-Type': 'application/json' });
   public options = new RequestOptions({ headers: this.headers });

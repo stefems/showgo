@@ -16,7 +16,7 @@ import {User} from './user';
 @Injectable()
 export class AuthService {
   
-  private getUserUrl = "http://45.55.156.114:4200/api/getUser";
+  private getUserUrl = "/api/getUser";
   isLoggedIn: boolean = false;
 
   private currentUser: BehaviorSubject<User> = new BehaviorSubject(new User(0));
