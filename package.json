@@ -37,6 +37,7 @@
     "jsdom": "^11.0.0",
     "mongoose": "^4.9.7",
     "ngx-facebook": "^2.4.0",
+    "npm-run-all": "^4.0.2",
     "oauth": "^0.9.15",
     "passport": "^0.3.2",
     "passport-facebook": "^2.1.1",
