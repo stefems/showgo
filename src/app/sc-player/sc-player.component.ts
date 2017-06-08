@@ -39,6 +39,6 @@ export class ScPlayerComponent implements OnInit {
 	 //  		//change button to pause
 		// 	this.widget.play();
 		// });
-	 }
+	 // }
   }
 }

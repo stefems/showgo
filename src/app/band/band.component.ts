@@ -42,7 +42,7 @@ export class BandComponent implements OnInit {
 		// 	this.widget.play();
 		// 	this.playing = true;
 		// });
-	 }
+	 // }
   }
 }
 
