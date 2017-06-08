@@ -2,7 +2,16 @@ const mongoose = require('mongoose');
 var User = require("./../models/user");
 
 var passport = require("passport");
-var env = require("./../.env/.env.js");
+var env = require("../.env/.env.js") || null;
+if (!env) {
+  env = {
+    facebookAppId: process.env.facebookAppId,
+    facebookAppSecret: process.env.facebookAppSecret,
+    googleKey: process.env.googleKey,
+    googleId: process.env.googleId,
+    soundcloudSecret: process.env.soundcloudSecret
+  };
+}
 var request = require("request");
 // mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/events');
 

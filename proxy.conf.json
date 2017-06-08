@@ -1,6 +1,6 @@
 {
    "/api": {
-      "target": process.env.PORT,
+      "target": "process.env.PORT",
       "secure": false
    }
 }
