@@ -11,7 +11,7 @@ export class BandComponent implements OnInit {
 
   private widget;
   private scReady = false;
-  private bc;
+  public bc;
   private playing = false;
   @Input("band") band;
 

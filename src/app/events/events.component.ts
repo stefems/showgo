@@ -16,10 +16,10 @@ declare var SC:any;
 })
 export class EventsComponent implements OnInit {
 
-  private events = [];
+  public events = [];
   private userAccessToken = "";
   private user: any;
-  private filterArgs;
+  public filterArgs;
   private snackbar = null;
 
   @ViewChild('popup') popup: ElementRef;
