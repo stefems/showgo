@@ -1,6 +1,6 @@
 {
    "/api": {
-      "target": "process.env.PORT",
+      "target": "localhost:39114",
       "secure": false
    }
 }
