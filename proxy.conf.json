@@ -1,6 +1,6 @@
 {
    "/api": {
-      "target": "http://45.55.156.114:3000",
+      "target": process.env.PORT,
       "secure": false
    }
 }
