@@ -34,6 +34,7 @@
     "express-handlebars": "^3.0.0",
     "express-session": "^1.15.2",
     "font-awesome": "^4.7.0",
+    "fs": "0.0.1-security",
     "jsdom": "^11.0.0",
     "mongoose": "^4.9.7",
     "ngx-facebook": "^2.4.0",

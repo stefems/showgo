@@ -1,9 +1,12 @@
 const mongoose = require('mongoose');
 var User = require("./../models/user");
-
+var fs = require('fs');
 var passport = require("passport");
-var env = require("../.env/.env.js") || null;
-if (!env) {
+var env;
+if (fs.existsSync("../.env/.env.js")) {
+  env = require("../.env/.env.js");
+}
+else {
   env = {
     facebookAppId: process.env.facebookAppId,
     facebookAppSecret: process.env.facebookAppSecret,
