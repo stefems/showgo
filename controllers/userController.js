@@ -4,6 +4,8 @@ var User = require("./../models/user");
 var passport = require("passport");
 var env = require("./../.env/.env.js");
 var request = require("request");
+// mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/events');
+
 
 var userController = {
   /*
@@ -12,7 +14,6 @@ var userController = {
   Failure or error states will return {error: message}
   */
   getUser: function(req, res) {
-    mongoose.connect('mongodb://localhost/users');
     console.log("getUser() in controller");
     //==================================================================
     //PART 1
@@ -37,7 +38,6 @@ var userController = {
           if(err) {
             console.log("mongo find error");
             console.log(err);  // handle errors!
-            mongoose.connection.close();
             res.json({"error":"error"});
           }
           else if (!err && user !== null) {
@@ -46,12 +46,10 @@ var userController = {
             user.access_token = access_token;
             user.save(function(err) {
               if(err) {
-                mongoose.connection.close();
                 console.log("mongo save error");
                 console.log(err);  // handle errors!
                 res.json({"error":"error"});
               } else {
-                mongoose.connection.close();
                 console.log("updating existing user's access token");
                 console.log(user.name);
                 res.json(user);
@@ -73,12 +71,10 @@ var userController = {
             });
             user.save(function(err) {
               if(err) {
-                mongoose.connection.close();
                 console.log("mongo new user save error");
                 console.log(err);  // handle errors!
                 res.json({"error":"error"});
               } else {
-                mongoose.connection.close();
                 console.log("saving new user");
                 res.json(user);
               }
@@ -87,7 +83,6 @@ var userController = {
         });
       }
       else {
-        mongoose.connection.close();
         console.log("access token is invalid");
         res.json({"error": "invalid"});
       }

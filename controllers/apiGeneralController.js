@@ -4,6 +4,8 @@ var User = require("../models/user");
 var request = require("request");
 var mongoose = require('mongoose');
 
+// mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/events');
+
 
 function findEvent(events, eventId) {
   for (let i = 0; i < events.length; i++) {
@@ -24,13 +26,11 @@ var generalApiController = {
     let eventId = req.params.eventId;
     let userId = req.params.userId;
     console.log(actionType + " eventId: " + eventId + " user: " + userId);
-    mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/events');
     //---------------------------------------------------------------------
     //get the access_token from the user's db record using the params
     //---------------------------------------------------------------------
     User.findOne({ _id: userId }, function(err, user) {
       if(err) {
-        mongoose.connection.close();
         console.log(err);  // handle errors!
         res.json({error: "mongoose connection error"});
       }
@@ -59,7 +59,6 @@ var generalApiController = {
             url:     facebookJoinEventUrl
           }, function (error, response, body) {
               if (error) {
-                mongoose.connection.close();
                 console.log(error);
                 res.json({error: "facebook event action request error"});
               }
@@ -67,7 +66,6 @@ var generalApiController = {
                 //search for the event in the events array
                 User.findOne({ "_id": userId, "events.eventId": eventId}, function(err, userFound) {
                   if(err) {
-                    mongoose.connection.close();
                     console.log(err);  // handle errors!
                     res.json({error: "mongoose connection error"});
                   }
@@ -82,19 +80,16 @@ var generalApiController = {
                       eventToChange.actionType = actionType;
                       userFound.save(function(err) {
                         if(err) {
-                          mongoose.connection.close();
                           console.log(err);  // handle errors!
                           res.json({error: "user event update error"});
                         }
                         else {
-                          mongoose.connection.close();
                           console.log("saved user's events");
                           res.json({status: "true"});
                         }
                       });
                     }
                     else {
-                      mongoose.connection.close();
                       console.log("event not found");
                       res.json({error: "user event save error"});
                     }
@@ -110,12 +105,10 @@ var generalApiController = {
                     //---------------------------------------------------------------------
                     user.save(function(err) {
                       if(err) {
-                        mongoose.connection.close();
                         console.log(err);  // handle errors!
                         res.json({error: "user event creations error"});
                       }
                       else {
-                        mongoose.connection.close();
                         console.log("saved user's events");
                         res.json({status: "true"});
                       }
@@ -126,7 +119,6 @@ var generalApiController = {
             });
       } 
       else {
-        mongoose.connection.close();
         console.log("this user doesn't exist.");
         res.json({error: "user does not exist"});
       }
@@ -138,22 +130,19 @@ var generalApiController = {
   },
   //will need a function for sending delete request for any kind of event (because they can't have an event in multiple categories)
   getEvents: function(req, res) {
-    mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/events');
+    // mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/events');
   	//get events from db
   	Event.find({}, function(err, docs) {
   		res.json(docs);
   	});
-    mongoose.connection.close();
   },
   friendPost: function(req, res) {
-    mongoose.connect('mongodb://localhost/users');
     //get the access_token and friend id from params
     let access_token = req.params.access_token;
     let friendId = req.params.friendId;
     //find mongo user
     User.findOne({access_token: access_token}, function(err, user) {
       if(err) {
-        mongoose.connection.close();
         res.json({"error": "mongo error on friend add user find"});
       }
       else if (!err && user !== null){
@@ -161,22 +150,18 @@ var generalApiController = {
           user.friends.push(friendId);
           user.save(function(error) {
             if (!error) {
-              mongoose.connection.close();
               res.json({"status": true});
             }
             else {
-              mongoose.connection.close();
               res.json({"error": "mongo save failure"});
             }
           });
         }
         else {
-          mongoose.connection.close();
           res.json({"error": "friend already in list"});
         }
       }
       else {
-        mongoose.connection.close();
         console.log("this user doesn't exist.");
         res.json({"error": "user does not exist"});
       }

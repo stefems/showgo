@@ -7,6 +7,7 @@
 	padding-right: 50px;
 	padding-bottom: 5px;
 	margin-top: 15%;
+	text-align: center;
 }
 
 h5 {
@@ -21,4 +22,5 @@ u {
 
 #splashSignupContainer {
 	text-align: center;
+	margin-bottom: 16px;
 }

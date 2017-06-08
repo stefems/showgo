@@ -1,2 +1,17 @@
-.mdl-chip mdl-chip--contact {
+.mdl-chip .mdl-chip--contact {
+}
+
+.friend-bubble {
+	display: inline-block;
+}
+
+.mdl-chip__text {
+	vertical-align: top;
+	margin-left: 4px;
+}
+
+.myIcon {
+	vertical-align: middle;
+	padding-left: 5px;
+	cursor: pointer;
 }

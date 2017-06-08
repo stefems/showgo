@@ -1,37 +1,41 @@
 <div class="eventContainer">
 	<div class="mdl-grid">
-	  <div class="mdl-cell mdl-cell--2-col eventLeft">
-	  	<div>
-	  		<p>{{event.timeString}}</p>
-	  	</div>
-	  	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" (click)="eventAction('join')" [disabled]="!buttonsEnabled" [ngClass]="{'clicked': joined }">
-	  		<i class="material-icons myIcon">event_available</i>
-	  		RSVP
-	  	</button>
-	  	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" (click)="eventAction('interested')" [disabled]="!buttonsEnabled" [ngClass]="{'clicked': interest }">Maybe</button>
-	  	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" (click)="eventAction('ignore')" [disabled]="!buttonsEnabled" [ngClass]="{'clicked': ignored }">
-	  		<i class="material-icons myIcon">event_busy</i>
-	  		Nah
-	  	</button>
-	  </div>
-	  <div class="mdl-cell mdl-cell--10-col">
-	  	<h4>{{event.name}}</h4>
-	  	<hr>
-	  	<h5>{{event.venue}} - {{event.location}}</h5>
-	  	<hr>
-	  	<div class="buttonDiv">
-	  		<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent listenButton">Listen</button>
-	  		<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent peopleButton" (click)="toggleFriends()">See People</button>
-	  	</div>
-	  </div>
+		<div class="mdl-cell mdl-cell--10-col mdl-cell--6-col-tablet mdl-cell--3-col-phone eventData">
+		  	<h4>{{event.name}}</h4>
+		  	<hr>
+		  	<h5>{{event.venue}} - {{event.location}}</h5>
+		  	<hr>
+		  	<div class="buttonDiv">
+		  		<button [class.showing]="showBands" (click)="toggleBands()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent listenButton">Listen</button>
+		  		<button [class.showing]="showFriends" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent peopleButton" (click)="toggleFriends()">People</button>
+		  	</div>
+		</div>
+	  	<div class="mdl-cell mdl-cell--2-col mdl-cell--2-col-tablet mdl-cell--1-col-phone eventLeft">
+		  	<div class="timeDiv">
+		  		<i class="material-icons myIcon">event_note</i>
+		  		<h5 class="timeSpan">{{event.timeString}}</h5>
+		  	</div>
+		  	<hr class="dateDivider">
+		  	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent fbButton" (click)="eventAction('join')" [disabled]="!buttonsEnabled" [class.clicked]="joined">
+		  		<i class="material-icons myIcon">event_available</i>
+		  		<span>Join</span>
+		  	</button>
+		  	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent fbButton" (click)="eventAction('interested')" [disabled]="!buttonsEnabled" [class.clicked]="interest">
+		  		<i class="fa fa-question questionIcon" aria-hidden="true"></i><i class="fa fa-calendar-o fa-lg calIcon" aria-hidden="true"></i><span>Maybe</span>
+		  	</button>
+		  	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent fbButton" (click)="eventAction('ignore')" [disabled]="!buttonsEnabled" [class.clicked]="ignored">
+		  		<i class="material-icons myIcon">event_busy</i>
+		  		<span>Nah</span>
+		  	</button>
+		</div>
 	</div>
 	<div *ngIf="showFriends" >
-		<ul *ngFor="let friend of event.social">
-			<friend-bubble (idSender)="addFriend($event)" [friend]="friend"></friend-bubble>
-		</ul>
+		<!-- <ul *ngFor="let friend of event.social"> -->
+			<friend-bubble *ngFor="let friend of event.social" (idSender)="addFriend($event)" [friend]="friend"></friend-bubble>
+		<!-- </ul> -->
 	</div>
-	<div *ngFor="let band of event.bands">
-		<band [band]="band"></band>
+	<div *ngIf="showBands">
+		<band *ngFor="let band of event.bands" [band]="band"></band>
 	</div>
 </div>
 

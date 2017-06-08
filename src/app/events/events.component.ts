@@ -20,7 +20,9 @@ export class EventsComponent implements OnInit {
   private userAccessToken = "";
   private user: any;
   private filterArgs;
+  private snackbar = null;
 
+  @ViewChild('popup') popup: ElementRef;
   @ViewChild('soundcloudWidget') soundcloudWidget: ElementRef;
   @ViewChild('filterFriend') filterFriend: ElementRef;
   @ViewChild('filterMe') filterMe: ElementRef;
@@ -49,6 +51,21 @@ export class EventsComponent implements OnInit {
       //widget.pause();
       widget.load(newsong);
     });
+    this.snackbar = this.popup.nativeElement.querySelector("#snackbar");
+  }
+
+  public triggerPopup(event): void {
+    let data = {message: event};
+    setInterval(() => {
+      this.snackbar = this.popup.nativeElement.querySelector("#snackbar");
+      if (this.snackbar) {
+        this.snackbar.MaterialSnackbar.showSnackbar(data);
+      }
+      else {
+        console.log("still undefined");
+      } 
+     }, 3000);
+    console.log(this.snackbar);
   }
 
   public filter(type): void {

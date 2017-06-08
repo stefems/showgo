@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { ApiService }      from './../api.service';
 import { FriendBubbleComponent }      from './../friend-bubble/friend-bubble.component';
 import {BcPlayerComponent} from './../bc-player/bc-player.component';
@@ -14,7 +14,11 @@ export class EventComponent implements OnInit {
 	@Input("event") event;
 	@Input("user") user;
 
+	@Output()
+  	popupSender:EventEmitter<string> = new EventEmitter();
+
 	private showFriends = false;
+	private showBands = false;
 	private joined = false
 	private interest = false;
 	private ignored = false;
@@ -24,12 +28,31 @@ export class EventComponent implements OnInit {
 		//TODO: when the event component is being generated we need to look at the user's shows in order to set the
 		//  joined/interested/ignored booleans appropriately
 	}
-	ngOnInit() {
 
+	ngOnInit() {
+		for (let i = 0; i < this.user.events.length; i++) {
+			if (this.user.events[i].eventId === this.event.fbId) {
+				switch (this.user.events[i].actionType) {
+					case "join":
+						this.joined = true;
+						break;
+					case "interested":
+						this.interest = true;
+						break;
+					case "ignore":
+						this.ignored = true;
+						break;
+				}
+			}
+		}
 	}
 
 	public toggleFriends() {
 		this.showFriends = !this.showFriends;
+	}
+
+	public toggleBands() {
+		this.showBands = !this.showBands;
 	}
 
 	public addFriend(eventTriggered){
@@ -68,6 +91,7 @@ export class EventComponent implements OnInit {
 	public eventAction(eventType: string) {
 		//disable the buttons
 		this.buttonsEnabled = false;
+		// this.calImage.nativeElement.style.color = "rgba(0,0,0,.26)";
 		let undo = false;
 		switch (eventType) {
 			case "join":
@@ -95,12 +119,14 @@ export class EventComponent implements OnInit {
 					this.ignored = true;
 					//after button changes have been made
 					this.buttonsEnabled = true;
+					// this.calImage.nativeElement.style.color = "white";
 					//make changes to the user ... is this sent to all users?
 					this.changeUser(eventType);
+					// this.popupSender.emit("You're not interested in " + this.event.eventName + " on facebook.");
 				}
 				else {
-					console.log("event post failed.");
 					//make note that the action has not happened
+					// this.popupSender.emit("We had an issue with this event action.");
 				}
 			});
 		}
@@ -113,19 +139,23 @@ export class EventComponent implements OnInit {
 						this.joined = true;
 						this.interest = false;
 						this.ignored = false;
+						// this.popupSender.emit("You've rsvp'd for " + this.event.eventName + " on facebook.");
 					}
 					else {
 						//show that the interested has happened
 						this.joined = false;
 						this.interest = true;
 						this.ignored = false;
+						// this.popupSender.emit("You're interested in " + this.event.eventName + " on facebook.");
 					}
 					//after button changes have been made
 					this.buttonsEnabled = true;
+					// this.calImage.nativeElement.style.color = "white";
 					this.changeUser(eventType);
 				}
 				else {
 					//make note that the action has not happened
+					// this.popupSender.emit("We had an issue with this event action.");
 				}
 			});
 		}

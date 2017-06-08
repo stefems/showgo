@@ -15,14 +15,7 @@ import {User} from './user';
 
 @Injectable()
 export class AuthService {
-
-  // private statusObservableSource = new Subject<boolean>(); 
-  // statusObservable = this.statusObservableSource.asObservable();
-  // private userObservableSource = new Subject<User>(); 
-  // userObservable = this.userObservableSource.asObservable();
-  // private user = this.userObservableSource.asObservable();
-  // private checkLoginUrl = "http://45.55.156.114:3000/loginCheck";
-
+  
   private getUserUrl = "http://45.55.156.114:4200/api/getUser";
   isLoggedIn: boolean = false;
 

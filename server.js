@@ -1,10 +1,10 @@
 // Get dependencies
 const express = require('express');
-// const mongoose = require('mongoose');
+const mongoose = require('mongoose');
 // var User = require("./models/user");
 // var Event = require("./models/event");
 // mongoose.createConnection('mongodb://localhost/users');
-// mongoose.createConnection('mongodb://localhost/events');
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/events');
 const path = require('path');
 const http = require('http');
 const bodyParser = require('body-parser');

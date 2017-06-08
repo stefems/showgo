@@ -1,4 +1,7 @@
-<button *ngIf="scReady" (click)="playTrack()">play track</button>
-<iframe *ngIf="bc" style="border: 0; width: 100%; height: 42px;" [src]="band.bcUrl | safe" seamless></iframe>
+<!-- <button *ngIf="scReady" (click)="playTrack()">play track</button>
+ -->
+ <div class="bandContainer">
+ 	<iframe *ngIf="bc" style="border: 0; width: 100%; height: 42px;" [src]="band.bcUrl | safe" seamless></iframe>
+</div>
 
 
