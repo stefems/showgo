@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-declare var SC:any;
+// declare var SC:any;
 
 @Component({
   selector: 'band',
@@ -20,28 +20,28 @@ export class BandComponent implements OnInit {
   ngOnInit() {
   	if (this.band.bcUrl !== "") {
   		this.bc = true;
-  		this.scReady = false;
+  		// this.scReady = false;
   	}
-  	else {
-		this.widget = SC.Widget("soundcloud_widget");
-		this.widget.bind(SC.Widget.Events.READY, () => {
-			this.scReady = true;
-		});
-  	}
+  // 	else {
+		// this.widget = SC.Widget("soundcloud_widget");
+		// this.widget.bind(SC.Widget.Events.READY, () => {
+		// 	this.scReady = true;
+		// });
+  // 	}
   }
 
   public playTrack(): void {
-  	if (this.playing) {
-  		////change button to play
-  		this.widget.pause();
-  	}
-  	else {
-	  	this.widget.load('https://api.soundcloud.com/tracks/'+this.band.scId);
-	  	this.widget.bind(SC.Widget.Events.READY, () => {
-	  		//change button to pause
-			this.widget.play();
-			this.playing = true;
-		});
+  // 	if (this.playing) {
+  // 		////change button to play
+  // 		this.widget.pause();
+  // 	}
+  // 	else {
+	 //  	this.widget.load('https://api.soundcloud.com/tracks/'+this.band.scId);
+	 //  	this.widget.bind(SC.Widget.Events.READY, () => {
+	 //  		//change button to pause
+		// 	this.widget.play();
+		// 	this.playing = true;
+		// });
 	 }
   }
 }

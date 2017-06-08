@@ -6,7 +6,7 @@ import {User} from '../user';
 import {EventsFilterPipe} from './../pipes/events-filter.pipe';
 
 
-declare var SC:any;
+// declare var SC:any;
 
 
 @Component({
@@ -46,12 +46,12 @@ export class EventsComponent implements OnInit {
   ngAfterViewInit() {
     let newsong = 'https://api.soundcloud.com/tracks/311739465';
     let scId = this.soundcloudWidget.nativeElement.id;
-    let widget = SC.Widget(scId);
-    widget.bind(SC.Widget.Events.READY, function() {
-      //widget.pause();
-      widget.load(newsong);
-    });
-    this.snackbar = this.popup.nativeElement.querySelector("#snackbar");
+    // let widget = SC.Widget(scId);
+    // widget.bind(SC.Widget.Events.READY, function() {
+    //   //widget.pause();
+    //   widget.load(newsong);
+    // });
+    // this.snackbar = this.popup.nativeElement.querySelector("#snackbar");
   }
 
   public triggerPopup(event): void {
