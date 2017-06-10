@@ -25,7 +25,88 @@ var generalApiController = {
     let actionType = req.params.actionType;
     let eventId = req.params.eventId;
     let userId = req.params.userId;
+    let access_token = req.params.access_token;
+    let facebookJoinEventUrl = "";
     console.log(actionType + " eventId: " + eventId + " user: " + userId);
+    switch (actionType) {
+      case "interested":
+        facebookJoinEventUrl = "https://graph.facebook.com/" + req.params.eventId + 
+        "/maybe?access_token=" + access_token;
+        break;
+      case "join":
+        facebookJoinEventUrl = "https://graph.facebook.com/" + req.params.eventId + 
+        "/attending?access_token=" + access_token;
+        break;
+      case "ignore":
+        facebookJoinEventUrl = "https://graph.facebook.com/" + req.params.eventId + 
+        "/declined?access_token=" + access_token;
+        break;
+    }
+    //send the request. If it fails, we send failure, otherwise we'll update the user.
+    request.post(
+    {
+      headers: {'content-type' : 'application/x-www-form-urlencoded'},
+      url:     facebookJoinEventUrl
+    }, function (error, response, body) {
+      console.log(JSON.parse(body));
+      if (error || JSON.parse(body).success !== true) {
+        res.json({error: "facebook event action request error"});
+      }
+      else {
+        User.findOne({ _id: userId }, function(err, user) {
+          if(err) {
+            console.log(err);  // handle errors!
+            res.json({error: "mongoose connection error"});
+          }
+          else if (!err && user !== null ) {
+            let eventToChange = findEvent(user.events, eventId);
+            //if we found an event (otherwise null)
+            if (eventToChange) {
+              //---------------------------------------------------------------------
+              //updating the event information for the user
+              //---------------------------------------------------------------------
+              eventToChange.actionType = actionType;
+              user.save(function(err) {
+                if(err) {
+                  console.log(err);  // handle errors!
+                  res.json({error: "user event update error"});
+                }
+                else {
+                  console.log("saved user's events");
+                  res.json({status: "true"});
+                }
+              });
+            }
+            else {
+              //event is not in user's list. Let's create that object and add it.
+              let newEvent = {
+                "eventId": eventId, "actionType": actionType
+              };
+              user.events.push(newEvent);
+              //---------------------------------------------------------------------
+              //adding the event information for the user
+              //---------------------------------------------------------------------
+              user.save(function(err) {
+                if(err) {
+                  console.log(err);  // handle errors!
+                  res.json({error: "user event creations error"});
+                }
+                else {
+                  console.log("saved user's events");
+                  res.json({status: "true"});
+                }
+              });
+            }
+          }
+          //this user doesn't exist... wwwuuhh
+          else {
+            console.log("user " + userId + " does not exist in the db so the event action failed.");  // handle errors!
+            res.json({error: "action type attempted for non-user"});
+          }
+        });
+      }
+    });
+  },/*
     //---------------------------------------------------------------------
     //get the access_token from the user's db record using the params
     //---------------------------------------------------------------------
@@ -34,7 +115,7 @@ var generalApiController = {
         console.log(err);  // handle errors!
         res.json({error: "mongoose connection error"});
       }
-      if (!err && user !== null) {
+      if (!err && user !== null && ) {
           let access_token = user.access_token;
           let facebookJoinEventUrl = "";
           switch (actionType) {
@@ -123,7 +204,7 @@ var generalApiController = {
         res.json({error: "user does not exist"});
       }
     });
-  },
+  },*/
   //TODO: not needed?
   eventDelete: function(req, res) {
     //get all the req params!

@@ -16,8 +16,8 @@ router.get('/events', apiGeneralController.getEvents);
 
 //TODO: change these to include access_token, not fbid
 router.get('/getUser/:fbId/:access_token', userController.getUser);
-router.post('/eventAction/:actionType/:eventId/:userId', apiGeneralController.eventPost);
-router.delete('/eventAction/:actionType/:eventId/:userId', apiGeneralController.eventDelete);
+router.post('/eventAction/:actionType/:eventId/:userId/:access_token', apiGeneralController.eventPost);
+router.delete('/eventAction/:actionType/:eventId/:userId/:access_token', apiGeneralController.eventDelete);
 router.post("/friend/:access_token/:friendId", apiGeneralController.friendPost);
 
 //SHOULD THESE BE DELETED

@@ -4,6 +4,8 @@ import {Subject} from "rxjs/Rx";
 import {BehaviorSubject} from "rxjs/Rx";
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { FacebookService, LoginResponse } from 'ngx-facebook';
+import {FbloginService} from './fblogin.service';
+
 
 
 import 'rxjs/add/observable/of';
@@ -25,8 +27,8 @@ export class AuthService {
   // store the URL so we can redirect after logging in
   redirectUrl: string;
 
-  constructor (private fb: FacebookService, private http: Http) {
-    
+  constructor (private fb: FacebookService, private http: Http, private fbloginService: FbloginService) {
+    this.checkLogin();
   }
 
   user() {
@@ -43,7 +45,9 @@ export class AuthService {
         if (!res.json().error) {
           this.currentUser.next(new User(res.json()));
           this.isLoggedIn = true;
-          console.log("user ought to be logged in...");
+          localStorage.setItem('showgoUserLoggedIn', res.json().id);
+          localStorage.setItem('showgoUserAT', res.json().access_token);
+          // console.log("user ought to be logged in...");
           return this.currentUser.asObservable();
         }
         else {
@@ -56,8 +60,57 @@ export class AuthService {
     return this.isLoggedIn;
   }
 
-  logout(): void {
+  login(): void {
+    this.fb.getLoginStatus()
+    .then((response: LoginResponse) => {
+      if (response.status === 'connected') {
+        console.log("connected");
+        let access_token = response.authResponse.accessToken;
+        let fbId = response.authResponse.userID;
+        this.getUser(fbId, access_token).subscribe(res => {
+          if (res.dbId !== "") {
+            this.isLoggedIn = true;
+          }
+        });
+      }
+      else {
+        this.fb.login()
+        .then((response: LoginResponse) => {
+          console.log("fb login()");
+          if (response.authResponse) {
+            let access_token = response.authResponse.accessToken;
+            let fbId = response.authResponse.userID;
+            this.getUser(fbId, access_token).subscribe(res => {
+              if (res.dbId !== "") {
+                this.isLoggedIn = true;
+              }
+            });
+          }
+        })
+        .catch((error: any) => console.error(error));
+      }
+    });    
+  }
+
+  logout(): any {
     this.currentUser.next(new User(0));
     this.isLoggedIn = false;
+    this.fb.logout();
+    localStorage.clear();
+  }
+
+  checkLogin(): void {
+    //look in local storage for keys
+    if (localStorage.getItem('showgoUserLoggedIn') && localStorage.getItem("showgoUserAT")) {
+      let fbId = localStorage.getItem('showgoUserLoggedIn');
+      let at = localStorage.getItem("showgoUserAT");
+      this.getUser(fbId, at).subscribe(res => {
+        // console.log(res);
+        if (res.dbId !== "") {
+          this.isLoggedIn = true;
+          // this.router.navigate(['/events']);
+        }
+      });
+    }
   }
 }

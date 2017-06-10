@@ -44,11 +44,14 @@ export class ApiService {
 
   //todo: ERROR HANDLING?
   eventPost(eventType: string, eventId: string, userId: string): Observable<boolean> {
-    var url = this.postEventActionUrl + "/" + eventType + "/" + eventId + "/" + userId;
+    var url = this.postEventActionUrl + "/" + eventType + "/" + eventId + "/" + userId + "/" + localStorage.getItem("showgoUserAT");
     return this.http.post(url, {}, this.options)
       .map((res:Response) => {
         if (!res.json().error) {
           return true;
+        }
+        else {
+          console.log(res.json().error);
         }
         return false;
       });

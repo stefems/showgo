@@ -7,7 +7,7 @@
     "ng": "ng",
     "begin": "npm-run-all --parallel api start",
     "api": "node server.js",
-    "start": "ng serve --proxy-config proxy.conf.json",
+    "start": "ng serve --host 45.55.156.114 --proxy-config proxy.conf.json",
     "test": "ng test",
     "pree2e": "webdriver-manager update --standalone false --gecko false",
     "e2e": "protractor",
@@ -67,6 +67,6 @@
     "protractor": "~4.0.13",
     "ts-node": "1.2.1",
     "tslint": "^4.3.0",
-    "typescript": "^2.0.0"
+    "typescript": "^2.3.4"
   }
 }

@@ -23,9 +23,13 @@ export class AppComponent {
   
   constructor(private authService: AuthService, private router: Router, private fb: FacebookService, private fbloginService: FbloginService){    
     this.authService.user().subscribe(response => {
-      // console.log("app constructor()");
-      // console.log(response);
+      console.log("auth service gave us a response");
       this.user = response;
+      console.log(this.user);
+      if (this.user.dbId !== "") {
+        this.router.navigate(['/events']);
+      }
+
     });
   }
 
@@ -35,51 +39,7 @@ export class AppComponent {
   
   login(): void {
     console.log("login()");
-    //todo: use this to prevent error:
-    this.fb.getLoginStatus()
-    .then((response: LoginResponse) => {
-      console.log("getLoginStatus()");
-      console.log(response);
-      if (response.status === 'connected') {
-        let access_token = response.authResponse.accessToken;
-        let fbId = response.authResponse.userID;
-        this.authService.getUser(fbId, access_token).subscribe(res => {
-          console.log(res);
-          //RES received isn't been handled...
-          if (res.dbId !== "") {
-            this.router.navigate(['/events']);
-          }
-          else {
-            this.router.navigate(['/splash']);
-            console.log("Failed to log into facebook. Can you try again?");
-          }
-        });
-      }
-      else {
-        this.fb.login()
-        .then((response: LoginResponse) => {
-          console.log("fb login()");
-          if (response.authResponse) {
-            let access_token = response.authResponse.accessToken;
-            let fbId = response.authResponse.userID;
-            this.authService.getUser(fbId, access_token).subscribe(res => {
-              console.log("getUser()");
-              console.log(res);
-              //RES received else isn't been handled...
-              if (res.dbId !== "") {
-                this.router.navigate(['/events']);
-              }
-              else {
-                this.router.navigate(['/splash']);
-                console.log("Failed to log into facebook. Can you try again?");
-              }
-            });
-          }
-        })
-        .catch((error: any) => console.error(error));
-      }
-    });    
-     // this.router.navigate(['/log']);
+    this.authService.login();
   }
 
   logout(): void {
