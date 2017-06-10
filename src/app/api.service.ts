@@ -62,6 +62,7 @@ export class ApiService {
         return false;
       });*/
   }
+  
   getEvents(): Observable<Event[]> {
     return this.http.get(this.getEventsUrl)
       .map((res:Response) => {
