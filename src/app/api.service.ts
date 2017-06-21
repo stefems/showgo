@@ -72,7 +72,7 @@ export class ApiService {
           eventArray.push(newEvent);
         }
         res.json()
-        return eventArray;
+        return eventArray;  
       });
   }
 }

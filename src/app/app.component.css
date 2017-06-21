@@ -1,5 +1,5 @@
 .demo-layout-transparent {
-	background: url('../assets/banner.jpg') center / cover;
+	/*background: url('../assets/banner.jpg') center / cover;*/
     position: fixed;
 }
 

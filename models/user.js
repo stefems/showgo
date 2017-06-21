@@ -13,7 +13,8 @@ var UserSchema = new mongoose.Schema({
     actionType: String
   }],
   venue_pages: [String],
-  id: String
+  id: String,
+  picture: String
 });
 // define the model
 var User = mongoose.model("User", UserSchema);

@@ -20,6 +20,19 @@ var request = require("request");
 
 
 var userController = {
+  getId: function(req, res) {
+    var access_token = req.params.access_token;
+    let url = "https://graph.facebook.com/me?access_token="+access_token;
+    request(url, function (error, response, body) { 
+      if (!error && JSON.parse(body).name && JSON.parse(body).id) {
+        res.json({id: JSON.parse(body).id});
+      }
+      else {
+        console.log("failed to acquire id from access token");
+        res.json({"error":"error"});
+      }
+    });
+  },
   /*
   1. tests the received fb access token again by sending to facebook
   2. On pass, find our user or make a new one. Send the user back as response data.
@@ -64,37 +77,55 @@ var userController = {
               } else {
                 console.log("updating existing user's access token");
                 console.log(user.name);
-                res.json(user);
+                request("https://graph.facebook.com/" + user.id + "/picture?redirect=0", function(err, r, bod){
+                  if (!err && JSON.parse(bod).data && JSON.parse(bod).data.url) {
+                    var pictureUrl = JSON.parse(bod).data.url;
+                    //find in array
+                    user.picture = pictureUrl;
+                  }
+                  res.json(user);
+                });
               }
             });
           }
           else {
             console.log("new user found.");
-            user = new User({
-              //todo: remove the oauthid user field
-              oauthID: 0,
-              id: fbId,
-              name: JSON.parse(body).name,
-              created: Date.now(),
-              access_token: access_token,
-              friends: [],
-              venue_pages: [],
-              events: []
-            });
-            user.save(function(err) {
-              if(err) {
-                console.log("mongo new user save error");
-                console.log(err);  // handle errors!
-                res.json({"error":"error"});
-              } else {
-                console.log("saving new user");
-                res.json(user);
+            request("https://graph.facebook.com/" + user.id + "/picture?redirect=0", function(err, r, bod){
+              if (!err && JSON.parse(bod).data && JSON.parse(bod).data.url) {
+                user = new User({
+                  //todo: remove the oauthid user field
+                  oauthID: 0,
+                  id: fbId,
+                  name: JSON.parse(body).name,
+                  created: Date.now(),
+                  access_token: access_token,
+                  friends: [],
+                  venue_pages: [],
+                  events: [],
+                  picture: ""
+                });
+                var pictureUrl = JSON.parse(bod).data.url;
+                user.picture = pictureUrl;
+                user.save(function(err) {
+                  if(err) {
+                    console.log("mongo new user save error");
+                    console.log(err);  // handle errors!
+                    res.json({"error":"error"});
+                  } else {
+                    console.log("saving new user");
+                    res.json(user);
+                  }
+                });
               }
             });
           }
         });
       }
       else {
+        console.log(error);
+        console.log(JSON.parse(body));
+        console.log(JSON.parse(body).id + ", " + fbId);
+        console.log("id match: " + JSON.parse(body).id == fbId);
         console.log("access token is invalid");
         res.json({"error": "invalid"});
       }

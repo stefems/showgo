@@ -25,6 +25,28 @@ export class LogComponent implements OnInit {
   }
 
   loginWithFacebook(): void {
+    this.fb.login()
+        .then((response: LoginResponse) => {
+          console.log("login()");
+          console.log(response);
+          if (response.authResponse) {
+            let access_token = response.authResponse.accessToken;
+            let fbId = response.authResponse.userID;
+            this.authService.getUser(fbId, access_token).subscribe(res => {
+              console.log("getUser()");
+              console.log(res);
+              //RES received else isn't been handled...
+              if (res.dbId !== "") {
+                this.router.navigate(['/events']);
+              }
+              else {
+                this.message = "Failed to log into facebook. Can you try again?";
+              }
+            });
+          }
+        })
+        .catch((error: any) => console.error(error));
+        /*
     //todo: use this to prevent error:
     this.fb.getLoginStatus()
     .then((response: LoginResponse) => {
@@ -65,6 +87,6 @@ export class LogComponent implements OnInit {
         })
         .catch((error: any) => console.error(error));
       }
-    });    
+    }); */   
   }
 }

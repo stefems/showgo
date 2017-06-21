@@ -6,6 +6,7 @@ export class User {
   	private ignoredList = [];
   	private friends = [];
   	private events = [];
+  	private picture = "";
 
 	constructor(inputJson: any) {
 		if (inputJson !== 0) {
@@ -16,6 +17,7 @@ export class User {
 			this.accessToken = inputJson.access_token;
 			this.friends = inputJson.friends;
 			this.events = inputJson.events;
+			this.picture = inputJson.picture;
 
 			//use the id to get from DB to populate other data
 		}
@@ -25,6 +27,7 @@ export class User {
 			this.ignoredList = [];
 			this.venues = [];
 			this.accessToken = "";
+			this.picture = "";
 		}
 	}
 

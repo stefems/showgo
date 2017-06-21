@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs/Subscription';
 import {User} from './user';
 import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import {FbloginService} from './fblogin.service';
-import { FacebookService, LoginResponse } from 'ngx-facebook';
+// import { FacebookService, LoginResponse } from 'ngx-facebook';
 
 
 @Component({
@@ -21,11 +21,9 @@ export class AppComponent {
   hasScrolled = false;
 
   
-  constructor(private authService: AuthService, private router: Router, private fb: FacebookService, private fbloginService: FbloginService){    
+  constructor(private authService: AuthService, private router: Router, private fbloginService: FbloginService){    
     this.authService.user().subscribe(response => {
-      console.log("auth service gave us a response");
       this.user = response;
-      console.log(this.user);
       if (this.user.dbId !== "") {
         this.router.navigate(['/events']);
       }

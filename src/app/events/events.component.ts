@@ -40,6 +40,7 @@ export class EventsComponent implements OnInit {
       this.events = response;
     });
   }
+  
   ngOnInit() {
     
   }

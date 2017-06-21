@@ -18,6 +18,7 @@ router.get('/events', apiGeneralController.getEvents);
 router.get('/getUser/:fbId/:access_token', userController.getUser);
 router.post('/eventAction/:actionType/:eventId/:userId/:access_token', apiGeneralController.eventPost);
 router.post("/friend/:access_token/:friendId", apiGeneralController.friendPost);
+router.get("/getId/:access_token", userController.getId);
 
 //SHOULD THESE BE DELETED
 // router.post('/join/:eventId/:user_id', apiGeneralController.postJoin);

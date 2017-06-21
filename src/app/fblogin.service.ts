@@ -16,7 +16,7 @@ export class FbloginService {
     let initParams: InitParams = {
       appId: '1928641050691340',
       xfbml: true,
-      version: 'v2.9'
+      version: 'v2.8',
     };
 
     fb.init(initParams);

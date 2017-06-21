@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+
 import {Observable} from 'rxjs/Rx';
 import {Subject} from "rxjs/Rx";
 import {BehaviorSubject} from "rxjs/Rx";
@@ -14,6 +16,7 @@ import 'rxjs/add/operator/delay';
 import 'rxjs/add/operator/toPromise';
 import {User} from './user';
 
+declare var FB: any;
 
 @Injectable()
 export class AuthService {
@@ -27,8 +30,15 @@ export class AuthService {
   // store the URL so we can redirect after logging in
   redirectUrl: string;
 
-  constructor (private fb: FacebookService, private http: Http, private fbloginService: FbloginService) {
+  constructor (private router: Router, private fb: FacebookService, private http: Http, private fbloginService: FbloginService) {
     this.checkLogin();
+    let initParams = {
+      appId: '1928641050691340',
+      xfbml: true,
+      version: 'v2.8',
+    };
+
+    FB.init(initParams);
   }
 
   user() {
@@ -41,7 +51,6 @@ export class AuthService {
       .map((res:Response) => {
         console.log("getUser() in auth service");
         console.log(res);
-        //TODO: unhappy path CURRENTLY TESTING HERE
         if (!res.json().error) {
           this.currentUser.next(new User(res.json()));
           this.isLoggedIn = true;
@@ -51,18 +60,35 @@ export class AuthService {
           return this.currentUser.asObservable();
         }
         else {
-          console.log("user login failed.");
+          this.logout();
           return this.currentUser.asObservable();
         }
       });
   }
+
+  getId(access_token: string): any {
+    return this.http.get("/api/getId/" + access_token)
+      .map((res:Response) => {
+        //TODO: unhappy path CURRENTLY TESTING HERE
+        if (!res.json().error) {
+          return res.json().id;
+        }
+        else {
+          console.log("could not get the user id from the access token.");
+          return false;
+        }
+      });
+  }
+
   loggedIn(): boolean {
     return this.isLoggedIn;
   }
 
-  login(): void {
+  loginOld(): void {
+    console.log("auth service login()");
     this.fb.getLoginStatus()
     .then((response: LoginResponse) => {
+      console.log(response.status);
       if (response.status === 'connected') {
         console.log("connected");
         let access_token = response.authResponse.accessToken;
@@ -73,44 +99,109 @@ export class AuthService {
           }
         });
       }
-      else {
-        this.fb.login()
-        .then((response: LoginResponse) => {
-          console.log("fb login()");
-          if (response.authResponse) {
-            let access_token = response.authResponse.accessToken;
-            let fbId = response.authResponse.userID;
-            this.getUser(fbId, access_token).subscribe(res => {
-              if (res.dbId !== "") {
-                this.isLoggedIn = true;
-              }
-            });
-          }
-        })
-        .catch((error: any) => console.error(error));
+      else {   
+        window.location.href="https://www.facebook.com/v2.9/dialog/oauth?client_id=1928641050691340&redirect_uri="+window.location.href+"&response_type=token&scope=user_friends,rsvp_event,user_events";
       }
-    });    
+    }).catch((error: any) => console.error(error));;
+  }
+
+  logoutOld(): any {
+    this.fb.getLoginStatus()
+    .then((response: LoginResponse) => {
+      console.log(response.status);
+      this.currentUser.next(new User(0));
+      this.isLoggedIn = false;
+      localStorage.clear();
+      if (response.status === 'connected') {
+        console.log("logging out...");
+        this.fb.logout().then( (res) => {
+          console.log(res.authResponse);
+          this.fb.getLoginStatus()
+          .then((r: LoginResponse) => {
+            console.log(r.status);
+          });
+        });
+      }
+    });
+  }
+
+  login(): void {
+    console.log("auth service login()");
+    FB.getLoginStatus(function(response) {
+      console.log(response.status);
+      if (response.status === 'connected') {
+        console.log("connected");
+        let access_token = response.authResponse.accessToken;
+        let fbId = response.authResponse.userID;
+        this.getUser(fbId, access_token).subscribe(res => {
+          if (res.dbId !== "") {
+            this.isLoggedIn = true;
+          }
+        });
+      }
+      else {   
+        window.location.href="https://www.facebook.com/v2.9/dialog/oauth?client_id=1928641050691340&redirect_uri="+window.location.href+"&response_type=token&scope=user_friends,rsvp_event,user_events";
+      }
+    }, true);
   }
 
   logout(): any {
-    this.currentUser.next(new User(0));
-    this.isLoggedIn = false;
-    this.fb.logout();
-    localStorage.clear();
+    FB.getLoginStatus(function(response) {
+      console.log(response.status);
+      this.currentUser.next(new User(0));
+      this.isLoggedIn = false;
+      localStorage.clear();
+      if (response.status === 'connected') {
+        console.log("logging out...");
+        FB.logout(function(res) {
+          console.log(res.authResponse);
+          FB.Auth.setAuthResponse(null, 'unknown');
+          FB.getLoginStatus(function(response) {
+            console.log(response.status);
+          }, true);
+        });
+      }
+    }.bind(this), true);
   }
 
   checkLogin(): void {
-    //look in local storage for keys
-    if (localStorage.getItem('showgoUserLoggedIn') && localStorage.getItem("showgoUserAT")) {
-      let fbId = localStorage.getItem('showgoUserLoggedIn');
-      let at = localStorage.getItem("showgoUserAT");
-      this.getUser(fbId, at).subscribe(res => {
-        // console.log(res);
-        if (res.dbId !== "") {
-          this.isLoggedIn = true;
-          // this.router.navigate(['/events']);
+
+    if (window.location.hash) {
+      console.log("hash");
+      let access_token = window.location.hash.split("=")[1].split("&")[0];
+      this.getId(access_token).subscribe(res => {
+        console.log(res);
+        console.log(access_token);
+        if (res) {
+          this.getUser(res, access_token).subscribe(res => {
+            // console.log(res);
+            if (res.dbId !== "") {
+              this.isLoggedIn = true;
+            }
+          });
         }
       });
     }
+    //look in local storage for keys
+    else if (localStorage.getItem('showgoUserLoggedIn') && localStorage.getItem("showgoUserAT")) {
+      console.log("localstorage");
+      let fbId = localStorage.getItem('showgoUserLoggedIn');
+      let at = localStorage.getItem("showgoUserAT");
+      console.log(fbId + " " + at);
+      this.getUser(fbId, at).subscribe(res => {
+        if (res.dbId !== "") {
+          this.isLoggedIn = true;
+        }
+      });
+    }
+    else {
+      console.log("none");
+    }
+    // this.fb.getLoginStatus().then( (response) => {
+    //   console.log(response.status);
+    // });
+    FB.getLoginStatus(function(res) {
+      console.log(res.status);
+    }, true);
   }
 }

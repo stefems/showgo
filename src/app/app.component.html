@@ -21,7 +21,8 @@
       <div class="mdl-layout-spacer"></div>
       <button id="demo-menu-lower-right"
           class="mdl-button mdl-js-button mdl-button--icon">
-          <i class="material-icons myIcon">menu</i>
+          <i *ngIf="!user.dbId" class="material-icons myIcon">more_vert</i>
+          <img *ngIf="user.dbId" class="mdl-chip__contact" src={{user.picture}}/>
       </button>
       <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
       for="demo-menu-lower-right">

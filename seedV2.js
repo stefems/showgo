@@ -1,14 +1,18 @@
 var mongoose = require('mongoose');
-var env = require("./.env/.env.js") || null;
-if (!env) {
-	console.log("using heroku process env");
-	env = {
-		facebookAppId: process.env.facebookAppId,
-		facebookAppSecret: process.env.facebookAppSecret,
-		googleKey: process.env.googleKey,
-		googleId: process.env.googleId,
-		soundcloudSecret: process.env.soundcloudSecret
-	};
+var fs = require('fs');
+
+var env;
+if (fs.existsSync(".env/.env.js")) {
+  env = require(".env/.env.js");
+}
+else {
+  env = {
+    facebookAppId: process.env.facebookAppId,
+    facebookAppSecret: process.env.facebookAppSecret,
+    googleKey: process.env.googleKey,
+    googleId: process.env.googleId,
+    soundcloudSecret: process.env.soundcloudSecret
+  };
 }
 
 var request = require('request');
@@ -30,15 +34,15 @@ Event.remove({}, function(err, wut) {
 		return console.log(err); 
 	}
 	console.log("removal of events.");
-	Band.remove({}, function(error, huh) {
-		if (err) {
-			return console.log(err); 
-		}
-		getEvents();
-	});
-	// getEvents();
+	// Band.remove({}, function(error, huh) {
+	// 	if (err) {
+	// 		return console.log(err); 
+	// 	}
+	// 	getEvents();
+	// });
+	getEvents();
 });
-//todo: fix date issues (not getting most recent events)
+
 function getEvents(url) {
 	let facebookEventURL = url || "https://graph.facebook.com/HiDiveDenver/events?fields=name,place,owner,description,start_time&access_token=" + access_token;
 	//send request to api
