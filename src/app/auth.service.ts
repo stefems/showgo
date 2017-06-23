@@ -84,7 +84,7 @@ export class AuthService {
     return this.isLoggedIn;
   }
 
-  loginOld(): void {
+  login(): void {
     console.log("auth service login()");
     this.fb.getLoginStatus()
     .then((response: LoginResponse) => {
@@ -105,7 +105,7 @@ export class AuthService {
     }).catch((error: any) => console.error(error));;
   }
 
-  logoutOld(): any {
+  logout(): any {
     this.fb.getLoginStatus()
     .then((response: LoginResponse) => {
       console.log(response.status);
@@ -125,7 +125,7 @@ export class AuthService {
     });
   }
 
-  login(): void {
+  loginNew(): void {
     console.log("auth service login()");
     FB.getLoginStatus(function(response) {
       console.log(response.status);
@@ -145,7 +145,7 @@ export class AuthService {
     }, true);
   }
 
-  logout(): any {
+  logoutNew(): any {
     FB.getLoginStatus(function(response) {
       console.log(response.status);
       this.currentUser.next(new User(0));
@@ -197,11 +197,13 @@ export class AuthService {
     else {
       console.log("none");
     }
+    //-------------------
+    //Logging for login status
     // this.fb.getLoginStatus().then( (response) => {
     //   console.log(response.status);
     // });
-    FB.getLoginStatus(function(res) {
-      console.log(res.status);
-    }, true);
+    // FB.getLoginStatus(function(res) {
+    //   console.log(res.status);
+    // }, true);
   }
 }

@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef} from '@angular/core';
 import { AuthService }      from './auth.service';
 import { Subscription } from 'rxjs/Subscription';
 import {User} from './user';
 import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import {FbloginService} from './fblogin.service';
+import {EventsComponent} from './events/events.component';
 // import { FacebookService, LoginResponse } from 'ngx-facebook';
 
 
@@ -13,6 +14,8 @@ import {FbloginService} from './fblogin.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
+
+  @ViewChild('drawer') drawer: ElementRef;
   title = 'ShowGo';
   loginStatus: boolean = false;
   subscription = Subscription;
@@ -27,14 +30,22 @@ export class AppComponent {
       if (this.user.dbId !== "") {
         this.router.navigate(['/events']);
       }
-
     });
   }
 
   ngOnInit(){
 
   }
+  ngAfterViewInit() {
+
+  }
   
+  filter(type): void {
+    // this.drawer.nativeElement.classList = this.drawer.nativeElement.classList[0];
+    this.drawer.nativeElement.MaterialLayout.toggleDrawer();
+    this.router.navigate(['/events/'+type]);
+  }
+
   login(): void {
     console.log("login()");
     this.authService.login();

@@ -1,8 +1,15 @@
-*:not(.myIcon){
+*:not(.material-icons){
 	font-family: 'Ubuntu Condensed', sans-serif;
 }
 .text-center  {
 	width: 100%;
 	margin: auto;
 	text-align: center;
+}
+.mdl-layout__drawer-button i{
+    margin-top: 4px;
+    font-size: 40px;
+}
+.mdl-layout__header .mdl-layout__drawer-button {
+	background-color: rgba(0,0,0,0);
 }

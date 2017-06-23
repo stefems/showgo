@@ -29,22 +29,12 @@
 }
 
 .eventsContainer {
-	margin-top: 5px;
 	overflow: scroll;
 	height: 100%;
+	background-color: rgba(0,0,0,.5);
 }
 
-.eventsFilter {
-	font-size: 4vw;
-	padding-right: 0;
-	padding-left: 0;
-	margin: auto;
-}
 
 .mdl-navigation__link {
 	cursor: pointer;
-}
-
-.filterActive {
-	text-decoration: underline;
 }

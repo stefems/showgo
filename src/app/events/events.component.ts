@@ -1,13 +1,10 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot, NavigationEnd } from '@angular/router';
 import { ApiService }      from './../api.service';
 import { AuthService }      from './../auth.service';
 import {EventComponent}				from './../event/event.component';
 import {User} from '../user';
 import {EventsFilterPipe} from './../pipes/events-filter.pipe';
-
-
-// declare var SC:any;
-
 
 @Component({
   selector: 'app-events',
@@ -21,9 +18,10 @@ export class EventsComponent implements OnInit {
   private user: any;
   public filterArgs;
   private snackbar = null;
+  private eventFilter = "";
 
-  @ViewChild('popup') popup: ElementRef;
-  @ViewChild('soundcloudWidget') soundcloudWidget: ElementRef;
+  // @ViewChild('popup') popup: ElementRef;
+  // @ViewChild('soundcloudWidget') soundcloudWidget: ElementRef;
   @ViewChild('filterFriend') filterFriend: ElementRef;
   @ViewChild('filterMe') filterMe: ElementRef;
   @ViewChild('filterAll') filterAll: ElementRef;
@@ -32,7 +30,22 @@ export class EventsComponent implements OnInit {
   @ViewChild('filterAll2') filterAll2: ElementRef;
 
 
-  constructor(private apiService: ApiService, private authService: AuthService) {
+  constructor(private router: Router, private apiService: ApiService, private authService: AuthService) {
+    this.router.events.subscribe((val) => {
+      this.eventFilter = val.url;
+      switch (val.url) {
+        case "/events/me":
+          this.filterArgs = {type: "mine", events: this.user.events};
+          break;
+        case "/events/friends":
+          this.filterArgs = {type: "friends", friends: this.user.friends};
+          break;
+        case "/events/all":
+          this.filterArgs = null;
+          break;
+      }
+    });
+
     this.authService.user().subscribe(response => {
       this.user = response;
     });
@@ -46,7 +59,7 @@ export class EventsComponent implements OnInit {
   }
   ngAfterViewInit() {
     let newsong = 'https://api.soundcloud.com/tracks/311739465';
-    let scId = this.soundcloudWidget.nativeElement.id;
+    // let scId = this.soundcloudWidget.nativeElement.id;
     // let widget = SC.Widget(scId);
     // widget.bind(SC.Widget.Events.READY, function() {
     //   //widget.pause();
@@ -55,6 +68,7 @@ export class EventsComponent implements OnInit {
     // this.snackbar = this.popup.nativeElement.querySelector("#snackbar");
   }
 
+/*
   public triggerPopup(event): void {
     let data = {message: event};
     setInterval(() => {
@@ -68,6 +82,7 @@ export class EventsComponent implements OnInit {
      }, 3000);
     console.log(this.snackbar);
   }
+  */
 
   public filter(type): void {
     this.filterAll.nativeElement.style.textDecoration = 'none';

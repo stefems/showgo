@@ -1,13 +1,65 @@
+.titleText {
+	margin: 0;
+}
+.topRow .playButtonDiv {
+	text-align: right;
+	margin: 0 auto;
+}
+.topRow .playButtonDiv i{
+	font-size: 45px;
+	cursor: pointer;
+}
+
+.mdl-cell {
+	margin: 0;
+}
+.eventContainer .middleRow {
+	text-align: center;
+	font-style: italic;
+}
+.eventContainer .middleRow div{
+	margin: 0 auto;
+}
+.eventContainer .middleRow h6{
+	margin: 0;
+}
+
+.eventContainer .bottomRow div{
+	text-align: center;
+	margin: 0 auto;
+}
+.eventContainer .bottomRow h5{
+	margin: 0;
+	margin-bottom: 4px;
+}
+.bottomRow .fbButton {
+	min-width: 40px;
+	width: 40px;
+}
+.bottomRow .fbButton .clicked {
+	background-color: #009688;
+}
+.bottomRow .fbButton i{
+	margin-left: -8px;
+}
+.bottomRow .fbButton .calIcon{
+	margin-left: -6px;
+	margin-top: -18px;
+	font-size: 21px;
+}
+.bottomRow .fbButton .questionIcon{
+	margin-left: -1px;
+	margin-top: 3px;
+}
+
+
+/*
 .eventContainer .eventLeft .clicked {
 	background-color: #009688;
 }
 
 .eventContainer {
 	background-color: rgba(0,0,0,.5);
-	border-radius: 4px;
-	margin-left: 5px;
-	margin-right: 5px;
-	margin-bottom: 10px;
 }
 .eventContainer .eventData .showing {
 	background-color: rgba(255,64,129, 0.5);
@@ -103,3 +155,4 @@ h4, h5 {
 	}
 
 }
+*/

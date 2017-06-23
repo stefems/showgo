@@ -1,29 +1,7 @@
-<header class="mdl-layout__header mdl-layout__header--transparent showgoHeader">
-	<div class="mdl-layout__header-row">
-	      <!-- Title -->
-	      <span class="mdl-layout-title">Events</span>
-	      <!-- Add spacer, to align navigation to the right -->
-	      <div class="mdl-layout-spacer"></div>
-	      <!-- Navigation -->
-	      <nav class="mdl-navigation">
-	        <a #filterAll class="mdl-navigation__link" style="text-decoration: underline" (click)="filter('all')">All Shows</a>
-	        <a #filterFriend class="mdl-navigation__link" (click)="filter('friends')">Friend's Shows</a>
-	        <a #filterMe class="mdl-navigation__link" (click)="filter('me')">My Shows</a>
-	      </nav>
-	</div>
-</header>
-<header class="mdl-layout__header--small-screen-only mdl-layout__header--transparent--small-screen-only mdl-layout--small-screen-only showgoHeader">
-    <div class="mdl-layout__header-row">
-    	<span class="mdl-layout-title">Events</span>
-        <a #filterAll2 class="mdl-navigation__link eventsFilter" style="text-decoration: underline" (click)="filter('all')">All Shows</a>
-        <a #filterFriend2 class="mdl-navigation__link eventsFilter" (click)="filter('friends')">Friend's Shows</a>
-        <a #filterMe2 class="mdl-navigation__link eventsFilter" (click)="filter('me')">My Shows</a>
-    </div>
-</header>
-
 <div class="eventsContainer">
 	<event *ngFor="let event of events | eventsFilter:filterArgs" [event]="event" [user]="user" (popupSender)="triggerPopup($event)"></event>
 </div>
+<!--
 <iframe #soundcloudWidget id="soundcloud_widget"
   src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/317619385&auto_play=false"
   width="420"
@@ -37,3 +15,4 @@
 	</div>
 </div>
 
+-->

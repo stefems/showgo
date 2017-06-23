@@ -1,7 +1,8 @@
 .demo-layout-transparent {
-	/*background: url('../assets/banner.jpg') center / cover;*/
+    background: url('../assets/banner.jpg') center / cover;
     position: fixed;
 }
+
 
 .mdl-layout__header, .myIcon, .mdl-layout-title{
 	color: white;
@@ -24,7 +25,7 @@
 }
 
 .mdl-layout__header--small-screen-only, .mdl-layout__header {
-    background-color: rgba(0,0,0,.5);
+    background-color: rgba(0,0,0,.7);
 }
 main {
     overflow: hidden;

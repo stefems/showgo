@@ -43,7 +43,23 @@ const ROUTES = [
   {
     path: 'splash',
     component: SplashComponent
-  }
+  },
+  {
+    path: 'events/all',
+    redirectTo: 'events',
+    pathMatch: "full"
+  },
+  {
+    path: 'events/me',
+    redirectTo: 'events',
+    pathMatch: "full"
+  },
+  {
+    path: 'events/friends',
+    redirectTo: 'events',
+    pathMatch: "full"
+  },
+
 ];
 
 @NgModule({
