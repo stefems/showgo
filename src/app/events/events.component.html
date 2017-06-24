@@ -1,6 +1,28 @@
 <div class="eventsContainer">
-	<event *ngFor="let event of events | eventsFilter:filterArgs" [event]="event" [user]="user" (popupSender)="triggerPopup($event)"></event>
+	<div id="socialDrawerDiv" #socialContainer class="mdl-layout__container socialDrawerContainer">
+		<div #socialDrawer  class="demo-layout-transparent mdl-layout mdl-js-layout mdl-layout--fixed-header">
+			<header id="socialDrawerHeader" class="mdl-layout__header">
+			</header>
+			<div #drawer class="mdl-layout__drawer">
+				<span class="mdl-layout-title socialTitle">
+	    	    	<h3>Social</h3>
+	    	    	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect inviteFriends">Invite Friends</button>
+					<h4 (click)="closeSocial()">-</h4>
+	    	    </span>
+	    	    <nav class="mdl-navigation">
+	    	    
+				<a *ngFor="let friend of currentSocial.social" class="mdl-navigation__link">
+					<friend-bubble (idSender)="addFriend($event)" [friend]="friend">
+					</friend-bubble>
+				</a>
+			    </nav>
+			</div>
+		</div>
+	</div>
+	<event *ngFor="let event of events | eventsFilter:filterArgs" [event]="event" [user]="user" (socialSender)="openSocial($event)" ></event>
+
 </div>
+
 <!--
 <iframe #soundcloudWidget id="soundcloud_widget"
   src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/317619385&auto_play=false"

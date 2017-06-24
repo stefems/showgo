@@ -32,11 +32,14 @@
 	margin: 0;
 	margin-bottom: 4px;
 }
+.bottomRow .friendString {
+	text-align: left;
+}
 .bottomRow .fbButton {
 	min-width: 40px;
 	width: 40px;
 }
-.bottomRow .fbButton .clicked {
+.fbButton.clicked {
 	background-color: #009688;
 }
 .bottomRow .fbButton i{
@@ -50,6 +53,10 @@
 .bottomRow .fbButton .questionIcon{
 	margin-left: -1px;
 	margin-top: 3px;
+}
+.bottomRow .socialButton {
+	background-color: #183E64;
+    color: white;
 }
 
 

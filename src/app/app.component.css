@@ -9,6 +9,11 @@
 }
 
 .mdl-layout-title {
+    color: black;
+}
+
+#mainTitle {
+    color: white;
     cursor: pointer;
 }
 

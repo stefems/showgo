@@ -1,3 +1,39 @@
+.eventsContainer .socialDrawerContainer {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 0;
+	height: 0;
+}
+#socialDrawerHeader .inviteFriends {
+	background-color: #183E64;
+	vertical-align: text-bottom;
+	width: 30%;
+	margin-right: 20%;
+}
+
+#socialDrawerHeader {
+	display: none;
+}
+
+#socialDrawer .socialTitle {
+	margin: 0;
+}
+
+#socialDrawer .socialTitle h3 {
+	display: inline-block;
+	margin-top: 0 auto;
+	width: 40%;
+}
+
+#socialDrawer .socialTitle h4 {
+	display: inline-block;
+	font-size: 75px;
+	margin-top: 0;
+	vertical-align: middle;
+}
+
+
 :host {
 	overflow: hidden;
 }

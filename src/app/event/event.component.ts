@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef }
 import { ApiService }      from './../api.service';
 import { FriendBubbleComponent }      from './../friend-bubble/friend-bubble.component';
 import {BcPlayerComponent} from './../bc-player/bc-player.component';
-
+import { Event } from './../event';
 
 @Component({
   selector: 'event',
@@ -15,7 +15,7 @@ export class EventComponent implements OnInit {
 	@Input("user") user;
 
 	@Output()
-  	popupSender:EventEmitter<string> = new EventEmitter();
+  	socialSender:EventEmitter<Event> = new EventEmitter<Event>();
 
 	public showFriends = false;
 	public showBands = false;
@@ -23,13 +23,14 @@ export class EventComponent implements OnInit {
 	public interest = false;
 	public ignored = false;
 	public buttonsEnabled: boolean = true;
+	public friendString = "";
 
 	constructor(private apiService: ApiService) {
-		//TODO: when the event component is being generated we need to look at the user's shows in order to set the
-		//  joined/interested/ignored booleans appropriately
+		
 	}
 
 	ngOnInit() {
+		//renders the event action status on the panel
 		for (let i = 0; i < this.user.events.length; i++) {
 			if (this.user.events[i].eventId === this.event.fbId) {
 				switch (this.user.events[i].actionType) {
@@ -45,10 +46,28 @@ export class EventComponent implements OnInit {
 				}
 			}
 		}
-	}
+		let friendsGoing = [];
 
-	public toggleFriends() {
-		this.showFriends = !this.showFriends;
+		//for each attendee, is that a friend
+		for (let i = 0; i < this.event.social.length; i++) {
+			if (this.user.friends.indexOf(this.event.social[i].fbId) != -1) {
+				friendsGoing.push(this.event.social[i].name);
+			}
+		}
+		switch (friendsGoing.length) {
+			case 0:
+				break;
+			case 1:
+				this.friendString = friendsGoing[0] + " is going.";
+				break;
+			case 2:
+				this.friendString = friendsGoing[0] + " and " + friendsGoing[0] + " are going.";
+				break;
+			default:
+				this.friendString = friendsGoing[0] + ", " + friendsGoing[0] + " and " + (friendsGoing.length - 2) + " friends are going.";
+				break;
+		}
+
 	}
 
 	public toggleBands() {
@@ -86,6 +105,11 @@ export class EventComponent implements OnInit {
 				actionType: actionType,
 			});
 		}
+	}
+
+	public openSocial() {
+		console.log("emitting " + this.event.name);
+		this.socialSender.emit(this.event);
 	}
 
 	public eventAction(eventType: string) {

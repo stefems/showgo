@@ -167,11 +167,11 @@ export class AuthService {
   checkLogin(): void {
 
     if (window.location.hash) {
-      console.log("hash");
+      // console.log("hash");
       let access_token = window.location.hash.split("=")[1].split("&")[0];
       this.getId(access_token).subscribe(res => {
-        console.log(res);
-        console.log(access_token);
+        // console.log(res);
+        // console.log(access_token);
         if (res) {
           this.getUser(res, access_token).subscribe(res => {
             // console.log(res);
@@ -184,10 +184,10 @@ export class AuthService {
     }
     //look in local storage for keys
     else if (localStorage.getItem('showgoUserLoggedIn') && localStorage.getItem("showgoUserAT")) {
-      console.log("localstorage");
+      // console.log("localstorage");
       let fbId = localStorage.getItem('showgoUserLoggedIn');
       let at = localStorage.getItem("showgoUserAT");
-      console.log(fbId + " " + at);
+      // console.log(fbId + " " + at);
       this.getUser(fbId, at).subscribe(res => {
         if (res.dbId !== "") {
           this.isLoggedIn = true;
@@ -195,15 +195,7 @@ export class AuthService {
       });
     }
     else {
-      console.log("none");
+      // console.log("none");
     }
-    //-------------------
-    //Logging for login status
-    // this.fb.getLoginStatus().then( (response) => {
-    //   console.log(response.status);
-    // });
-    // FB.getLoginStatus(function(res) {
-    //   console.log(res.status);
-    // }, true);
   }
 }

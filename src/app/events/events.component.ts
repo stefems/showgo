@@ -1,9 +1,10 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
 import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot, NavigationEnd } from '@angular/router';
 import { ApiService }      from './../api.service';
 import { AuthService }      from './../auth.service';
 import {EventComponent}				from './../event/event.component';
 import {User} from '../user';
+import {Event} from '../event'
 import {EventsFilterPipe} from './../pipes/events-filter.pipe';
 
 @Component({
@@ -15,19 +16,14 @@ export class EventsComponent implements OnInit {
 
   public events = [];
   private userAccessToken = "";
-  private user: any;
   public filterArgs;
   private snackbar = null;
   private eventFilter = "";
-
-  // @ViewChild('popup') popup: ElementRef;
-  // @ViewChild('soundcloudWidget') soundcloudWidget: ElementRef;
-  @ViewChild('filterFriend') filterFriend: ElementRef;
-  @ViewChild('filterMe') filterMe: ElementRef;
-  @ViewChild('filterAll') filterAll: ElementRef;
-  @ViewChild('filterFriend2') filterFriend2: ElementRef;
-  @ViewChild('filterMe2') filterMe2: ElementRef;
-  @ViewChild('filterAll2') filterAll2: ElementRef;
+  public currentSocial = new Event(0);
+  @Input("user") user;
+  @ViewChild('drawer') drawer: ElementRef;
+  @ViewChild('socialDrawer') socialDrawer: ElementRef;
+  @ViewChild('socialContainer') socialContainer: ElementRef;
 
 
   constructor(private router: Router, private apiService: ApiService, private authService: AuthService) {
@@ -68,44 +64,32 @@ export class EventsComponent implements OnInit {
     // this.snackbar = this.popup.nativeElement.querySelector("#snackbar");
   }
 
-/*
-  public triggerPopup(event): void {
-    let data = {message: event};
-    setInterval(() => {
-      this.snackbar = this.popup.nativeElement.querySelector("#snackbar");
-      if (this.snackbar) {
-        this.snackbar.MaterialSnackbar.showSnackbar(data);
-      }
-      else {
-        console.log("still undefined");
-      } 
-     }, 3000);
-    console.log(this.snackbar);
+  public openSocial(event): void {
+    console.log("closing social");
+    this.currentSocial = event;
+    this.socialDrawer.nativeElement.MaterialLayout.toggleDrawer();
+    this.socialContainer.nativeElement.style.width="100%";
+    this.socialContainer.nativeElement.style.height="100%";
+    this.drawer.nativeElement.style.width="100%";
   }
-  */
+
+  public closeSocial(): void {
+    console.log("closing social");
+    this.socialDrawer.nativeElement.MaterialLayout.toggleDrawer();
+    this.socialContainer.nativeElement.style.width="0";
+    this.socialContainer.nativeElement.style.height="0";
+    this.drawer.nativeElement.style.width="240px";
+  }
 
   public filter(type): void {
-    this.filterAll.nativeElement.style.textDecoration = 'none';
-    this.filterAll2.nativeElement.style.textDecoration = 'none';
-    this.filterMe.nativeElement.style.textDecoration = 'none';
-    this.filterMe2.nativeElement.style.textDecoration = 'none';
-    this.filterFriend.nativeElement.style.textDecoration = 'none';
-    this.filterFriend2.nativeElement.style.textDecoration = 'none';
-
     switch (type) {
       case "all":
-        this.filterAll.nativeElement.style.textDecoration = 'underline';
-        this.filterAll2.nativeElement.style.textDecoration = 'underline';
         this.filterArgs = null;
         break;
       case "me":
-        this.filterMe.nativeElement.style.textDecoration = 'underline';
-        this.filterMe2.nativeElement.style.textDecoration = 'underline';
         this.filterArgs = {type: "mine", events: this.user.events};
         break;
       case "friends":
-        this.filterFriend.nativeElement.style.textDecoration = 'underline';
-        this.filterFriend2.nativeElement.style.textDecoration = 'underline';
         this.filterArgs = {type: "friends", friends: this.user.friends};
         break;
     }

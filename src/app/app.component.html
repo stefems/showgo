@@ -2,7 +2,7 @@
   <header class="mdl-layout__header mdl-layout__header--transparent">
     <div class="mdl-layout__header-row">
       <!-- Title -->
-      <span (click)="home()" class="mdl-layout-title">{{title}}</span>
+      <span id="mainTitle" (click)="home()" class="mdl-layout-title">{{title}}</span>
       <!-- Add spacer, to align navigation to the right -->
       <div class="mdl-layout-spacer"></div>
       <!-- Navigation -->
@@ -30,7 +30,7 @@
     </div>
   </header>
   <div *ngIf="user.dbId" class="mdl-layout__drawer">
-    <span class="mdl-layout-title">Title</span>
+    <span class="mdl-layout-title">ShowGo</span>
     <nav class="mdl-navigation">
       <a (click)="filter('all')" class="mdl-navigation__link" >All Shows</a>
       <a (click)="filter('me')" class="mdl-navigation__link" >My Shows</a>
