@@ -1,4 +1,5 @@
-.mdl-chip .mdl-chip--contact {
+.mdl-chip .mdl-chip--contact .mdl-chip--deletable {
+	background-color: rgba(0,0,0,0);
 }
 
 .friend-bubble {

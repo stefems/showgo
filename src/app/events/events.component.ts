@@ -76,9 +76,9 @@ export class EventsComponent implements OnInit {
   public closeSocial(): void {
     console.log("closing social");
     this.socialDrawer.nativeElement.MaterialLayout.toggleDrawer();
+    this.drawer.nativeElement.style.width="240px";
     this.socialContainer.nativeElement.style.width="0";
     this.socialContainer.nativeElement.style.height="0";
-    this.drawer.nativeElement.style.width="240px";
   }
 
   public filter(type): void {

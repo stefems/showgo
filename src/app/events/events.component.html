@@ -3,18 +3,22 @@
 		<div #socialDrawer  class="demo-layout-transparent mdl-layout mdl-js-layout mdl-layout--fixed-header">
 			<header id="socialDrawerHeader" class="mdl-layout__header">
 			</header>
-			<div #drawer class="mdl-layout__drawer">
-				<span class="mdl-layout-title socialTitle">
-	    	    	<h3>Social</h3>
-	    	    	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect inviteFriends">Invite Friends</button>
-					<h4 (click)="closeSocial()">-</h4>
-	    	    </span>
-	    	    <nav class="mdl-navigation">
-	    	    
-				<a *ngFor="let friend of currentSocial.social" class="mdl-navigation__link">
-					<friend-bubble (idSender)="addFriend($event)" [friend]="friend">
-					</friend-bubble>
-				</a>
+			<div #drawer class="mdl-grid mdl-layout__drawer">
+				<!--SOCIAL-->
+    	    	<h3 id="socialH3" class="mdl-cell mdl-cell--7-col mdl-cell--5-col-tablet mdl-cell--2-col-phone">Social</h3>
+    	    	<!--INVITE BUTTON-->
+    	    	<button id="socialButton" class="mdl-cell mdl-cell--4-col mdl-cell--2-col-tablet mdl-cell--1-col-phone mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">Invite Friends</button>
+				<!--CLOSE-->
+				<i id="socialMinimize" class="fa fa-times-circle fa-lg mdl-cell mdl-cell--1-col mdl-cell--1-col-tablet mdl-cell--1-col-phone" (click)="closeSocial()"></i>
+				<!--LISTING-->
+	    	    <nav id="socialNav" class="mdl-navigation">
+					<a *ngIf="!inviteOpen" *ngFor="let friend of currentSocial.social" class="mdl-navigation__link">
+						<friend-bubble (idSender)="addFriend($event)" [friend]="friend">
+						</friend-bubble>
+					</a>
+					<a *ngIf="inviteOpen" *ngFor="let friend of user.friends" class="mdl-navigation__link">
+						<friend-invite [friend]="friend"></friend-invite>
+					</a>
 			    </nav>
 			</div>
 		</div>
