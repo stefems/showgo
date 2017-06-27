@@ -7,7 +7,11 @@ var UserSchema = new mongoose.Schema({
   name: String,
   created: Date,
   access_token: String,
-  friends: [String],
+  friends: [{
+    name: String,
+    picture: String,
+    fbId: String
+  }],
   events: [{
     eventId: String,
     actionType: String

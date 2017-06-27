@@ -90,7 +90,7 @@ var userController = {
           }
           else {
             console.log("new user found.");
-            request("https://graph.facebook.com/" + user.id + "/picture?redirect=0", function(err, r, bod){
+            request("https://graph.facebook.com/" + fbId + "/picture?redirect=0", function(err, r, bod){
               if (!err && JSON.parse(bod).data && JSON.parse(bod).data.url) {
                 user = new User({
                   //todo: remove the oauthid user field

@@ -26,9 +26,11 @@ export class EventComponent implements OnInit {
 	public friendString = "";
 
 	constructor(private apiService: ApiService) {
-		
-	}
 
+	}
+	ngAfterViewInit() {
+		// console.log("event ngOnInit");
+	}
 	ngOnInit() {
 		//renders the event action status on the panel
 		for (let i = 0; i < this.user.events.length; i++) {
@@ -47,11 +49,21 @@ export class EventComponent implements OnInit {
 			}
 		}
 		let friendsGoing = [];
-
 		//for each attendee, is that a friend
 		for (let i = 0; i < this.event.social.length; i++) {
-			if (this.user.friends.indexOf(this.event.social[i].fbId) != -1) {
-				friendsGoing.push(this.event.social[i].name);
+			this.event.social[i].isFriend = false;
+			//for each friend
+			for (let j = 0; j < this.user.friends.length; j++) {
+				if (this.user.friends[j].fbId === this.event.social[i].fbId) {
+					this.event.social[i].isFriend = true;
+					let friend = this.event.social[i];
+					friendsGoing.push(this.event.social[i].name);
+					//remove friend from social list
+					this.event.social.splice(i, 1);
+					//push friend to front of social list
+					this.event.social.unshift(friend);
+					break;
+				}
 			}
 		}
 		switch (friendsGoing.length) {
@@ -61,32 +73,56 @@ export class EventComponent implements OnInit {
 				this.friendString = friendsGoing[0] + " is going.";
 				break;
 			case 2:
-				this.friendString = friendsGoing[0] + " and " + friendsGoing[0] + " are going.";
+				this.friendString = friendsGoing[0] + " and " + friendsGoing[1] + " are going.";
 				break;
 			default:
-				this.friendString = friendsGoing[0] + ", " + friendsGoing[0] + " and " + (friendsGoing.length - 2) + " friends are going.";
+				this.friendString = friendsGoing[0] + ", " + friendsGoing[1] + " and " + (friendsGoing.length - 2) + " more.";
 				break;
 		}
-
+		this.event.friendString = this.friendString;
+		// console.log("event ngOnInit");
 	}
 
 	public toggleBands() {
 		this.showBands = !this.showBands;
 	}
 
-	public addFriend(eventTriggered){
-		//use the api service to add this friend id to the user's friends list
-		this.apiService.friendPost(eventTriggered, this.user.accessToken).subscribe(response => {
-			//response will be true or false based on success
-			if(response) {
-				console.log("friend added");
-				this.user.friends.push(eventTriggered);
+	public updateAfterFriend(friendList): void {
+		let friendsGoing = [];
+		this.user.friends = friendList;
+		//for each attendee, is that a friend
+		for (let i = 0; i < this.event.social.length; i++) {
+			this.event.social[i].isFriend = false;
+			//for each friend
+			for (let j = 0; j < this.user.friends.length; j++) {
+				if (this.user.friends[j].fbId === this.event.social[i].fbId) {
+					this.event.social[i].isFriend = true;
+					let friend = this.event.social[i];
+					friendsGoing.push(this.event.social[i].name);
+					//remove friend from social list
+					this.event.social.splice(i, 1);
+					//push friend to front of social list
+					this.event.social.unshift(friend);
+					break;
+				}
 			}
-			else {
-				console.log("friend not added");
-			}
-		});
-	}
+		}
+		switch (friendsGoing.length) {
+			case 0:
+				break;
+			case 1:
+				this.friendString = friendsGoing[0] + " is going.";
+				break;
+			case 2:
+				this.friendString = friendsGoing[0] + " and " + friendsGoing[1] + " are going.";
+				break;
+			default:
+				this.friendString = friendsGoing[0] + ", " + friendsGoing[1] + " and " + (friendsGoing.length - 2) + " more.";
+				break;
+		}
+		this.event.friendString = this.friendString;
+		// this.socialSender.emit(this.event);
+	}	
 	
 	public changeUser(actionType) {
 		console.log("adding/updating user event: " + actionType + " " + this.event.fbId);

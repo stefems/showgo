@@ -7,7 +7,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 })
 export class FriendBubbleComponent implements OnInit {
 	@Output()
-  	idSender:EventEmitter<string> = new EventEmitter();
+  	idSender:EventEmitter<any> = new EventEmitter();
 	@Input("friend") friend;
 
 	constructor() {
@@ -18,7 +18,10 @@ export class FriendBubbleComponent implements OnInit {
 
 	public addFriend(): void {
 		//get the id of the friend
-		this.idSender.emit(this.friend.fbId);
+		this.idSender.emit({friend: this.friend, isAdd: true});
+	}
 
+	public removeFriend(): void {
+		this.idSender.emit({friend: this.friend, isAdd: false});
 	}
 }

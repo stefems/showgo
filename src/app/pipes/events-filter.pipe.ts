@@ -23,7 +23,7 @@ export class EventsFilterPipe implements PipeTransform {
             return events.filter(function(event) {
                 for (let i = 0; i < filter.friends.length; i++) {
                     for (let eventPerson = 0; eventPerson < event.social.length; eventPerson++) {
-                        if (event.social[eventPerson].fbId === filter.friends[i]) {
+                        if (event.social[eventPerson].fbId === filter.friends[i].fbId) {
                             return true;
                         }
                     }
@@ -36,7 +36,6 @@ export class EventsFilterPipe implements PipeTransform {
                 //for each user event
                 for (let i = 0; i < filter.events.length; i++) {
                     //is the current event on that list?
-                    // console.log(filter.events[i]);
                     if ( (event.fbId === filter.events[i].eventId) && (filter.events[i].actionType !== "ignore") ) {
                         return true;
                     }

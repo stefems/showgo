@@ -1,7 +1,12 @@
-<!-- <span (click)="addFriend()"> <img src={{friend.picture}}/> </span>
- -->
-<span class="mdl-chip mdl-chip--contact mdl-chip--deletable">
+<span class="mdl-chip mdl-chip--contact mdl-chip--deletable personPanel">
     <img class="mdl-chip__contact" src={{friend.picture}}/>
-    <span class="mdl-chip__text">{{friend.name}}</span>
-    <i (click)="addFriend()" class="material-icons myIcon">person_add</i>
+    <span [class.friend]="friend.isFriend" class="mdl-chip__text">{{friend.name}}</span>
+    <button *ngIf="!friend.isFriend" (click)="addFriend()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect addFriendButton">
+    	<i class="material-icons myIcon friendIcon">person_add</i>
+    	<p>Follow</p>
+    </button>
+    <button *ngIf="friend.isFriend" (click)="removeFriend()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect removeFriendButton">
+    	<i class="material-icons myIcon friendIcon">person_outline</i>
+    	<p>Unfollow</p>
+    </button>
 </span>

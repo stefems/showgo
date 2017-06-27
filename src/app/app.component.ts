@@ -34,14 +34,14 @@ export class AppComponent {
   }
 
   ngOnInit(){
-
+    console.log("app ngOnInit");
   }
   ngAfterViewInit() {
-
+    console.log("app ngAfterViewInit");
   }
   
   filter(type): void {
-    // this.drawer.nativeElement.classList = this.drawer.nativeElement.classList[0];
+    console.log("type: " + type);
     this.drawer.nativeElement.MaterialLayout.toggleDrawer();
     this.router.navigate(['/events/'+type]);
   }

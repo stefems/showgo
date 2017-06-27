@@ -9,8 +9,10 @@ export class Event {
 	private bcEmbeds;
 	private scEmbeds;
 	private bands;
+	public friendString : string;
 	//TODO: add this shit, yo
 	constructor(inputJson: any) {
+		this.friendString = "";
 		if (inputJson !== 0) {
 			this.name = inputJson.eventName;
 			this.venue = inputJson.eventVenue;

@@ -5,26 +5,30 @@
 			</header>
 			<div #drawer class="mdl-grid mdl-layout__drawer">
 				<!--SOCIAL-->
-    	    	<h3 id="socialH3" class="mdl-cell mdl-cell--7-col mdl-cell--5-col-tablet mdl-cell--2-col-phone">Social</h3>
+    	    	<h3 id="socialH3" class="mdl-cell mdl-cell--7-col mdl-cell--5-col-tablet mdl-cell--1-col-phone">Social</h3>
     	    	<!--INVITE BUTTON-->
-    	    	<button id="socialButton" class="mdl-cell mdl-cell--4-col mdl-cell--2-col-tablet mdl-cell--1-col-phone mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">Invite Friends</button>
+    	    	<button (click)="openInvite()" id="socialButton" class="mdl-cell mdl-cell--4-col mdl-cell--2-col-tablet mdl-cell--2-col-phone mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"><p *ngIf="!inviteOpen">Invite Friends</p><p *ngIf="inviteOpen">See Attendance</p></button>
 				<!--CLOSE-->
-				<i id="socialMinimize" class="fa fa-times-circle fa-lg mdl-cell mdl-cell--1-col mdl-cell--1-col-tablet mdl-cell--1-col-phone" (click)="closeSocial()"></i>
-				<!--LISTING-->
-	    	    <nav id="socialNav" class="mdl-navigation">
-					<a *ngIf="!inviteOpen" *ngFor="let friend of currentSocial.social" class="mdl-navigation__link">
+				<i id="socialMinimize" class="fa fa-times-circle fa-2x mdl-cell mdl-cell--1-col mdl-cell--1-col-tablet mdl-cell--1-col-phone" (click)="closeSocial()"></i>
+				<!--ATTENDANCE LISTING-->
+	    	    <nav *ngIf="!inviteOpen"  id="socialNav" class="mdl-navigation nav">
+					<a *ngFor="let friend of currentEvent.social" class="mdl-navigation__link navLink">
 						<friend-bubble (idSender)="addFriend($event)" [friend]="friend">
 						</friend-bubble>
 					</a>
-					<a *ngIf="inviteOpen" *ngFor="let friend of user.friends" class="mdl-navigation__link">
-						<friend-invite [friend]="friend"></friend-invite>
+			    </nav>
+			    <!--INVITATION LISTING-->
+	    	    <nav *ngIf="inviteOpen"  id="socialNav" class="mdl-navigation nav">
+					<a *ngFor="let friend of user.friends" class="mdl-navigation__link navLink">
+						<friend-invite [friend]="friend" (inviteSender)="inviteFriend($event)"></friend-invite>
 					</a>
 			    </nav>
 			</div>
 		</div>
 	</div>
-	<event *ngFor="let event of events | eventsFilter:filterArgs" [event]="event" [user]="user" (socialSender)="openSocial($event)" ></event>
-
+	<!-- EVENT LISTING -->
+	<event #eventComps *ngFor="let event of events | eventsFilter:filterArgs" [event]="event" [user]="user" (socialSender)="openSocial($event)" >
+	</event>
 </div>
 
 <!--

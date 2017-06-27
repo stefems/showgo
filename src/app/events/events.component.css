@@ -4,6 +4,7 @@
 	left: 0;
 	width: 0;
 	height: 0;
+	z-index: 100;
 }
 .socialTitle .inviteFriends {
 	vertical-align: text-bottom;
@@ -26,12 +27,20 @@
 #socialMinimize {
 	text-align: right;
 	cursor: pointer;
+	margin: 0 0;
 }
 #socialH3 {
-	margin: 0 auto;
+	margin: 0;
 }
 #socialButton {
 	margin: 0;
+	margin-left: auto;
+	padding: 0;
+
+}
+#socialButton p {
+	margin: 0;
+	font-size: 4vw;
 }
 
 :host {
@@ -69,8 +78,16 @@
 	height: 100%;
 	background-color: rgba(0,0,0,.5);
 }
-
+.nav .navLink {
+	padding-left: 0;
+}
 
 .mdl-navigation__link {
 	cursor: pointer;
 }
+
+ @media screen and (min-width: 480px) {
+ 	#socialButton p {
+ 		font-size: 2vw;
+ 	}
+ }

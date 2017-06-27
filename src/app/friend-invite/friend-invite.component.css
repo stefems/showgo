@@ -1,4 +1,4 @@
-.personPanel{
+.personPanel {
 	background-color: rgba(0,0,0,0);
 	width: 100%;
 	text-align: right;
@@ -6,14 +6,14 @@
 .personPanel img {
 	float: left;
 }
+.personPanel span {
+	float: left;
+	font-size: 20px;
+}
 .personPanel p {
 	display: inline;
 	margin: 0;
 	text-transform: initial;
-}
-.personPanel span {
-	float: left;
-	font-size: 20px;
 }
 
 .friend-bubble {
@@ -24,17 +24,11 @@
 	vertical-align: top;
 	margin-left: 4px;
 }
-
 .myIcon {
 	vertical-align: middle;
 	padding-left: 5px;
 	cursor: pointer;
 }
-
-.friend {
-	color: #183E64;
-}
 .friendIcon {
 	margin-bottom: 5px;
 }
-

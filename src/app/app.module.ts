@@ -23,6 +23,7 @@ import { BcPlayerComponent } from './bc-player/bc-player.component';
 import { ScPlayerComponent } from './sc-player/sc-player.component';
 import { BandComponent } from './band/band.component';
 import { SplashComponent } from './splash/splash.component';
+import { FriendInviteComponent } from './friend-invite/friend-invite.component';
 
 // Define the routes
 const ROUTES = [
@@ -77,7 +78,8 @@ const ROUTES = [
     BcPlayerComponent,
     ScPlayerComponent,
     BandComponent,
-    SplashComponent
+    SplashComponent,
+    FriendInviteComponent
   ],
   imports: [
     BrowserModule,

@@ -21,6 +21,7 @@ export class ApiService {
   private postDeclineUrl = "/api/decline";
   private postInterestedUrl = "/api/interested";
   private postFriend = "/api/friend";
+  private postUnfriend = "/api/unfriend";
 
   public headers = new Headers({ 'Content-Type': 'application/json' });
   public options = new RequestOptions({ headers: this.headers });
@@ -31,10 +32,25 @@ export class ApiService {
 
   constructor (private http: Http) {}
 
-  friendPost(friendId: string, access_token: string): Observable<boolean> {
-    let url = this.postFriend + "/" + access_token + "/" + friendId;
-    return this.http.post(url, {}, this.options)
+  friendPost(friend, access_token: string): Observable<boolean> {
+    let url = this.postFriend + "/" + access_token + "/" + friend.fbId;
+    let body = JSON.stringify(friend);
+    return this.http.post(url, body, this.options)
       .map((res:Response) => {
+        console.log(res.json());
+        if (!res.json().error) {
+          return true;
+        }
+        return false;
+      });
+  }
+
+  unfriendPost(friend, access_token: string): Observable<boolean> {
+    let url = this.postUnfriend + "/" + access_token + "/" + friend.fbId;
+    let body = JSON.stringify(friend);
+    return this.http.post(url, body, this.options)
+      .map((res:Response) => {
+        console.log(res.json());
         if (!res.json().error) {
           return true;
         }
