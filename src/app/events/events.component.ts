@@ -17,11 +17,16 @@ export class EventsComponent implements OnInit {
 
   public inviteOpen = false;
   public events = [];
+  public copyLinkText = "";
+  public copyTextActive;
   private userAccessToken = "";
   public filterArgs;
   private snackbar = null;
   private eventFilter = "";
   public currentEvent = new Event(0);
+  @ViewChild("show") show;
+  @ViewChild("showCopyText") showCopyText;
+  @ViewChild("linkText") linkText;
   @ViewChildren("eventComps") eventComps: QueryList<EventComponent>;
   @Input("user") user;
   @ViewChild('drawer') drawer: ElementRef;
@@ -46,6 +51,7 @@ export class EventsComponent implements OnInit {
 
     this.authService.user().subscribe(response => {
       this.user = response;
+      console.log(this.user.friendNotifications);
     });
     this.apiService.getEvents().subscribe(response => {
       this.events = response;
@@ -55,16 +61,48 @@ export class EventsComponent implements OnInit {
   ngOnInit() {
     console.log("ngOnInit");
   }
+  public copyText(): void {
+    console.log(this.linkText.nativeElement.select());
+    if (document.execCommand("copy")) {
+      this.showCopyText.nativeElement.querySelector("button").innerHTML = "Copied";
+    }
+  }
+  public closeSnackbar(): void {
+    // this.showCopyText.nativeElement.MaterialSnackbar.hideSnackbar();
+  }
+  public openLinkCopier(eventUrl): void {
+    this.copyTextActive = true;
+    this.copyLinkText = eventUrl;
+    let data = { 
+      message: '',
+      timeout: 10000,
+      actionHandler: this.copyText.bind(this),
+      actionText: 'Copy'
+    };
+    this.showCopyText.nativeElement.MaterialSnackbar.showSnackbar(data);
+  }
+
   ngAfterViewInit() {
     console.log("ngAfterViewInit");
-    let newsong = 'https://api.soundcloud.com/tracks/311739465';
+    // let newsong = 'https://api.soundcloud.com/tracks/311739465';
     // let scId = this.soundcloudWidget.nativeElement.id;
     // let widget = SC.Widget(scId);
     // widget.bind(SC.Widget.Events.READY, function() {
     //   //widget.pause();
     //   widget.load(newsong);
     // });
-    // this.snackbar = this.popup.nativeElement.querySelector("#snackbar");
+  }
+  public dontShowInviteUser() {
+    // this.dontInviteUser = false;
+  }
+
+  public showInviteUser(friendName) {
+    this.copyTextActive = false;
+    let data = { 
+      message: "You're now tracking " + friendName + ", but they're not using ShowGo. Would you like to send them a message to join our app?",
+      timeout: 5000
+    };
+    this.showCopyText.nativeElement.MaterialSnackbar.showSnackbar(data);
   }
 
   public addFriend(event){
@@ -81,6 +119,16 @@ export class EventsComponent implements OnInit {
           for (let i = 0; i < events.length; i++) {
             events[i].updateAfterFriend(this.user.friends);
           }
+          //if the user doesn't have an account, "You're now tracking {{name}}, but they're not using showgo. Care to send them a showgo link?"
+          this.apiService.findUser(event.friend.fbId).subscribe(response => {
+            if (response) {
+              console.log("added friend is a user");
+            }
+            else {
+              console.log("added friend is not a user");
+              this.showInviteUser(event.friend.name);
+            }
+          });
         }
         else {
           console.log("friend not added");
@@ -109,29 +157,22 @@ export class EventsComponent implements OnInit {
         }
       });
     }
-
   }
 
   public inviteFriend(friend): void {
     console.log("trying to invite: "+ friend.name);
-    /*
-    //use the api service to add this friend id to the user's friends list
-      this.apiService.friendPost(event.friend, this.user.accessToken).subscribe(response => {
-        //response will be true or false based on success
-        if(response) {
-          console.log(response);
-          this.user.friends.push(event.friend);
-          //for each event, update it
-          let events = this.eventComps.toArray()
-          for (let i = 0; i < events.length; i++) {
-            events[i].updateAfterFriend(this.user.friends);
-          }
-        }
-        else {
-          console.log("friend not added");
-        }
-      });
-    */
+    // //use the api service to add this friend id to the user's friends list
+    //   this.apiService.friendInvitePost(friend, this.currentEvent.fbId, this.user.accessToken).subscribe(response => {
+    //     //response will be true or false based on success
+    //     if(response) {
+    //       console.log(response);
+    //       //update the friend object
+    //       friend.showsInvited.push(this.currentEvent.fbId);
+    //     }
+    //     else {
+    //       console.log("friend invite failed");
+    //     }
+    //   });
   }
 
   public openSocial(event): void {

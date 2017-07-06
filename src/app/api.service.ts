@@ -22,6 +22,8 @@ export class ApiService {
   private postInterestedUrl = "/api/interested";
   private postFriend = "/api/friend";
   private postUnfriend = "/api/unfriend";
+  private postFriendInvite = "/api/friendInvite";
+  private getFindUser = '/api/findUser';
 
   public headers = new Headers({ 'Content-Type': 'application/json' });
   public options = new RequestOptions({ headers: this.headers });
@@ -44,6 +46,18 @@ export class ApiService {
         return false;
       });
   }
+  // friendInvitePost(friend, eventId, access_token: string): Observable<boolean> {
+  //   //if fbid is a user, send a showgo notification, otherwise tack the invite onto the friend object
+  //   let url = this.postFriendInvite + "/" + access_token + "/" + eventId + "/" + friend.fbId;
+  //   return this.http.post(url, {}, this.options)
+  //     .map((res:Response) => {
+  //       console.log(res.json());
+  //       if (!res.json().error) {
+  //         return true;
+  //       }
+  //       return false;
+  //     });
+  // }
 
   unfriendPost(friend, access_token: string): Observable<boolean> {
     let url = this.postUnfriend + "/" + access_token + "/" + friend.fbId;
@@ -89,6 +103,19 @@ export class ApiService {
         }
         res.json()
         return eventArray;  
+      });
+  }
+
+  findUser(friendId): Observable<boolean> {
+    return this.http.get(this.getFindUser + "/" + friendId)
+      .map((res:Response) => {
+        console.log(res);
+        if (!res.json().error) {
+          return true;
+        }
+        else {
+          return false;
+        }
       });
   }
 }

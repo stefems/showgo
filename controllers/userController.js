@@ -76,14 +76,62 @@ var userController = {
                 res.json({"error":"error"});
               } else {
                 console.log("updating existing user's access token");
-                console.log(user.name);
+                // console.log(user.name);
+                //updating their profile photo
                 request("https://graph.facebook.com/" + user.id + "/picture?redirect=0", function(err, r, bod){
                   if (!err && JSON.parse(bod).data && JSON.parse(bod).data.url) {
                     var pictureUrl = JSON.parse(bod).data.url;
                     //find in array
                     user.picture = pictureUrl;
+                    request("https://graph.facebook.com/" + fbId + "/friends?access_token=" + access_token, function(error, r, body){
+                      //if not error or null
+                      if (!error) {
+                        //get each id, perform lookup for user
+                        let friendList = JSON.parse(body).data;
+                        console.log(friendList.length);
+                        let duplicate = false;
+                        for (let friend = 0; friend < friendList.length; friend++) {
+                          for (let i = 0; i < user.friends.length; i++) {
+                            if (friendList[friend].id === user.friends[i].fbId ) {
+                              duplicate = true;
+                              break;
+                            }
+                          }
+                          if (duplicate) {
+                            break;
+                          }
+                          duplicate = false;
+                          for (let i = 0; i < user.friendSuggestions.length; i++) {
+                            if (friendList[friend].id === user.friendSuggestions[i].fbId ) {
+                              duplicate = true;
+                              break;
+                            }
+                          }
+                          if (!duplicate) {
+                            user.friendSuggestions.push({
+                              name: "",
+                              picture: "",
+                              fbId: friendList[friend].id
+                            });
+                            //incrememt the friend suggestions notifications
+                            user.friendNotifications++;
+                          }
+                        }
+                        user.save(function(err) {
+                          if(err) {
+                            console.log("mongo save error");
+                            console.log(err);  // handle errors!
+                            res.json({"error":"error"});
+                          } 
+                          else {
+                            console.log("updated user's friend suggestions and notifications");
+                            res.json(user);
+                          }
+                        });
+                      }
+                    });
                   }
-                  res.json(user);
+                  // res.json(user);
                 });
               }
             });
@@ -102,18 +150,71 @@ var userController = {
                   friends: [],
                   venue_pages: [],
                   events: [],
-                  picture: ""
+                  picture: "",
+                  friendNotifications: 0,
+                  inviteNotifications: 0,
+                  eventInvites: [],
+                  friendSuggestions: []
                 });
                 var pictureUrl = JSON.parse(bod).data.url;
-                user.picture = pictureUrl;
+                user.picture = pictureUrl;                
                 user.save(function(err) {
                   if(err) {
                     console.log("mongo new user save error");
                     console.log(err);  // handle errors!
                     res.json({"error":"error"});
                   } else {
+                    //send request to find friends
                     console.log("saving new user");
-                    res.json(user);
+                    //send request to get friends
+                    request("https://graph.facebook.com/" + fbId + "/friends?access_token=" + access_token, function(error, r, body){
+                      //if not error or null
+                      if (!error) {
+                        //get each id, perform lookup for user
+                        let friendList = JSON.parse(body).data;
+                        console.log(friendList.length);
+                        let duplicate = false;
+                        for (let friend = 0; friend < friendList.length; friend++) {
+                          for (let i = 0; i < user.friends.length; i++) {
+                            if (friendList[friend].id === user.friends[i].fbId ) {
+                              duplicate = true;
+                              break;
+                            }
+                          }
+                          if (duplicate) {
+                            break;
+                          }
+                          duplicate = false;
+                          for (let i = 0; i < user.friendSuggestions.length; i++) {
+                            if (friendList[friend].id === user.friendSuggestions[i].fbId ) {
+                              duplicate = true;
+                              break;
+                            }
+                          }
+                          if (!duplicate) {
+                            user.friendSuggestions.push({
+                              name: "",
+                              picture: "",
+                              fbId: friendList[friend].id
+                            });
+                            //incrememt the friend suggestions notifications
+                            user.friendNotifications++;
+                          }
+                        }
+                        user.save(function(err) {
+                          if(err) {
+                            console.log("mongo save error");
+                            console.log(err);  // handle errors!
+                            res.json({"error":"error"});
+                          } 
+                          else {
+                            console.log("updated user's friend suggestions and notifications");
+                            res.json(user);
+                          }
+                        });
+                      }
+                    });
+                    // res.json(user);
                   }
                 });
               }

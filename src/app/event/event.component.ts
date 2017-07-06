@@ -13,11 +13,15 @@ export class EventComponent implements OnInit {
 
 	@Input("event") event;
 	@Input("user") user;
-
+	@ViewChild("linkText") linkText;
 	@Output()
   	socialSender:EventEmitter<Event> = new EventEmitter<Event>();
+  	@Output()
+  	copyLinkSender:EventEmitter<string> = new EventEmitter<string>();
+  	
 
 	public showFriends = false;
+	public copyTextHidden = false;
 	public showBands = false;
 	public joined = false
 	public interest = false;
@@ -87,6 +91,8 @@ export class EventComponent implements OnInit {
 		this.showBands = !this.showBands;
 	}
 
+
+
 	public updateAfterFriend(friendList): void {
 		let friendsGoing = [];
 		this.user.friends = friendList;
@@ -141,6 +147,9 @@ export class EventComponent implements OnInit {
 				actionType: actionType,
 			});
 		}
+	}
+	public copyLink() {
+		this.copyLinkSender.emit("facebook.com/" + this.event.fbId);
 	}
 
 	public openSocial() {

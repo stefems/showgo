@@ -6,27 +6,23 @@
       <!-- Add spacer, to align navigation to the right -->
       <div class="mdl-layout-spacer"></div>
       <!-- Navigation -->
-      <nav class="mdl-navigation mdl-layout--large-screen-only">
-        <a *ngIf="!user.dbId" class="mdl-navigation__link" (click)="login()">Signup</a>
-        <a *ngIf="!user.dbId" class="mdl-navigation__link" (click)="login()">Login</a>
-        <a *ngIf="user.dbId" class="mdl-navigation__link" (click)="logout()">Logout</a>
-        <a *ngIf="user.dbId" class="mdl-navigation__link" >{{user.displayName}}</a>
-        <img *ngIf="user.dbId" class="mdl-chip__contact" src={{user.picture}}/>
-      </nav>
-      <nav class="mdl-navigation mdl-layout--small-screen-only">
-        <button id="demo-menu-lower-right"
-            class="mdl-button mdl-js-button mdl-button--icon">
-            <i *ngIf="!user.dbId" class="material-icons myIcon">more_vert</i>
-            <img *ngIf="user.dbId" class="mdl-chip__contact" src={{user.picture}}/>
-        </button>
-        <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
-        for="demo-menu-lower-right">
-          <li *ngIf="user.dbId" class="mdl-menu__item">{{user.displayName}}</li>
-          <li *ngIf="!user.dbId" class="mdl-menu__item" (click)="login()">Signup</li>
-          <li *ngIf="!user.dbId" (click)="login()" class="mdl-menu__item">Login</li>
-          <li *ngIf="user.dbId" (click)="logout()" class="mdl-menu__item">Logout</li>
-        </ul>
-      </nav>
+      <span #badge class="mdl-badge" id="badge">
+        <nav class="mdl-navigation">
+          <button id="demo-menu-lower-right"
+              class="mdl-button mdl-js-button mdl-button--icon">
+              <i *ngIf="!user.dbId" class="material-icons myIcon">more_vert</i>
+              <img *ngIf="user.dbId" class="mdl-chip__contact" src={{user.picture}}/>
+          </button>
+          <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
+          for="demo-menu-lower-right">
+            <li *ngIf="user.dbId" class="mdl-menu__item">{{user.displayName}}</li>
+            <li (click)="friendAlertsNav()" [class.hiding]="hideAlerts" class="mdl-menu__item ">Friend Alerts<span #friendAlerts id="friendBadge" class="mdl-badge"></span></li>
+            <li *ngIf="!user.dbId" class="mdl-menu__item" (click)="login()">Signup</li>
+            <li *ngIf="!user.dbId" (click)="login()" class="mdl-menu__item">Login</li>
+            <li *ngIf="user.dbId" (click)="logout()" class="mdl-menu__item">Logout</li>
+          </ul>
+        </nav>
+      </span>
     </div>
   </header>
   <div class="mdl-layout__drawer">

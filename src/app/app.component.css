@@ -11,7 +11,25 @@
 .mdl-layout-title {
     color: black;
 }
-
+.mdl-menu__item.hiding {
+    display: none;
+}
+#badge{
+    margin-right: 0;
+}
+#badge::after {
+    top: 5px;
+    right: -13px;
+    width: 20px;
+    height: 20px;
+    margin-right: 0;
+}
+#friendBadge::after {
+    top: -2px;
+    right: -31px;
+    width: 18px;
+    height: 18px;
+}
 #mainTitle {
     color: white;
     cursor: pointer;

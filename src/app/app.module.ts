@@ -24,6 +24,7 @@ import { ScPlayerComponent } from './sc-player/sc-player.component';
 import { BandComponent } from './band/band.component';
 import { SplashComponent } from './splash/splash.component';
 import { FriendInviteComponent } from './friend-invite/friend-invite.component';
+import { SuggestionPageComponent } from './suggestion-page/suggestion-page.component';
 
 // Define the routes
 const ROUTES = [
@@ -60,6 +61,11 @@ const ROUTES = [
     redirectTo: 'events',
     pathMatch: "full"
   },
+  {
+    path: 'friends/suggestions',
+    component: SuggestionPageComponent,
+    canActivate: [AuthGuard],
+  }
 
 ];
 
@@ -79,7 +85,8 @@ const ROUTES = [
     ScPlayerComponent,
     BandComponent,
     SplashComponent,
-    FriendInviteComponent
+    FriendInviteComponent,
+    SuggestionPageComponent
   ],
   imports: [
     BrowserModule,

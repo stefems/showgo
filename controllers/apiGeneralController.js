@@ -107,6 +107,27 @@ var generalApiController = {
       }
     });
   },
+  getFindUser: function(req, res) {
+    //get the user id
+    let userId = req.params.userId;
+    //perform mongo lookup
+    console.log(userId);
+    User.findOne({id: userId}, function(err, docs) {
+      if(!err && docs !== null && docs !== "") {
+        console.log("found user: " + docs);
+        res.json({status: true});
+      }
+      else if (!docs){
+        console.log("no user found for id: " + userId);
+        res.json({error: "no user found"});
+      }
+      else {
+        console.log("error in getFindUser() searching the mongo db");
+        res.json({error: "error in getFindUser() searching the mongo db"});
+      }
+    });
+
+  },
   //TODO: not needed?
   eventDelete: function(req, res) {
     //get all the req params!
@@ -114,11 +135,22 @@ var generalApiController = {
   //will need a function for sending delete request for any kind of event (because they can't have an event in multiple categories)
   getEvents: function(req, res) {
     // mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/events');
-  	//get events from db
-  	Event.find({}, function(err, docs) {
-  		res.json(docs);
-  	});
+    //get events from db
+    Event.find({}, function(err, docs) {
+      res.json(docs);
+    });
   },
+  // friendInvitePost: function(req, res) {
+  //   //use the access token to send the fb graph request
+
+  //     //if success
+  //     //get the user from the db
+
+  //     //find their friend
+
+
+  // },
+
   friendPost: function(req, res) {
     //get the access_token and friend id from params
     let access_token = req.params.access_token;
@@ -181,6 +213,7 @@ var generalApiController = {
         if (removed) {
           user.save(function(error) {
             if (!error) {
+              console.log("removed a friend");
               res.json({"status": true});
             }
             else {

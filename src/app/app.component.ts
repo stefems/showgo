@@ -14,20 +14,27 @@ import {EventsComponent} from './events/events.component';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-
+  @ViewChild('badge') badge: ElementRef;
   @ViewChild('drawer') drawer: ElementRef;
+  @ViewChild("friendAlerts") friendAlerts: ElementRef;
   title = 'ShowGo';
   loginStatus: boolean = false;
   subscription = Subscription;
   loginStatusObservable: boolean = false;
   user: any;
   hasScrolled = false;
+  notifications = 0;
+  hideAlerts = true;
 
   
   constructor(private authService: AuthService, private router: Router, private fbloginService: FbloginService){    
     this.authService.user().subscribe(response => {
       this.user = response;
       if (this.user.dbId !== "") {
+        this.notifications = this.user.friendNotifications + this.user.inviteNotifications;
+        this.friendAlerts.nativeElement.setAttribute("data-badge", this.user.friendNotifications);
+        this.badge.nativeElement.setAttribute("data-badge", this.notifications);
+        this.hideAlerts = false;
         this.router.navigate(['/events']);
       }
     });
@@ -45,13 +52,17 @@ export class AppComponent {
     this.drawer.nativeElement.MaterialLayout.toggleDrawer();
     this.router.navigate(['/events/'+type]);
   }
-
+  friendAlertsNav(): void {
+    this.router.navigate(['/friends/suggestions']);
+  }
   login(): void {
     console.log("login()");
     this.authService.login();
   }
 
   logout(): void {
+    this.hideAlerts = true;
+    this.badge.nativeElement.removeAttribute("data-badge");
     console.log("logout()");
     this.authService.logout();
     this.router.navigate(['/splash']);

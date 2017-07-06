@@ -1,5 +1,6 @@
 // requiring mongoose dependency
 var mongoose = require('mongoose');
+var Event = require('./event.js');
 
 // defining schema for reminders
 var UserSchema = new mongoose.Schema({
@@ -18,7 +19,19 @@ var UserSchema = new mongoose.Schema({
   }],
   venue_pages: [String],
   id: String,
-  picture: String
+  picture: String,
+  friendSuggestions: [{
+    name: String,
+    picture: String,
+    fbId: String
+  }],
+  friendNotifications: Number,
+  inviteNotifications: Number,
+  eventInvites : [{
+    invitedByName: String,
+    event: [Event.schema]
+  }]
+
 });
 // define the model
 var User = mongoose.model("User", UserSchema);
