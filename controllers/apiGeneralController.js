@@ -1,11 +1,25 @@
 var Event = require("../models/event");
 var User = require("../models/user");
+var fs = require('fs');
+var path = require("path");
 
 var request = require("request");
 var mongoose = require('mongoose');
-
-// mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/events');
-
+var env;
+fs.stat(".env/.env.js", function(err, stat) {
+  if(err == null) {
+    env = require("../.env/.env.js");
+  } 
+  else if(err.code == 'ENOENT') {
+    env = {
+      facebookAppId: process.env.facebookAppId,
+      facebookAppSecret: process.env.facebookAppSecret,
+      googleKey: process.env.googleKey,
+      googleId: process.env.googleId,
+      soundcloudSecret: process.env.soundcloudSecret
+    };
+  }
+});
 
 function findEvent(events, eventId) {
   for (let i = 0; i < events.length; i++) {
@@ -113,25 +127,82 @@ var generalApiController = {
     //perform mongo lookup
     console.log(userId);
     User.findOne({id: userId}, function(err, docs) {
-      if(!err && docs !== null && docs !== "") {
-        console.log("found user: " + docs);
+      if(!err && docs !== null && docs !== "" && docs.access_token != "") {
+        // console.log("found user: " + docs);
         res.json({status: true});
       }
-      else if (!docs){
+      else if (!docs || docs.access_token != ""){
         console.log("no user found for id: " + userId);
         res.json({error: "no user found"});
       }
       else {
+        console.log(err);
         console.log("error in getFindUser() searching the mongo db");
         res.json({error: "error in getFindUser() searching the mongo db"});
       }
     });
+  },
+  getUser: function(req, res) {
+    //get the user id
+    let userId = req.params.userId;
+    //perform mongo lookup
+    User.findOne({id: userId}, function(err, docs) {
+      if(!err && docs !== null && docs !== "") {
+        res.json({picture: docs.picture, name: docs.name, fbId: userId});
+      }
+      else if (!docs){
+        let newUser = new User({
+          //todo: remove the oauthid user field
+          oauthID: 0,
+          id: userId,
+          name: "",
+          created: Date.now(),
+          access_token: "",
+          friends: [],
+          venue_pages: [],
+          events: [],
+          picture: "",
+          friendNotifications: 0,
+          inviteNotifications: 0,
+          eventInvites: [],
+          friendSuggestions: []
+        });
+        newUser.save(function(error) {
+          if (error) {
+            console.log("error first save new user");
+            console.log(error);
+          }
+        });
+        request("https://graph.facebook.com/" + userId + "/picture?redirect=0", function(error, response, body) {
+          if (!error) {
+            newUser.picture = JSON.parse(body).data.url;
+          }
+          let url  = "https://graph.facebook.com/" + userId + "?access_token=" + env.facebookAppId + "|" + env.facebookAppSecret;
+          request(url, function(e, r, b) {
+            if (!JSON.parse(b).error) {
+              newUser.name = JSON.parse(b).name;
+            }
+            else {
+              console.log(JSON.parse(b).error);
+            }
+            newUser.save(function(er) {
+              if(!er) {
+                res.json({fbId: newUser.id, name: newUser.name, picture: newUser.picture});
+              }
+              else {
+                res.json({error: "failed to save a new user created for this get."});
+              }
+            });
+          });
+        });
+      }
+      else {
+        console.log("error in getUser() searching the mongo db");
+        res.json({error: "error in getUser() searching the mongo db"});
+      }
+    });
+  },
 
-  },
-  //TODO: not needed?
-  eventDelete: function(req, res) {
-    //get all the req params!
-  },
   //will need a function for sending delete request for any kind of event (because they can't have an event in multiple categories)
   getEvents: function(req, res) {
     // mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/events');
@@ -140,16 +211,6 @@ var generalApiController = {
       res.json(docs);
     });
   },
-  // friendInvitePost: function(req, res) {
-  //   //use the access token to send the fb graph request
-
-  //     //if success
-  //     //get the user from the db
-
-  //     //find their friend
-
-
-  // },
 
   friendPost: function(req, res) {
     //get the access_token and friend id from params

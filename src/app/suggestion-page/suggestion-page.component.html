@@ -1,5 +1,5 @@
 <h1>Friend Suggestions</h1>
-<a *ngFor="let friend of user.friendSuggestions" class="mdl-navigation__link navLink">
+<a *ngFor="let friend of user.friendSuggestions">
 	<friend-bubble (idSender)="addFriend($event)" [friend]="friend">
 	</friend-bubble>
 </a>

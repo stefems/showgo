@@ -13,7 +13,8 @@ var EventSchema = new mongoose.Schema({
 		eventHour: String,
 		eventDay: String,
 		eventYear: String,
-		eventMonth: String
+		eventMonth: String,
+		start_time: String
 	},
 	eventCancelled: Boolean,
 	eventVenue: String,

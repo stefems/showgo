@@ -41,14 +41,14 @@ export class AppComponent {
   }
 
   ngOnInit(){
-    console.log("app ngOnInit");
+    // console.log("app ngOnInit");
   }
   ngAfterViewInit() {
-    console.log("app ngAfterViewInit");
+    // console.log("app ngAfterViewInit");
   }
   
   filter(type): void {
-    console.log("type: " + type);
+    // console.log("type: " + type);
     this.drawer.nativeElement.MaterialLayout.toggleDrawer();
     this.router.navigate(['/events/'+type]);
   }

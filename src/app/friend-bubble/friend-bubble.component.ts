@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { ApiService }      from './../api.service';
 
 @Component({
   selector: 'friend-bubble',
@@ -10,10 +11,16 @@ export class FriendBubbleComponent implements OnInit {
   	idSender:EventEmitter<any> = new EventEmitter();
 	@Input("friend") friend;
 
-	constructor() {
+	constructor(private apiService: ApiService) {
+		
 	}
 
 	ngOnInit() {
+		this.apiService.userGet(this.friend.fbId).subscribe(response => {
+	      this.friend.name = response.name;
+	      this.friend.picture = response.picture;
+	      this.friend.fbId = response.fbId;
+	    });
 	}
 
 	public addFriend(): void {

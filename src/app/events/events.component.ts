@@ -51,7 +51,6 @@ export class EventsComponent implements OnInit {
 
     this.authService.user().subscribe(response => {
       this.user = response;
-      console.log(this.user.friendNotifications);
     });
     this.apiService.getEvents().subscribe(response => {
       this.events = response;
@@ -59,16 +58,12 @@ export class EventsComponent implements OnInit {
   }
   
   ngOnInit() {
-    console.log("ngOnInit");
   }
   public copyText(): void {
-    console.log(this.linkText.nativeElement.select());
+    this.linkText.nativeElement.select();
     if (document.execCommand("copy")) {
       this.showCopyText.nativeElement.querySelector("button").innerHTML = "Copied";
     }
-  }
-  public closeSnackbar(): void {
-    // this.showCopyText.nativeElement.MaterialSnackbar.hideSnackbar();
   }
   public openLinkCopier(eventUrl): void {
     this.copyTextActive = true;
@@ -83,7 +78,6 @@ export class EventsComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    console.log("ngAfterViewInit");
     // let newsong = 'https://api.soundcloud.com/tracks/311739465';
     // let scId = this.soundcloudWidget.nativeElement.id;
     // let widget = SC.Widget(scId);
@@ -112,20 +106,19 @@ export class EventsComponent implements OnInit {
       this.apiService.friendPost(event.friend, this.user.accessToken).subscribe(response => {
         //response will be true or false based on success
         if(response) {
-          console.log(response);
+          // console.log(event.friend);
           this.user.friends.push(event.friend);
           //for each event, update it
           let events = this.eventComps.toArray()
           for (let i = 0; i < events.length; i++) {
             events[i].updateAfterFriend(this.user.friends);
           }
-          //if the user doesn't have an account, "You're now tracking {{name}}, but they're not using showgo. Care to send them a showgo link?"
           this.apiService.findUser(event.friend.fbId).subscribe(response => {
             if (response) {
-              console.log("added friend is a user");
+              // console.log("added friend is a user");
             }
             else {
-              console.log("added friend is not a user");
+              // console.log("added friend is not a user");
               this.showInviteUser(event.friend.name);
             }
           });
@@ -141,7 +134,6 @@ export class EventsComponent implements OnInit {
       this.apiService.unfriendPost(event.friend, this.user.accessToken).subscribe(response => {
         //response will be true or false based on success
         if(response) {
-          console.log(response);
           for (let i = 0; i < this.user.friends.length; i++) {
             if (this.user.friends[i].fbId == event.friend.fbId) {
               this.user.friends.splice(i, 1);

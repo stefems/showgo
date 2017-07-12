@@ -22,6 +22,8 @@ router.post("/friend/:access_token/:friendId", apiGeneralController.friendPost);
 router.post("/unfriend/:access_token/:friendId", apiGeneralController.unfriendPost);
 router.get("/getId/:access_token", userController.getId);
 router.get("/findUser/:userId", apiGeneralController.getFindUser);
+router.get("/user/:userId", apiGeneralController.getUser);
+
 
 
 //SHOULD THESE BE DELETED

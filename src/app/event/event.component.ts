@@ -99,12 +99,13 @@ export class EventComponent implements OnInit {
 		//for each attendee, is that a friend
 		for (let i = 0; i < this.event.social.length; i++) {
 			this.event.social[i].isFriend = false;
+			// console.log(this.event.social[i].name);
 			//for each friend
 			for (let j = 0; j < this.user.friends.length; j++) {
 				if (this.user.friends[j].fbId === this.event.social[i].fbId) {
 					this.event.social[i].isFriend = true;
 					let friend = this.event.social[i];
-					friendsGoing.push(this.event.social[i].name);
+					friendsGoing.push(friend.name);
 					//remove friend from social list
 					this.event.social.splice(i, 1);
 					//push friend to front of social list
@@ -115,6 +116,7 @@ export class EventComponent implements OnInit {
 		}
 		switch (friendsGoing.length) {
 			case 0:
+				this.friendString = "";
 				break;
 			case 1:
 				this.friendString = friendsGoing[0] + " is going.";
@@ -127,6 +129,7 @@ export class EventComponent implements OnInit {
 				break;
 		}
 		this.event.friendString = this.friendString;
+		// console.log(this.event.friendString);
 		// this.socialSender.emit(this.event);
 	}	
 	
@@ -153,7 +156,7 @@ export class EventComponent implements OnInit {
 	}
 
 	public openSocial() {
-		console.log("emitting " + this.event.name);
+		// console.log("emitting " + this.event.name);
 		this.socialSender.emit(this.event);
 	}
 

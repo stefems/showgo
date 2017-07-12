@@ -17,13 +17,11 @@ export class ApiService {
   eventsObservable = this.eventsObservableSource.asObservable();
   private getEventsUrl = "/api/events";
   private postEventActionUrl = "/api/eventAction";
-  private postJoinUrl = "/api/join";
-  private postDeclineUrl = "/api/decline";
-  private postInterestedUrl = "/api/interested";
   private postFriend = "/api/friend";
   private postUnfriend = "/api/unfriend";
   private postFriendInvite = "/api/friendInvite";
   private getFindUser = '/api/findUser';
+  private getUser = '/api/user';
 
   public headers = new Headers({ 'Content-Type': 'application/json' });
   public options = new RequestOptions({ headers: this.headers });
@@ -34,12 +32,28 @@ export class ApiService {
 
   constructor (private http: Http) {}
 
+  userGet(fbId): Observable<any> {
+    return this.http.get(this.getUser + "/" + fbId)
+      .map((res:Response) => {
+        // console.log(res);
+        if (!res.json().error) {
+          return res.json();
+        }
+        else {
+          console.log("null friend");
+          return null;
+        }
+    });
+    //look for db for user with this id
+      //if found, return the picture and name
+      //if not found, send requests to backend
+  }
+
   friendPost(friend, access_token: string): Observable<boolean> {
     let url = this.postFriend + "/" + access_token + "/" + friend.fbId;
     let body = JSON.stringify(friend);
     return this.http.post(url, body, this.options)
       .map((res:Response) => {
-        console.log(res.json());
         if (!res.json().error) {
           return true;
         }
@@ -64,7 +78,6 @@ export class ApiService {
     let body = JSON.stringify(friend);
     return this.http.post(url, body, this.options)
       .map((res:Response) => {
-        console.log(res.json());
         if (!res.json().error) {
           return true;
         }
@@ -109,7 +122,6 @@ export class ApiService {
   findUser(friendId): Observable<boolean> {
     return this.http.get(this.getFindUser + "/" + friendId)
       .map((res:Response) => {
-        console.log(res);
         if (!res.json().error) {
           return true;
         }

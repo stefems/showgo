@@ -1,8 +1,27 @@
-var mongoose = require('mongoose');
-var fs = require('fs');
-
-var env;
-var access_token;
+/*
+=====================================
+Node Setup
+=====================================
+*/
+const mongoose = require('mongoose');
+const fs = require('fs');
+const request = require('request');
+const jsdom = require('jsdom');
+const { JSDOM } = jsdom;
+/*
+=====================================
+Mongoose Setup
+=====================================
+*/
+var User = require("./models/user");
+var Event = require("./models/event");
+var Band = require("./models/band");
+/*
+=====================================
+ENV Setup (for keys)
+=====================================
+*/
+var env, access_token;
 fs.stat(".env/.env.js", function(err, stat) {
   if(err == null) {
     env = require("/home/stefan/showstopper/showgo/mean-app/.env/.env.js");
@@ -21,169 +40,257 @@ fs.stat(".env/.env.js", function(err, stat) {
   access_token = env.facebookAppId + "|" + env.facebookAppSecret;
 });
 
-var request = require('request');
-const jsdom = require('jsdom');
-const { JSDOM } = jsdom;
 
-var User = require("./models/user");
-var Event = require("./models/event");
-var Band = require("./models/band");
 
-//TODO: systematic way to get access token for when this is scheduled
-//TODO: replace with DB venues
-var venues = [];
-
+/* TODO
+=====================================
+- create a db entry for facebook venue pages
+- capture the facebook venues into an array
+- run getEvents() on each venue
+=====================================
+*/
+var facebookVenuePages = ["HiDiveDenver", "lostlakedenver"];
 mongoose.connect('mongodb://localhost/events');
-Event.remove({}, function(err, wut) {
-	if (err) {
-		return console.log(err); 
+Event.remove({}, function(error, wut) {
+	if (error) {
+		console.log(error); 
 	}
-	console.log("removal of events.");
-	User.remove({}, function(error, huh) {
-		if (err) {
-			return console.log(err); 
-		}
-		getEvents();
-	});
+	else {
+		User.remove({}, function(e, huh) {
+			if (e) {
+				console.log(e); 
+			}
+			else {
+				getAllEvents(facebookVenuePages);
+			}
+		});
+	}
+	
 });
 
-function getEvents(url) {
-	let facebookEventURL = url || "https://graph.facebook.com/HiDiveDenver/events?fields=name,place,owner,description,start_time&access_token=" + access_token;
-	//send request to api
-	request(facebookEventURL, function (error, response, body) {
-		let events = JSON.parse(body).data;
-		//for each event acquired in the response
-		for (let i = 0; i < events.length; i++) {
-			Event.findOne({eventId: events[i].id}, function(error, found) {
-				//event exists
-				if (!error && found) {
-					//Update the event
-				}
-				//create new event
-				else {
-					createEvent(events[i]);
-				}
+var getEvents = function(url) {
+	/*
+	=====================================
+	Create a promise for creating all events
+	- when an event is created, the then happens
+	=====================================
+	*/
+	var getEventsPromise = new Promise((resolve, reject) => {
+		request(url, function (error, response, body) {
+			let events = JSON.parse(body).data;
+			fetchEventInfo(events).then(function() {
+			    console.log('all done');
 			});
-		}
-		//if we need to page to get more events
-		if (response.paging) {
-	    	getEvents(response.paging.next);         
-	    }
+		});
+			// for (let i = 0; i < events.length; i++) {
+			// events.map(function(currentEvent, index) {
+		// 		Event.findOne({eventId: events[i].id}, function(error, found) {
+		// 			let currentEvent = events[i];
+		// 			/*
+		// 			=====================================
+		// 			TODO: no updating feature for events
+		// 			=====================================
+		// 			*/
+		// 			if (!error && found) {
+		// 				//Update the event
+		// 			}
+		// 			else {
+		// 				/*
+		// 				=====================================
+		// 				Creating the new event
+		// 				=====================================
+		// 				*/
+		// 				let currentDate = new Date();
+		// 				let month = parseInt(currentEvent.start_time.slice(5,7));
+		// 				var monthNames = ["January", "February", "March", "April", "May", "June",
+		// 								  "July", "August", "September", "October", "November", "December"
+		// 								];
+		// 				let eventDay = parseInt(currentEvent.start_time.slice(8,10));
+		// 				//TODO: display hour in a more formatted way
+		// 				let eventHour = currentEvent.start_time.slice(11,16);
+		// 				let eventYear = parseInt(currentEvent.start_time.slice(0,4));
+		// 				let eventMonth = monthNames[month-1];
+		// 				let eventTime = {
+		// 					eventHour: eventHour,
+		// 					eventDay: eventDay,
+		// 					eventYear: eventYear,
+		// 					eventMonth: eventMonth,
+		// 					start_time: currentEvent.start_time
+		// 				};
+		// 				let newEvent = new Event({
+		// 					eventId: currentEvent.id,
+		// 					eventName: currentEvent.name,
+		// 					eventOwner: "",
+		// 					eventPlace: currentEvent.place.location.street + " " + currentEvent.place.location.city + ", " + currentEvent.place.location.state,
+		// 					eventCategory: "",
+		// 					eventDescription: currentEvent.description,
+		// 					eventTime: eventTime,
+		// 					eventCancelled: currentEvent.is_cancelled,
+		// 					eventVenue: currentEvent.place.name,
+		// 					social: [],
+		// 					bcEmbeds: [],
+		// 					scEmbeds: [],
+		// 					bands: []
+		// 				});
+		// 				/*
+		// 				=====================================
+		// 				Creating the new event
+		// 				=====================================
+		// 				*/
+		// 				resolve(newEvent);
+		// 			}
+		// 		});
+		// 	}
+		// 	if (JSON.parse(body).paging.next) {
+		//     	getEvents(JSON.parse(body).paging.next);         
+		//     }
 	});
-}
+	return getEventsPromise;
+};
 
-function createEvent(eventPassedIn) {
+var saveEvent = function(currentEvent) {
+	/*
+	=====================================
+	Creating the new event
+	=====================================
+	*/
 	let currentDate = new Date();
-	let month = parseInt(eventPassedIn.start_time.slice(5,7));
+	let month = parseInt(currentEvent.start_time.slice(5,7));
 	var monthNames = ["January", "February", "March", "April", "May", "June",
 					  "July", "August", "September", "October", "November", "December"
 					];
-	let eventDay = parseInt(eventPassedIn.start_time.slice(8,10));
+	let eventDay = parseInt(currentEvent.start_time.slice(8,10));
 	//TODO: display hour in a more formatted way
-	let eventHour = eventPassedIn.start_time.slice(11,16);
-
-	let eventYear = parseInt(eventPassedIn.start_time.slice(0,4));
-	if (currentDate.getDate() > eventDay) {
-		if ((currentDate.getMonth() + 1) >= month ) {
-			if (currentDate.getFullYear() >= eventYear) {
-				console.log("reached upcoming.");
-				return;
-			}
-		}
-	}
+	let eventHour = currentEvent.start_time.slice(11,16);
+	let eventYear = parseInt(currentEvent.start_time.slice(0,4));
 	let eventMonth = monthNames[month-1];
 	let eventTime = {
 		eventHour: eventHour,
 		eventDay: eventDay,
 		eventYear: eventYear,
-		eventMonth: eventMonth
+		eventMonth: eventMonth,
+		start_time: currentEvent.start_time
 	};
 	let newEvent = new Event({
-		eventId: eventPassedIn.id,
-		eventName: eventPassedIn.name,
+		eventId: currentEvent.id,
+		eventName: currentEvent.name,
 		eventOwner: "",
-		eventPlace: eventPassedIn.place.location.street + " " + eventPassedIn.place.location.city + ", " + eventPassedIn.place.location.state,
+		eventPlace: currentEvent.place.location.street + " " + currentEvent.place.location.city + ", " + currentEvent.place.location.state,
 		eventCategory: "",
-		eventDescription: eventPassedIn.description,
+		eventDescription: currentEvent.description,
 		eventTime: eventTime,
-		eventCancelled: false,
-		eventVenue: eventPassedIn.place.name,
+		eventCancelled: currentEvent.is_cancelled,
+		eventVenue: currentEvent.place.name,
 		social: [],
 		bcEmbeds: [],
 		scEmbeds: [],
 		bands: []
 	});
-	getAttending(newEvent);
-	acquireBands(newEvent);
-
-}
+	var saveEventPromise = new Promise((resolve, reject) => {
+		newEvent.save(function(saveError) {
+			if (saveError) {
+				console.log(saveError);
+			}
+			else {
+				console.log("saved: " + newEvent.eventName);
+				//resolve(newEvent);
+			}
+		});
+	});
+	return saveEventPromise;
+	//acquireBands(newEvent);
+};
 
 function getAttending(event, urlGiven) {
-	let url = urlGiven || "https://graph.facebook.com/" + event.eventId + "/attending?access_token=" + access_token;
-	request(url, function (error, response, body) {
-  		response = JSON.parse(body).paging;
-		let peopleAttending = JSON.parse(body).data;
-		for(let i = 0; i < peopleAttending.length; i++) {
-			url = env.home + "/api/user/" + peopleAttending[i].id;
-			let newFriend = {
-				name: peopleAttending[i].name,
-				picture: "",
-				fbId: peopleAttending[i].id
-			};
-			let currentEvent = event;
-			//send request to our backend to get the user
-			request(url, function(e, r, b) {
-				if (!e && !JSON.parse(b).error) {
-					newFriend = JSON.parse(b);
-				}
-				else {
-					// console.log(b);
-					// console.log(e);
-				}
-				if (currentEvent.social.length === 0) {
-					currentEvent.social.push(newFriend);
-				}
-				else {
-					for (let i = 0; i < event.social.length; i++) {
-						if (currentEvent.social[i].fbId === newFriend.fbId) {
-							console.log("friend duplicate found...");
-							break;
-						}
-						else if (i === (currentEvent.social.length - 1)) {
-							// console.log("adding to social");
-							currentEvent.social.push(newFriend);
-						}
-					}
-				}
-				
+	var getAttendingPromise = new Promise((resolve, reject) => {
+		let url = urlGiven || "https://graph.facebook.com/" + event.eventId + "/attending?fields=name,picture&access_token=" + access_token;
+		request(url, function (error, response, body) {
+			let people = JSON.parse(body).data;
+			// for (let i = 0; i < people.length; i++) {
+			// 	let attendee = {
+			// 		name: people[i].name,
+			// 		fbId: people[i].id,
+			// 		picture: people[i].picture.data.url
+			// 	};
+			// 	event.social.push(attendee);
+			// }
+			// event.social.concat(peopleAttending);
+			//sendUserRequest(currentEvent, peopleAttending);
+			//if we need to page to get more users
+			if (JSON.parse(body).paging.next) {
+				getAttending(event, JSON.parse(body).paging.next);  
+		    }
+		    else {
+		    	resolve(event);
+		    }
+	  	});
+
+	});
+	return getAttendingPromise;
+
+	// sendAttendenceRequest(event, url);
+}
+
+function sendAttendenceRequest(currentEvent, url) {
+	
+}
+
+function sendUserRequest(currentEvent, peopleAttending) {
+	peopleAttending.forEach(function(item, index){
+		let attendee = item;
+		url = env.home + "/api/user/" + attendee.id;
+		//send request to our backend to get the user
+		request(url, function(e, r, b) {
+			if (!e && !JSON.parse(b).error) {
+				let newFriend = JSON.parse(b);
+				//check for event here next
+				currentEvent.social.push(newFriend);
 				currentEvent.save(function(error) {
 					if (error) {
-						console.log(newFriend);
 						console.log(error);
 						console.log("error when saving an attender");
 					}
 				});
-			});
-			//push the response if not null
+			}
+			else {
+				console.log("request to get user info gave us trouble");
+				console.log(JSON.parse(b).error);
+			}
+			
+		});
+	});
+}
+
+function getProfileImages(event) {
+	for (let i = 0; i < event.social.length; i ++) {
+		let currentPerson = event.social[i];
+		request("https://graph.facebook.com/" + currentPerson.fbId + "/picture?redirect=0", function(err, res, bod){
+			if (!err && JSON.parse(bod).data && JSON.parse(bod).data.url) {
+				var pictureUrl = JSON.parse(bod).data.url;
+				//find in array
+				currentPerson.picture = pictureUrl;
+				event.save(function(error) {
+					if (error) {
+						console.log(error)
+						console.log("failed to save image for " + person.fbId);
+						// console.log(err);
+					}
+				});
+			}
+			else {
+				console.log(err);
+				console.log("request to get user image failed.");
+			}
+		});
+	}
+	for (let personIndex = 0; personIndex < event.social.length; personIndex++) {
+		for (let index = 0; index < event.social.length; index++) {
+			if (event.social[personIndex].fbId === event.social[index].fbId) {
+				console.log("DUPLICATE PERSON IN EVENT FOUND");
+				break;
+			}
 		}
-		//if we need to page to get more users
-		if (response && response.next) {
-			getAttending(event, response.next);  
-	    }
-	    else {
-	    	event.save(function(err){
-				if (err) {
-					console.log("event save error in get attending");
-					console.log(err);
-				}
-				else {
-					//launch the get profile image portion
-	    			//getProfileImages(event);
-				}
-			}); 
-	    	
-	    }
-  	});
+	}
 }
 
 function acquireBands(eventPassedIn) {
@@ -381,6 +488,7 @@ function googleSearchBand(bandId, event, bandName) {
 		}
 	});
 }
+
 function getsoundcloudEmbed(bandId, url, event) {
 	//send request to get the user's id
 	let options = {
@@ -485,13 +593,6 @@ function getbandcampEmbed(bandId, url, event) {
 	});	
 }
 
-function getProfileImages(event) {
-	for (let i = 0; i < event.social.length; i ++) {
-		let currentPerson = event.social[i];
-		getImage(event, currentPerson);
-	}
-}
-
 function saveNewBandUpdateEvent(bandId, event, bcEmbed, scEmbed) {
 	Band.findOne({fbId: bandId}, function(error, found) {
 		if (error) {
@@ -530,27 +631,7 @@ function saveNewBandUpdateEvent(bandId, event, bcEmbed, scEmbed) {
 			}
 	});
 		}
-	});
-	
-}
-
-function getImage(event, person) {
-	request("https://graph.facebook.com/" + person.fbId + "/picture?redirect=0", function(err, res, bod){
-		if (!err && JSON.parse(bod).data && JSON.parse(bod).data.url) {
-			var pictureUrl = JSON.parse(bod).data.url;
-			//find in array
-			person.picture = pictureUrl;
-			event.save(function(err) {
-				if (err) {
-					console.log("failed to save image for " + person.fbId);
-					// console.log(err);
-				}
-				else {
-
-				}
-			});
-		}
-	});
+	});	
 }
 
 function FindUser() {
@@ -594,5 +675,136 @@ function addUser() {
 	  if(err) {
 	    console.log(err);  // handle errors!
 	  }
+	});
+}
+
+/*
+=====================================
+Event Seeding Process
+1. getAllEvents() calls acquireEvents() for each venue
+2. acquireEvents() recursively get the events
+3. getEventPromiseArray() returns an array of promises for the event being saved to mongo
+4. getPeople() is called for each event in order to recursively acquire the attendence
+and save the event's social listing.
+=====================================
+*/
+function getAllEvents(venues) {
+	//get before date string for 2 months from now
+	var untilValue;
+	let date = new Date();
+	if (date.getMonth() === 12 || date.getMonth() === 11) {
+		//set the until to year++/2/15
+		untilValue = (date.getFullYear + 2) + "-1-15";
+	}
+	else {
+		untilValue = date.getFullYear() + "-" + (date.getMonth() + 2) + "-15";  
+	}
+	for (let i = 0; i < venues.length; i++) {
+		let url = "https://graph.facebook.com/" + venues[i] + "/events?fields=is_cancelled,name,place,owner,description,start_time&until=" + untilValue + "&since=now&access_token=" + access_token;
+		acquireEvents(url);
+	}
+}
+
+function acquireEvents(url) {
+	request(url, function (error, response, body) {
+		let events = JSON.parse(body).data;
+		Promise.all(getEventPromiseArray(events)).then(values => {
+			for (let i = 0; i < values.length; i++) {
+				let attendeeUrl = "https://graph.facebook.com/" + values[i].eventId + "/attending?fields=picture,name&access_token=" + access_token;
+				getPeople(attendeeUrl, [], values[i]);
+			}			
+		});
+		if (JSON.parse(body).paging.next) {
+			acquireEvents(JSON.parse(body).paging.next);
+		}
+	});
+}
+
+function getEventPromiseArray(events) {
+	let promiseArray = [];
+	for (let i = 0; i < events.length; i++) {
+		//for each event, create and push a promise to create and save the event to mongo
+		promiseArray.push(new Promise( (resolve) => {
+			//create event
+			let currentEvent = events[i];
+			/*
+			=====================================
+			Creating the new event
+			=====================================
+			*/
+			let currentDate = new Date();
+			let month = parseInt(currentEvent.start_time.slice(5,7));
+			var monthNames = ["January", "February", "March", "April", "May", "June",
+							  "July", "August", "September", "October", "November", "December"
+							];
+			let eventDay = parseInt(currentEvent.start_time.slice(8,10));
+			//TODO: display hour in a more formatted way
+			let eventHour = currentEvent.start_time.slice(11,16);
+			let eventYear = parseInt(currentEvent.start_time.slice(0,4));
+			let eventMonth = monthNames[month-1];
+			let eventTime = {
+				eventHour: eventHour,
+				eventDay: eventDay,
+				eventYear: eventYear,
+				eventMonth: eventMonth,
+				start_time: currentEvent.start_time
+			};
+			let newEvent = new Event({
+				eventId: currentEvent.id,
+				eventName: currentEvent.name,
+				eventOwner: "",
+				eventPlace: currentEvent.place.location.street + " " + currentEvent.place.location.city + ", " + currentEvent.place.location.state,
+				eventCategory: "",
+				eventDescription: currentEvent.description,
+				eventTime: eventTime,
+				eventCancelled: currentEvent.is_cancelled,
+				eventVenue: currentEvent.place.name,
+				social: [],
+				bcEmbeds: [],
+				scEmbeds: [],
+				bands: []
+			});
+			//save
+			newEvent.save(function(saveError) {
+				if (saveError) {
+					console.log(saveError);
+				}
+				else {
+					// console.log("saved: " + newEvent.eventName);
+					resolve(newEvent);
+				}
+			});
+		}));
+	}
+    return promiseArray;
+}
+
+function getPeople(url, array, event) {
+	request(url, function (error, response, body) {
+		if (!error && JSON.parse(body) && JSON.parse(body).paging && (JSON.parse(body).data.length > 0)) {
+			let people = JSON.parse(body).data;
+			for (let i = 0; i < people.length; i++) {
+				let attendee = {
+					name: people[i].name,
+					fbId: people[i].id,
+					picture: people[i].picture.data.url
+				};
+				array.push(attendee);
+			}
+			if (JSON.parse(body).paging.next) {
+				getPeople(JSON.parse(body).paging.next, array, event);
+			}
+			else {
+				event.social = array;
+				event.save(function(e) {
+					if (e) {
+						console.log(e);
+					}
+				});
+			}
+		}
+		else {
+
+		}
 	});
 }

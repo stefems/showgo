@@ -76,7 +76,6 @@ var userController = {
                 res.json({"error":"error"});
               } else {
                 console.log("updating existing user's access token");
-                // console.log(user.name);
                 //updating their profile photo
                 request("https://graph.facebook.com/" + user.id + "/picture?redirect=0", function(err, r, bod){
                   if (!err && JSON.parse(bod).data && JSON.parse(bod).data.url) {
@@ -108,13 +107,17 @@ var userController = {
                             }
                           }
                           if (!duplicate) {
-                            user.friendSuggestions.push({
+                            let newFriendSuggestion = {
                               name: "",
                               picture: "",
                               fbId: friendList[friend].id
-                            });
+                            };
+                            user.friendSuggestions.push(newFriendSuggestion);
                             //incrememt the friend suggestions notifications
                             user.friendNotifications++;
+                          }
+                          else {
+
                           }
                         }
                         user.save(function(err) {
@@ -172,7 +175,6 @@ var userController = {
                       if (!error) {
                         //get each id, perform lookup for user
                         let friendList = JSON.parse(body).data;
-                        console.log(friendList.length);
                         let duplicate = false;
                         for (let friend = 0; friend < friendList.length; friend++) {
                           for (let i = 0; i < user.friends.length; i++) {
@@ -192,11 +194,12 @@ var userController = {
                             }
                           }
                           if (!duplicate) {
-                            user.friendSuggestions.push({
+                            let newFriendSuggestion = {
                               name: "",
                               picture: "",
                               fbId: friendList[friend].id
-                            });
+                            };
+                            user.friendSuggestions.push(newFriendSuggestion);
                             //incrememt the friend suggestions notifications
                             user.friendNotifications++;
                           }
@@ -214,7 +217,6 @@ var userController = {
                         });
                       }
                     });
-                    // res.json(user);
                   }
                 });
               }
@@ -233,6 +235,27 @@ var userController = {
     });
   }
 };
+
+function findPhotoAndName(user, friend) {
+
+  //send request to get photo
+  request("https://graph.facebook.com/" + friend.fbId + "/picture?redirect=0", function(error, response, body){
+    if (!err && JSON.parse(body).data && JSON.parse(body).data.url) {
+      friend.picture = JSON.parse(body).data.url;
+    }
+    //send request to get name
+    request("https://graph.facebook.com/" + friend.fbId + "?access_token="+user.access_token, function(error, response, body){
+      if (!err) {
+        friend.name = JSON.parse(body).name;
+      }
+    });
+  });
+
+
+  //save to friend object
+
+
+}
 
 module.exports = userController;
 
