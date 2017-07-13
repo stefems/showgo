@@ -1,10 +1,11 @@
 export class Event {
 	private name: string;
-	private fbId: string;
+	public fbId: string;
 	private dbId: string; 
 	private venue: string;
 	private location: string;
 	private timeString: string;
+	private time: string;
 	private social;
 	private bcEmbeds;
 	private scEmbeds;
@@ -19,11 +20,22 @@ export class Event {
 			this.fbId = inputJson.eventId;
 			this.dbId = inputJson._id;
 			this.location = inputJson.eventPlace;
-			this.timeString = inputJson.eventTime.eventMonth + " " + inputJson.eventTime.eventDay + " at " + inputJson.eventTime.eventHour;
+			let timeHour = "";
+			if (parseInt(inputJson.eventTime.eventHour.slice(0, 2)) < 12) {
+				timeHour = inputJson.eventTime.eventHour + "am";
+			}
+			else if (parseInt(inputJson.eventTime.eventHour.slice(0, 2)) > 12) {
+				timeHour = (parseInt(inputJson.eventTime.eventHour.slice(0, 2)) % 12) + (inputJson.eventTime.eventHour.slice(2)) + "pm";
+			}
+			else {
+				timeHour = inputJson.eventTime.eventHour + "pm";
+			}
+			this.timeString = inputJson.eventTime.eventMonth + " " + inputJson.eventTime.eventDay + " at " + timeHour;
 			this.social = inputJson.social;
 			this.bcEmbeds = inputJson.bcEmbeds;
 			this.scEmbeds = inputJson.scEmbeds;
 			this.bands = inputJson.bands;
+			this.time = inputJson.eventTime.start_time;
 		}
 		else {
 			this.name = "";
@@ -36,6 +48,7 @@ export class Event {
 			this.scEmbeds = [];
 			this.bands = [];
 			this.social = [];
+			this.time = "";
 		}
 		//use the id to get from DB to populate other data
 	}

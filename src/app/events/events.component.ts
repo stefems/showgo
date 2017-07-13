@@ -152,19 +152,18 @@ export class EventsComponent implements OnInit {
   }
 
   public inviteFriend(friend): void {
-    console.log("trying to invite: "+ friend.name);
     // //use the api service to add this friend id to the user's friends list
-    //   this.apiService.friendInvitePost(friend, this.currentEvent.fbId, this.user.accessToken).subscribe(response => {
-    //     //response will be true or false based on success
-    //     if(response) {
-    //       console.log(response);
-    //       //update the friend object
-    //       friend.showsInvited.push(this.currentEvent.fbId);
-    //     }
-    //     else {
-    //       console.log("friend invite failed");
-    //     }
-    //   });
+    this.apiService.friendInvitePost(friend, this.currentEvent.fbId, this.user.accessToken).subscribe(response => {
+      //response will be true or false based on success
+      if(response) {
+        console.log(response);
+        //update the friend object
+        // friend.showsInvited.push(this.currentEvent.fbId);
+      }
+      else {
+        console.log("friend invite failed");
+      }
+    });
   }
 
   public openSocial(event): void {

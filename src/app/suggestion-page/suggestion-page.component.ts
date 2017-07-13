@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService }      from './../auth.service';
+import { ApiService }      from './../api.service';
+
 
 
 @Component({
@@ -11,9 +13,12 @@ export class SuggestionPageComponent implements OnInit {
 
 	private user;
 
-	constructor(private authService: AuthService) {
+	constructor(private authService: AuthService, private apiService: ApiService) {
 		this.authService.user().subscribe(response => {
 			this.user = response;
+		});
+		this.apiService.clearNotifications(this.user.accessToken, "friend").subscribe(response => {
+			console.log(response);
 		});
 	}
 

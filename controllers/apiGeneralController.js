@@ -32,6 +32,77 @@ function findEvent(events, eventId) {
 
 var generalApiController = {
 
+  friendInvitePost: function(req, res) {
+    let at = req.params.access_token;
+    let friendId = req.params.friendId;
+    let eventId = req.params.eventId;
+    //use the user's access_token to get their id
+    User.findOne({access_token: at}, function(err, docs) {
+      if(!err && docs !== null && docs !== "" && docs.access_token != "") {
+        let userId = docs.id;
+        //get friend from db
+        User.findOne({id: friendId}, function(friendError, friendDoc) {
+          if(!friendError && friendDoc !== null && friendDoc !== "" && friendDoc.access_token != "") {
+            //determing if they've already been invited
+            for (let i = 0; i < friendDoc.eventInvites; i++) {
+              if (friendDoc.eventInvites[i].event === eventId) {
+                friendDoc.eventInvites[i].invitedByNames.push(docs.name);
+              }
+              else if (i === friendDoc.eventInvites - 1) {
+                friendDoc.eventInvites.push({
+                  event: eventId,
+                  invitedByNames: [docs.name]
+                });
+              }
+            }
+            friendDoc.inviteNotifications++;
+            friendDoc.save(function(friendSaveError) {
+              if (friendSaveError) {
+                res.json({error: "error when saving the invite to the user"});
+              }
+              else {
+                res.json({status: true});
+              }
+            });            
+          }
+          else {
+            res.json({error: "error when finding the user to invite"});
+          }
+        });
+      }
+      else {
+        res.json({error: "error when finding the user that sent the invite"});
+      }
+    });
+  },
+
+  postClearNotifs: function(req, res) {
+    let at = req.params.access_token;
+    let type = req.params.type;
+    User.findOne({access_token: at}, function(err, docs) {
+      if(!err && docs !== null && docs !== "" && docs.access_token != "") {
+        if (type === "friend") {
+          //clear their friend alerts
+          docs.friendNotifications = 0;
+        }
+        else {
+          //clear their invite alerts
+          docs.inviteNotifications = 0;
+        }
+        docs.save(function(error) {
+          if (error) {
+            res.json({error: "error when saving the notification update to the user"});
+          }
+          else {
+            res.json({status: true});
+          }
+        });
+      }
+      else {
+        res.json({error: "failed to find this user in our db"});
+      }
+    });
+  },
   //will need a function for sending post request for any kind of event
   //req params will choose the event type, and then also there's the event id
   eventPost: function(req, res) {

@@ -28,8 +28,8 @@ var UserSchema = new mongoose.Schema({
   friendNotifications: Number,
   inviteNotifications: Number,
   eventInvites : [{
-    invitedByName: String,
-    event: [Event.schema]
+    invitedByNames: [String],
+    event: String
   }]
 
 });

@@ -53,6 +53,10 @@ export class AppComponent {
     this.router.navigate(['/events/'+type]);
   }
   friendAlertsNav(): void {
+    //remove user friend notifications
+    this.user.friendNotifications = 0;
+    this.friendAlerts.nativeElement.setAttribute("data-badge", this.user.friendNotifications);
+    this.badge.nativeElement.setAttribute("data-badge", this.user.inviteNotifications);
     this.router.navigate(['/friends/suggestions']);
   }
   login(): void {

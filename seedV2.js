@@ -96,7 +96,8 @@ function createEvent(eventPassedIn) {
 		eventHour: eventHour,
 		eventDay: eventDay,
 		eventYear: eventYear,
-		eventMonth: eventMonth
+		eventMonth: eventMonth,
+		start_time: eventPassedIn.start_time
 	};
 	let newEvent = new Event({
 		eventId: eventPassedIn.id,

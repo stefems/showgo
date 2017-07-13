@@ -18,11 +18,12 @@ router.get('/events', apiGeneralController.getEvents);
 router.get('/getUser/:fbId/:access_token', userController.getUser);
 router.post('/eventAction/:actionType/:eventId/:userId/:access_token', apiGeneralController.eventPost);
 router.post("/friend/:access_token/:friendId", apiGeneralController.friendPost);
-//router.post("/friendInvite/:access_token/:eventId/:friendId", apiGeneralController.friendInvitePost);
+router.post("/friendInvite/:access_token/:eventId/:friendId", apiGeneralController.friendInvitePost);
 router.post("/unfriend/:access_token/:friendId", apiGeneralController.unfriendPost);
 router.get("/getId/:access_token", userController.getId);
 router.get("/findUser/:userId", apiGeneralController.getFindUser);
 router.get("/user/:userId", apiGeneralController.getUser);
+router.post("/clearNotifs/:access_token/:type", apiGeneralController.postClearNotifs);
 
 
 
