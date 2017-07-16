@@ -1,5 +1,6 @@
 import { Component, ViewChild, ElementRef} from '@angular/core';
 import { AuthService }      from './auth.service';
+import { ApiService }      from './api.service';
 import { Subscription } from 'rxjs/Subscription';
 import {User} from './user';
 import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
@@ -17,6 +18,7 @@ export class AppComponent {
   @ViewChild('badge') badge: ElementRef;
   @ViewChild('drawer') drawer: ElementRef;
   @ViewChild("friendAlerts") friendAlerts: ElementRef;
+  @ViewChild("inviteAlerts") inviteAlerts: ElementRef;
   title = 'ShowGo';
   loginStatus: boolean = false;
   subscription = Subscription;
@@ -27,12 +29,13 @@ export class AppComponent {
   hideAlerts = true;
 
   
-  constructor(private authService: AuthService, private router: Router, private fbloginService: FbloginService){    
+  constructor(private apiService: ApiService, private authService: AuthService, private router: Router, private fbloginService: FbloginService){    
     this.authService.user().subscribe(response => {
       this.user = response;
       if (this.user.dbId !== "") {
         this.notifications = this.user.friendNotifications + this.user.inviteNotifications;
         this.friendAlerts.nativeElement.setAttribute("data-badge", this.user.friendNotifications);
+        this.inviteAlerts.nativeElement.setAttribute("data-badge", this.user.inviteNotifications);
         this.badge.nativeElement.setAttribute("data-badge", this.notifications);
         this.hideAlerts = false;
         this.router.navigate(['/events']);
@@ -58,6 +61,16 @@ export class AppComponent {
     this.friendAlerts.nativeElement.setAttribute("data-badge", this.user.friendNotifications);
     this.badge.nativeElement.setAttribute("data-badge", this.user.inviteNotifications);
     this.router.navigate(['/friends/suggestions']);
+  }
+  inviteAlertsNav(): void {
+    //remove user invite notifications
+    this.user.inviteNotifications = 0;
+    this.inviteAlerts.nativeElement.setAttribute("data-badge", this.user.inviteNotifications);
+    this.badge.nativeElement.setAttribute("data-badge", this.user.friendNotifications);
+    this.apiService.clearNotifications(this.user.accessToken, "event").subscribe(response => {
+      console.log(response);
+    });
+    this.router.navigate(['/events/invites']);
   }
   login(): void {
     console.log("login()");

@@ -787,7 +787,8 @@ function getPeople(url, array, event) {
 				let attendee = {
 					name: people[i].name,
 					fbId: people[i].id,
-					picture: people[i].picture.data.url
+					picture: people[i].picture.data.url,
+					isUser: false
 				};
 				array.push(attendee);
 			}

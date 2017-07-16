@@ -33,37 +33,61 @@ function findEvent(events, eventId) {
 var generalApiController = {
 
   friendInvitePost: function(req, res) {
-    let at = req.params.access_token;
+    let at = req.body.access_token;
     let friendId = req.params.friendId;
     let eventId = req.params.eventId;
     //use the user's access_token to get their id
+    //SILENT FAILURE BEYOND HERE
     User.findOne({access_token: at}, function(err, docs) {
       if(!err && docs !== null && docs !== "" && docs.access_token != "") {
         let userId = docs.id;
         //get friend from db
+        let friendUpdated = "";
         User.findOne({id: friendId}, function(friendError, friendDoc) {
           if(!friendError && friendDoc !== null && friendDoc !== "" && friendDoc.access_token != "") {
-            //determing if they've already been invited
-            for (let i = 0; i < friendDoc.eventInvites; i++) {
-              if (friendDoc.eventInvites[i].event === eventId) {
+            for (let i = 0; i < friendDoc.eventInvites.length; i++) {
+              if ( (friendDoc.eventInvites[i].event === eventId) && (friendDoc.eventInvites[i].invitedByNames.indexOf(docs.name) === -1) ) {
                 friendDoc.eventInvites[i].invitedByNames.push(docs.name);
+                friendUpdated = "added friend to list";
+                friendDoc.inviteNotifications++;
+                break;
               }
-              else if (i === friendDoc.eventInvites - 1) {
-                friendDoc.eventInvites.push({
-                  event: eventId,
-                  invitedByNames: [docs.name]
-                });
+              else if ( (friendDoc.eventInvites[i].event === eventId) && (friendDoc.eventInvites[i].invitedByNames.indexOf(docs.name) !== -1) ) {
+                friendUpdated = "friend already invited for this event";
+                break;
               }
             }
-            friendDoc.inviteNotifications++;
-            friendDoc.save(function(friendSaveError) {
-              if (friendSaveError) {
-                res.json({error: "error when saving the invite to the user"});
-              }
-              else {
-                res.json({status: true});
-              }
-            });            
+            if (friendUpdated === "") {
+              friendDoc.eventInvites.push({
+                  event: eventId,
+                  invitedByNames: [docs.name]
+              });
+              friendDoc.inviteNotifications++;   
+              console.log(friendDoc.eventInvites);
+              friendDoc.save(function(friendSaveError) {
+                if (friendSaveError) {
+                  res.json({error: "error when saving the invite to the user"});
+                }
+                else {
+                  //change the user.invitesSent to include this invite
+                  docs.invitesSent.push({
+                    friendInvited: friendDoc.id,
+                    eventId: eventId
+                  });
+                  docs.save(function(userSaveError) {
+                    if (userSaveError) {
+                      res.json({error: "we invited the friend but failed to save that the invite was sent on the sender."});
+                    }
+                    else {
+                      res.json({status: true});
+                    }
+                  });
+                }
+              });
+            }
+            else {
+              res.json({error: "friend already invited for this event"});
+            }            
           }
           else {
             res.json({error: "error when finding the user to invite"});
@@ -105,6 +129,7 @@ var generalApiController = {
   },
   //will need a function for sending post request for any kind of event
   //req params will choose the event type, and then also there's the event id
+  
   eventPost: function(req, res) {
     //get all the req params!
     let actionType = req.params.actionType;
@@ -192,6 +217,7 @@ var generalApiController = {
       }
     });
   },
+  
   getFindUser: function(req, res) {
     //get the user id
     let userId = req.params.userId;
@@ -213,6 +239,7 @@ var generalApiController = {
       }
     });
   },
+  
   getUser: function(req, res) {
     //get the user id
     let userId = req.params.userId;
@@ -221,6 +248,7 @@ var generalApiController = {
       if(!err && docs !== null && docs !== "") {
         res.json({picture: docs.picture, name: docs.name, fbId: userId});
       }
+      /*
       else if (!docs){
         let newUser = new User({
           //todo: remove the oauthid user field
@@ -267,6 +295,7 @@ var generalApiController = {
           });
         });
       }
+      */
       else {
         console.log("error in getUser() searching the mongo db");
         res.json({error: "error in getUser() searching the mongo db"});
@@ -304,16 +333,28 @@ var generalApiController = {
             res.json({"error": "friend already in list"});
         }
         else {
-          //get their name and img
           let friend = req.body;
-          user.friends.push(friend);
-          user.save(function(error) {
-            if (!error) {
-              res.json({"status": true});
+          friend.isUser = false;
+          //search in the db to see if the friend is a user, if not, add a property to it
+          User.findOne({id: friendId}, function(friendFindError, foundFriend) {
+            if (!friendFindError && (foundFriend === null || foundFriend === "") ){
+              friend.isUser = false;
+            }
+            else if (foundFriend){
+              friend.isUser = true;
             }
             else {
-              res.json({"error": "mongo save failure"});
+              console.log(friendFindError);
             }
+            user.friends.push(friend);
+            user.save(function(error) {
+              if (!error) {
+                res.json({"status": true, "friend": friend});
+              }
+              else {
+                res.json({"error": "mongo save failure"});
+              }
+            });
           });
         }
       }

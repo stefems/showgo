@@ -64,13 +64,13 @@ export class ApiService {
       //if not found, send requests to backend
   }
 
-  friendPost(friend, access_token: string): Observable<boolean> {
+  friendPost(friend, access_token: string): Observable<any> {
     let url = this.postFriend + "/" + access_token + "/" + friend.fbId;
     let body = JSON.stringify(friend);
     return this.http.post(url, body, this.options)
       .map((res:Response) => {
         if (!res.json().error) {
-          return true;
+          return res.json();
         }
         return false;
       });
@@ -78,10 +78,9 @@ export class ApiService {
   
   friendInvitePost(friend, eventId, access_token: string): Observable<boolean> {
     //if fbid is a user, send a showgo notification, otherwise tack the invite onto the friend object
-    let url = this.postFriendInvite + "/" + access_token + "/" + eventId + "/" + friend.fbId;
-    return this.http.post(url, {}, this.options)
+    let url = this.postFriendInvite + "/" + eventId + "/" + friend.fbId;
+    return this.http.post(url, JSON.stringify({access_token: access_token}), this.options)
       .map((res:Response) => {
-        console.log(res.json());
         if (!res.json().error) {
           return true;
         }

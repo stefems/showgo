@@ -16,7 +16,8 @@
           <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
           for="demo-menu-lower-right">
             <li *ngIf="user.dbId" class="mdl-menu__item">{{user.displayName}}</li>
-            <li (click)="friendAlertsNav()" [class.hiding]="hideAlerts" class="mdl-menu__item ">Friend Alerts<span #friendAlerts id="friendBadge" class="mdl-badge"></span></li>
+            <li (click)="friendAlertsNav()" [class.hiding]="hideAlerts" class="mdl-menu__item ">Friend Alerts<span #friendAlerts class="mdl-badge alertBadge"></span></li>
+            <li (click)="inviteAlertsNav()" [class.hiding]="hideAlerts" class="mdl-menu__item ">Invites<span #inviteAlerts class="mdl-badge alertBadge"></span></li>
             <li *ngIf="!user.dbId" class="mdl-menu__item" (click)="login()">Signup</li>
             <li *ngIf="!user.dbId" (click)="login()" class="mdl-menu__item">Login</li>
             <li *ngIf="user.dbId" (click)="logout()" class="mdl-menu__item">Logout</li>

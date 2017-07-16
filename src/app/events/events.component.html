@@ -1,3 +1,4 @@
+<a href="sms:Stefan&body=lol">Send SMS</a>
 <div class="eventsContainer">
 	<div id="socialDrawerDiv" #socialContainer class="mdl-layout__container socialDrawerContainer">
 		<div #socialDrawer  class="demo-layout-transparent mdl-layout mdl-js-layout mdl-layout--fixed-header">
@@ -6,7 +7,7 @@
 			<div #drawer class="mdl-grid mdl-layout__drawer">
 				<!--SOCIAL-->
     	    	<h3 id="socialH3" class="mdl-cell mdl-cell--7-col mdl-cell--5-col-tablet mdl-cell--1-col-phone">Social</h3>
-    	    	<!--INVITE BUTTON-->
+    	    	<!--INVITE/ATTENDANCE TOGGLE-->
     	    	<button (click)="openInvite()" id="socialButton" class="mdl-cell mdl-cell--4-col mdl-cell--2-col-tablet mdl-cell--2-col-phone mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"><p *ngIf="!inviteOpen">Invite Friends</p><p *ngIf="inviteOpen">See Attendance</p></button>
 				<!--CLOSE-->
 				<i id="socialMinimize" class="fa fa-times-circle fa-2x mdl-cell mdl-cell--1-col mdl-cell--1-col-tablet mdl-cell--1-col-phone" (click)="closeSocial()"></i>
@@ -19,7 +20,7 @@
 			    </nav>
 			    <!--INVITATION LISTING-->
 	    	    <nav *ngIf="inviteOpen"  id="socialNav" class="mdl-navigation nav">
-					<a *ngFor="let friend of user.friends" class="mdl-navigation__link navLink">
+					<a *ngFor="let friend of user.friends | inviteFriendsFilter:{invites: user.invitesSent, event: this.currentEvent.fbId}" class="mdl-navigation__link navLink">
 						<friend-invite [friend]="friend" (inviteSender)="inviteFriend($event)"></friend-invite>
 					</a>
 			    </nav>

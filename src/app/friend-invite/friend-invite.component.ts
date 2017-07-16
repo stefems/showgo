@@ -9,7 +9,8 @@ export class FriendInviteComponent implements OnInit {
 	@Output()
   	inviteSender:EventEmitter<string> = new EventEmitter();
 	@Input("friend") friend;
-
+	private inviteSent: boolean = false;
+	private buttonText: string = "Invite";
 
 	constructor() { }
 
@@ -17,7 +18,9 @@ export class FriendInviteComponent implements OnInit {
 	}
 
 	public invite(): void {
-		console.log("inviting");
+		//disable button
+		this.buttonText = "Invited";
+		this.inviteSent = true;
 		this.inviteSender.emit(this.friend);
 	}
 

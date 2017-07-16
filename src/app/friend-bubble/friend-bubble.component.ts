@@ -16,11 +16,11 @@ export class FriendBubbleComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		this.apiService.userGet(this.friend.fbId).subscribe(response => {
-	      this.friend.name = response.name;
-	      this.friend.picture = response.picture;
-	      this.friend.fbId = response.fbId;
-	    });
+		// this.apiService.userGet(this.friend.fbId).subscribe(response => {
+	 //      this.friend.name = response.name;
+	 //      this.friend.picture = response.picture;
+	 //      this.friend.fbId = response.fbId;
+	 //    });
 	}
 
 	public addFriend(): void {

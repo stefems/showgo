@@ -46,6 +46,9 @@ export class EventsComponent implements OnInit {
         case "/events/all":
           this.filterArgs = null;
           break;
+        case "/events/invites":
+          this.filterArgs = {type: "invites", eventInvites: this.user.eventInvites};
+          break;
       }
     });
 
@@ -102,12 +105,13 @@ export class EventsComponent implements OnInit {
   public addFriend(event){
     if (event.isAdd) {
       console.log("adding");
+      console.log(event.friend);
       //use the api service to add this friend id to the user's friends list
       this.apiService.friendPost(event.friend, this.user.accessToken).subscribe(response => {
         //response will be true or false based on success
         if(response) {
-          // console.log(event.friend);
-          this.user.friends.push(event.friend);
+          console.log(response);
+          this.user.friends.push(response.friend);
           //for each event, update it
           let events = this.eventComps.toArray()
           for (let i = 0; i < events.length; i++) {
@@ -156,13 +160,16 @@ export class EventsComponent implements OnInit {
     this.apiService.friendInvitePost(friend, this.currentEvent.fbId, this.user.accessToken).subscribe(response => {
       //response will be true or false based on success
       if(response) {
-        console.log(response);
-        //update the friend object
-        // friend.showsInvited.push(this.currentEvent.fbId);
+        //update the button to be grayed out
+        this.user.invitesSent.push({
+          eventId: this.currentEvent.fbId,
+          friendInvited: friend.fbId
+        });
       }
       else {
         console.log("friend invite failed");
       }
+      
     });
   }
 

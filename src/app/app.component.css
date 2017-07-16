@@ -24,7 +24,7 @@
     height: 20px;
     margin-right: 0;
 }
-#friendBadge::after {
+.alertBadge::after {
     top: -2px;
     right: -31px;
     width: 18px;

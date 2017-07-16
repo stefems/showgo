@@ -17,6 +17,7 @@ import { FacebookModule } from 'ngx-facebook';
 import { AddFriendsComponent } from './add-friends/add-friends.component';
 import { FriendBubbleComponent } from './friend-bubble/friend-bubble.component';
 import { EventsFilterPipe}  from './pipes/events-filter.pipe';
+import { InviteFriendsFilter} from './pipes/invite-friends-filter.pipe';
 import { SafePipe}  from './pipes/safe.pipe';
 
 import { BcPlayerComponent } from './bc-player/bc-player.component';
@@ -25,6 +26,7 @@ import { BandComponent } from './band/band.component';
 import { SplashComponent } from './splash/splash.component';
 import { FriendInviteComponent } from './friend-invite/friend-invite.component';
 import { SuggestionPageComponent } from './suggestion-page/suggestion-page.component';
+import { EventInvitesComponent } from './event-invites/event-invites.component';
 
 // Define the routes
 const ROUTES = [
@@ -65,6 +67,11 @@ const ROUTES = [
     path: 'friends/suggestions',
     component: SuggestionPageComponent,
     canActivate: [AuthGuard],
+  },
+  {
+    path: 'events/invites',
+    redirectTo: 'events',
+    pathMatch: "full"
   }
 
 ];
@@ -80,13 +87,15 @@ const ROUTES = [
     AddFriendsComponent,
     FriendBubbleComponent,
     EventsFilterPipe,
+    InviteFriendsFilter,
     SafePipe,
     BcPlayerComponent,
     ScPlayerComponent,
     BandComponent,
     SplashComponent,
     FriendInviteComponent,
-    SuggestionPageComponent
+    SuggestionPageComponent,
+    EventInvitesComponent
   ],
   imports: [
     BrowserModule,

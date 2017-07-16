@@ -11,7 +11,8 @@ var UserSchema = new mongoose.Schema({
   friends: [{
     name: String,
     picture: String,
-    fbId: String
+    fbId: String,
+    isUser: Boolean
   }],
   events: [{
     eventId: String,
@@ -27,10 +28,15 @@ var UserSchema = new mongoose.Schema({
   }],
   friendNotifications: Number,
   inviteNotifications: Number,
-  eventInvites : [{
+  eventInvites: [{
     invitedByNames: [String],
     event: String
-  }]
+  }],
+  invitesSent: [{
+    friendInvited: String,
+    eventId: String
+  }
+  ]
 
 });
 // define the model
