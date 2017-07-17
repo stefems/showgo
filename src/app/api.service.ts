@@ -84,6 +84,9 @@ export class ApiService {
         if (!res.json().error) {
           return true;
         }
+        else {
+          console.log(res.json().error);
+        }
         return false;
       });
   }
@@ -95,6 +98,9 @@ export class ApiService {
       .map((res:Response) => {
         if (!res.json().error) {
           return true;
+        }
+        else {
+          console.log(res.json().error)
         }
         return false;
       });

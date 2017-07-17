@@ -24,6 +24,7 @@ export class EventsComponent implements OnInit {
   private snackbar = null;
   private eventFilter = "";
   public currentEvent = new Event(0);
+  public interval;
   @ViewChild("show") show;
   @ViewChild("showCopyText") showCopyText;
   @ViewChild("linkText") linkText;
@@ -58,10 +59,21 @@ export class EventsComponent implements OnInit {
     this.apiService.getEvents().subscribe(response => {
       this.events = response;
     });
+
   }
-  
+  public detectLoad(): void{
+    if(this.socialDrawer && this.socialDrawer.nativeElement && this.socialDrawer.nativeElement.MaterialLayout) {
+      console.log("loaded!");
+      clearInterval(this.interval);
+    }
+    else {
+      console.log("not yet loaded");
+    }
+  }
+
   ngOnInit() {
   }
+
   public copyText(): void {
     this.linkText.nativeElement.select();
     if (document.execCommand("copy")) {
@@ -73,7 +85,7 @@ export class EventsComponent implements OnInit {
     this.copyLinkText = eventUrl;
     let data = { 
       message: '',
-      timeout: 10000,
+      timeout: 50000,
       actionHandler: this.copyText.bind(this),
       actionText: 'Copy'
     };
@@ -81,6 +93,8 @@ export class EventsComponent implements OnInit {
   }
 
   ngAfterViewInit() {
+    console.log("ngAfterViewInit");
+    this.interval = setInterval(this.detectLoad.bind(this), 5000);
     // let newsong = 'https://api.soundcloud.com/tracks/311739465';
     // let scId = this.soundcloudWidget.nativeElement.id;
     // let widget = SC.Widget(scId);
@@ -110,7 +124,6 @@ export class EventsComponent implements OnInit {
       this.apiService.friendPost(event.friend, this.user.accessToken).subscribe(response => {
         //response will be true or false based on success
         if(response) {
-          console.log(response);
           this.user.friends.push(response.friend);
           //for each event, update it
           let events = this.eventComps.toArray()
@@ -160,11 +173,13 @@ export class EventsComponent implements OnInit {
     this.apiService.friendInvitePost(friend, this.currentEvent.fbId, this.user.accessToken).subscribe(response => {
       //response will be true or false based on success
       if(response) {
+        console.log(response);
         //update the button to be grayed out
         this.user.invitesSent.push({
           eventId: this.currentEvent.fbId,
           friendInvited: friend.fbId
         });
+        console.log(this.user.invitesSent);
       }
       else {
         console.log("friend invite failed");

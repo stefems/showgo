@@ -157,7 +157,8 @@ var userController = {
                   friendNotifications: 0,
                   inviteNotifications: 0,
                   eventInvites: [],
-                  friendSuggestions: []
+                  friendSuggestions: [],
+                  invitesSent: []
                 });
                 var pictureUrl = JSON.parse(bod).data.url;
                 user.picture = pictureUrl;                

@@ -58,12 +58,11 @@ var generalApiController = {
               }
             }
             if (friendUpdated === "") {
-              friendDoc.eventInvites.push({
+              friendDoc.eventInvites.splice(0, 0, {
                   event: eventId,
                   invitedByNames: [docs.name]
               });
               friendDoc.inviteNotifications++;   
-              console.log(friendDoc.eventInvites);
               friendDoc.save(function(friendSaveError) {
                 if (friendSaveError) {
                   res.json({error: "error when saving the invite to the user"});
@@ -76,6 +75,7 @@ var generalApiController = {
                   });
                   docs.save(function(userSaveError) {
                     if (userSaveError) {
+                      console.log(userSaveError);
                       res.json({error: "we invited the friend but failed to save that the invite was sent on the sender."});
                     }
                     else {
@@ -364,6 +364,7 @@ var generalApiController = {
       }
     });
   },
+  
   unfriendPost: function(req, res) {
     //get the access_token and friend id from params
     let access_token = req.params.access_token;

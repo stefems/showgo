@@ -35,8 +35,7 @@ var UserSchema = new mongoose.Schema({
   invitesSent: [{
     friendInvited: String,
     eventId: String
-  }
-  ]
+  }]
 
 });
 // define the model
