@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef} from '@angular/core';
+import { Component, ViewChild, ElementRef, ViewEncapsulation} from '@angular/core';
 import { AuthService }      from './auth.service';
 import { ApiService }      from './api.service';
 import { Subscription } from 'rxjs/Subscription';
@@ -8,11 +8,13 @@ import {FbloginService} from './fblogin.service';
 import {EventsComponent} from './events/events.component';
 // import { FacebookService, LoginResponse } from 'ngx-facebook';
 
+declare var componentHandler:any;
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'
+  ]
 })
 export class AppComponent {
   @ViewChild('badge') badge: ElementRef;
@@ -47,6 +49,7 @@ export class AppComponent {
     // console.log("app ngOnInit");
   }
   ngAfterViewInit() {
+    console.log(componentHandler);
     // console.log("app ngAfterViewInit");
   }
   

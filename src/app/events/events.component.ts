@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ViewChildren, EventEmitter, ElementRef, Input, QueryList, ContentChildren } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewChildren, EventEmitter, ElementRef, Input, QueryList, ContentChildren, ViewEncapsulation} from '@angular/core';
 import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot, NavigationEnd } from '@angular/router';
 import { ApiService }      from './../api.service';
 import { AuthService }      from './../auth.service';
@@ -6,6 +6,8 @@ import {EventComponent}				from './../event/event.component';
 import {User} from '../user';
 import {Event} from '../event'
 import {EventsFilterPipe} from './../pipes/events-filter.pipe';
+
+declare var componentHandler:any;
 
 @Component({
   selector: 'app-events',
@@ -73,6 +75,7 @@ export class EventsComponent implements OnInit {
       clearInterval(this.interval);
     }
     else {
+      componentHandler.upgradeDom();
       console.log("not yet loaded");
     }
   }
