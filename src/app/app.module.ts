@@ -65,8 +65,7 @@ const ROUTES = [
   },
   {
     path: 'friends/suggestions',
-    component: SuggestionPageComponent,
-    canActivate: [AuthGuard],
+    component: SuggestionPageComponent
   },
   {
     path: 'events/invites',

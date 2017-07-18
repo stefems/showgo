@@ -1,5 +1,6 @@
-<a href="sms:Stefan&body=lol">Send SMS</a>
-<div class="eventsContainer">
+<!-- <a href="sms:Stefan&body=lol">Send SMS</a>
+ -->
+ <div [hidden]="!loaded" class="eventsContainer">
 	<div id="socialDrawerDiv" #socialContainer class="mdl-layout__container socialDrawerContainer">
 		<div #socialDrawer  id="socialDrawer" class="demo-layout-transparent mdl-layout mdl-js-layout mdl-layout--fixed-header">
 			<header id="socialDrawerHeader" class="mdl-layout__header">
@@ -35,4 +36,8 @@
 	<!-- EVENT LISTING -->
 	<event #eventComps *ngFor="let event of events | eventsFilter:filterArgs" [event]="event" [user]="user" (socialSender)="openSocial($event)" (copyLinkSender)="openLinkCopier($event)">
 	</event>
+</div>
+<div class="text-center">
+	<i [hidden]="loaded" class="fa fa-music fa-spin fa-5x"></i>
+	<h4>Loading Events!</h4>
 </div>

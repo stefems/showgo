@@ -14,7 +14,7 @@ import {EventsFilterPipe} from './../pipes/events-filter.pipe';
 })
 export class EventsComponent implements OnInit {
 
-
+  public loaded = false;
   public inviteOpen = false;
   public events = [];
   public copyLinkText = "";
@@ -35,7 +35,9 @@ export class EventsComponent implements OnInit {
   @ViewChild('socialContainer') socialContainer: ElementRef;
   
   constructor(private router: Router, private apiService: ApiService, private authService: AuthService) {
+    console.log("constructor");
     this.router.events.subscribe((val) => {
+      console.log(val);
       this.eventFilter = val.url;
       switch (val.url) {
         case "/events/me":
@@ -54,16 +56,20 @@ export class EventsComponent implements OnInit {
     });
 
     this.authService.user().subscribe(response => {
+      console.log(response);
       this.user = response;
     });
     this.apiService.getEvents().subscribe(response => {
+      console.log(response);
       this.events = response;
     });
 
   }
   public detectLoad(): void{
-    if(this.socialDrawer && this.socialDrawer.nativeElement && this.socialDrawer.nativeElement.MaterialLayout) {
+    if(this.socialDrawer && this.socialDrawer.nativeElement && this.socialDrawer.nativeElement.MaterialLayout &&
+       this.showCopyText && this.showCopyText.nativeElement && this.showCopyText.nativeElement.MaterialSnackbar) {
       console.log("loaded!");
+      this.loaded = true;
       clearInterval(this.interval);
     }
     else {
@@ -72,6 +78,7 @@ export class EventsComponent implements OnInit {
   }
 
   ngOnInit() {
+    console.log("ngOnInit");
   }
 
   public copyText(): void {
@@ -80,6 +87,7 @@ export class EventsComponent implements OnInit {
       this.showCopyText.nativeElement.querySelector("button").innerHTML = "Copied";
     }
   }
+
   public openLinkCopier(eventUrl): void {
     this.copyTextActive = true;
     this.copyLinkText = eventUrl;
@@ -94,17 +102,7 @@ export class EventsComponent implements OnInit {
 
   ngAfterViewInit() {
     console.log("ngAfterViewInit");
-    this.interval = setInterval(this.detectLoad.bind(this), 5000);
-    // let newsong = 'https://api.soundcloud.com/tracks/311739465';
-    // let scId = this.soundcloudWidget.nativeElement.id;
-    // let widget = SC.Widget(scId);
-    // widget.bind(SC.Widget.Events.READY, function() {
-    //   //widget.pause();
-    //   widget.load(newsong);
-    // });
-  }
-  public dontShowInviteUser() {
-    // this.dontInviteUser = false;
+    this.interval = setInterval(this.detectLoad.bind(this), 2000);
   }
 
   public showInviteUser(friendName) {

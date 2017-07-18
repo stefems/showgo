@@ -87,6 +87,6 @@ export class AppComponent {
 
   home(): void {
     console.log("home()");
-    this.router.navigate(['/']);
+    this.router.navigate(['/events/all']);
   }
 }
