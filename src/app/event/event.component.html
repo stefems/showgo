@@ -26,7 +26,8 @@
 	<div class="mdl-grid bottomRow">
 		<!-- Social & Copy Link -->
 		<div class="mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--2-col-phone">
-			<h5 class="friendString">{{friendString}}</h5>
+			<h5 class="friendString">{{friendString}} {{event.invitedByNames}}</h5>
+
 			<button (click)="openSocial()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect socialButton">Social</button>
 			<button (click)="copyLink()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect copyLinkButton">Copy Link</button>
 		</div>
@@ -40,9 +41,9 @@
 		  			<i class="fa fa-question questionIcon" aria-hidden="true"></i>
 		  			<i class="fa fa-calendar-o fa-lg calIcon" aria-hidden="true"></i>
 				</button>
-				<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent fbButton" (click)="eventAction('ignore')" [disabled]="!buttonsEnabled" [class.clicked]="ignored">
+				<!-- <button class="mdl-button mdl-js-button mdl-button-/-raised mdl-js-ripple-effect mdl-button-/-accent fbButton" (click)="eventAction('ignore')" [disabled]="!buttonsEnabled" [class.clicked]="ignored">
 		  			<i class="material-icons">event_busy</i>
-				</button>
+				</button> -->
 			</span>
 		</div>
 	</div>

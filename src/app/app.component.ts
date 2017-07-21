@@ -8,8 +8,6 @@ import {FbloginService} from './fblogin.service';
 import {EventsComponent} from './events/events.component';
 // import { FacebookService, LoginResponse } from 'ngx-facebook';
 
-declare var componentHandler:any;
-
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -49,7 +47,6 @@ export class AppComponent {
     // console.log("app ngOnInit");
   }
   ngAfterViewInit() {
-    console.log(componentHandler);
     // console.log("app ngAfterViewInit");
   }
   
@@ -63,6 +60,9 @@ export class AppComponent {
     this.user.friendNotifications = 0;
     this.friendAlerts.nativeElement.setAttribute("data-badge", this.user.friendNotifications);
     this.badge.nativeElement.setAttribute("data-badge", this.user.inviteNotifications);
+    this.apiService.clearNotifications(this.user.accessToken, "friend").subscribe(response => {
+      console.log(response);
+    });
     this.router.navigate(['/friends/suggestions']);
   }
   inviteAlertsNav(): void {
@@ -71,25 +71,25 @@ export class AppComponent {
     this.inviteAlerts.nativeElement.setAttribute("data-badge", this.user.inviteNotifications);
     this.badge.nativeElement.setAttribute("data-badge", this.user.friendNotifications);
     this.apiService.clearNotifications(this.user.accessToken, "event").subscribe(response => {
-      console.log(response);
+      // console.log(response);
     });
     this.router.navigate(['/events/invites']);
   }
   login(): void {
-    console.log("login()");
+    // console.log("login()");
     this.authService.login();
   }
 
   logout(): void {
     this.hideAlerts = true;
     this.badge.nativeElement.removeAttribute("data-badge");
-    console.log("logout()");
+    // console.log("logout()");
     this.authService.logout();
     this.router.navigate(['/splash']);
   }
 
   home(): void {
-    console.log("home()");
+    // console.log("home()");
     this.router.navigate(['/events/all']);
   }
 }

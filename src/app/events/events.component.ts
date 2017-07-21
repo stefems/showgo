@@ -37,9 +37,9 @@ export class EventsComponent implements OnInit {
   @ViewChild('socialContainer') socialContainer: ElementRef;
   
   constructor(private router: Router, private apiService: ApiService, private authService: AuthService) {
-    console.log("constructor");
+    // console.log("constructor");
     this.router.events.subscribe((val) => {
-      console.log(val);
+      // console.log(val);
       this.eventFilter = val.url;
       switch (val.url) {
         case "/events/me":
@@ -58,11 +58,11 @@ export class EventsComponent implements OnInit {
     });
 
     this.authService.user().subscribe(response => {
-      console.log(response);
+      // console.log(response);
       this.user = response;
     });
     this.apiService.getEvents().subscribe(response => {
-      console.log(response);
+      // console.log(response);
       this.events = response;
     });
 
@@ -70,18 +70,18 @@ export class EventsComponent implements OnInit {
   public detectLoad(): void{
     if(this.socialDrawer && this.socialDrawer.nativeElement && this.socialDrawer.nativeElement.MaterialLayout &&
        this.showCopyText && this.showCopyText.nativeElement && this.showCopyText.nativeElement.MaterialSnackbar) {
-      console.log("loaded!");
+      // console.log("loaded!");
       this.loaded = true;
       clearInterval(this.interval);
     }
     else {
       componentHandler.upgradeDom();
-      console.log("not yet loaded");
+      // console.log("not yet loaded");
     }
   }
 
   ngOnInit() {
-    console.log("ngOnInit");
+    // console.log("ngOnInit");
   }
 
   public copyText(): void {
@@ -104,7 +104,7 @@ export class EventsComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    console.log("ngAfterViewInit");
+    // console.log("ngAfterViewInit");
     this.interval = setInterval(this.detectLoad.bind(this), 2000);
   }
 
@@ -119,7 +119,7 @@ export class EventsComponent implements OnInit {
 
   public addFriend(event){
     if (event.isAdd) {
-      console.log("adding");
+      // console.log("adding");
       console.log(event.friend);
       //use the api service to add this friend id to the user's friends list
       this.apiService.friendPost(event.friend, this.user.accessToken).subscribe(response => {
@@ -147,7 +147,7 @@ export class EventsComponent implements OnInit {
       });
     }
     else {
-      console.log("removing");
+      // console.log("removing");
       //use the api service to add this friend id to the user's friends list
       this.apiService.unfriendPost(event.friend, this.user.accessToken).subscribe(response => {
         //response will be true or false based on success
@@ -174,13 +174,13 @@ export class EventsComponent implements OnInit {
     this.apiService.friendInvitePost(friend, this.currentEvent.fbId, this.user.accessToken).subscribe(response => {
       //response will be true or false based on success
       if(response) {
-        console.log(response);
+        // console.log(response);
         //update the button to be grayed out
         this.user.invitesSent.push({
           eventId: this.currentEvent.fbId,
           friendInvited: friend.fbId
         });
-        console.log(this.user.invitesSent);
+        // console.log(this.user.invitesSent);
       }
       else {
         console.log("friend invite failed");

@@ -10,6 +10,7 @@ export class Event {
 	private bcEmbeds;
 	private scEmbeds;
 	private bands;
+	private invitedByNames: string;
 	public friendString : string;
 	//TODO: add this shit, yo
 	constructor(inputJson: any) {
@@ -50,6 +51,7 @@ export class Event {
 			this.social = [];
 			this.time = "";
 		}
+		this.invitedByNames = "";
 		//use the id to get from DB to populate other data
 	}
 }

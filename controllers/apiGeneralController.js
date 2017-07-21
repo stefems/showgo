@@ -138,6 +138,7 @@ var generalApiController = {
     let access_token = req.params.access_token;
     let facebookJoinEventUrl = "";
     console.log(actionType + " eventId: " + eventId + " user: " + userId);
+    let isJoining = "";
     switch (actionType) {
       case "interested":
         facebookJoinEventUrl = "https://graph.facebook.com/" + req.params.eventId + 
@@ -146,10 +147,12 @@ var generalApiController = {
       case "join":
         facebookJoinEventUrl = "https://graph.facebook.com/" + req.params.eventId + 
         "/attending?access_token=" + access_token;
+        isJoining = true;
         break;
       case "ignore":
         facebookJoinEventUrl = "https://graph.facebook.com/" + req.params.eventId + 
         "/declined?access_token=" + access_token;
+        isJoining = false;
         break;
     }
     //send the request. If it fails, we send failure, otherwise we'll update the user.
@@ -158,7 +161,7 @@ var generalApiController = {
       headers: {'content-type' : 'application/x-www-form-urlencoded'},
       url:     facebookJoinEventUrl
     }, function (error, response, body) {
-      console.log(JSON.parse(body));
+      // console.log(JSON.parse(body));
       if (error || JSON.parse(body).success !== true) {
         res.json({error: "facebook event action request error"});
       }
@@ -182,8 +185,51 @@ var generalApiController = {
                   res.json({error: "user event update error"});
                 }
                 else {
+                  let url = "";
                   console.log("saved user's events");
-                  res.json({status: "true"});
+                  //find event and update the listing
+                  Event.findOne({eventId: eventId}, function(eventFindingError, eventFound) {
+                    if (!eventFindingError && eventFound) {
+                      if (actionType === "join") {
+                        let alreadyJoined = false;
+                        for (let i = 0; i < eventFound.social.length; i++) {
+                          //if found, remove the user from the social listing
+                          if (eventFound.social[i].fbId === user.id) {
+                            alreadyJoined = true;
+                            break;
+                          }
+                        }
+                        if (!alreadyJoined){
+                          eventFound.social.push({
+                            name: user.name,
+                            picture: user.picture,
+                            fbId: user.id
+                          });
+                        }
+                      }
+                      else if (actionType === "ignore") {
+                        //look for the user in the listing
+                        for (let i = 0; i < eventFound.social.length; i++) {
+                          //if found, remove the user from the social listing
+                          if (eventFound.social[i].fbId === user.id) {
+                            eventFound.social.splice(i, 1);
+                            break;
+                          }
+                        }
+                      }
+                      eventFound.save(function(eventSaveError) {
+                        if (!eventSaveError) {
+                          res.json({status: "true"});
+                        }
+                        else {
+                          res.json({error: "failed to save the event social update."});
+                        }
+                      });
+                    }
+                    else {
+                      res.json({error: "unable to find event in order to update event listing."});
+                    }
+                  });
                 }
               });
             }
@@ -203,7 +249,48 @@ var generalApiController = {
                 }
                 else {
                   console.log("saved user's events");
-                  res.json({status: "true"});
+                  Event.findOne({eventId: eventId}, function(eventFindingError, eventFound) {
+                    if (!eventFindingError && eventFound) {
+                      if (actionType === "join") {
+                        let alreadyJoined = false;
+                        for (let i = 0; i < eventFound.social.length; i++) {
+                          //if found, remove the user from the social listing
+                          if (eventFound.social[i].fbId === user.id) {
+                            alreadyJoined = true;
+                            break;
+                          }
+                        }
+                        if (!alreadyJoined){
+                          eventFound.social.push({
+                            name: user.name,
+                            picture: user.picture,
+                            fbId: user.id
+                          });
+                        }
+                      }
+                      else if (actionType === "ignore") {
+                        //look for the user in the listing
+                        for (let i = 0; i < eventFound.social.length; i++) {
+                          //if found, remove the user from the social listing
+                          if (eventFound.social[i].fbId === user.id) {
+                            eventFound.social.splice(i, 1);
+                            break;
+                          }
+                        }
+                      }
+                      eventFound.save(function(eventSaveError) {
+                        if (!eventSaveError) {
+                          res.json({status: "true"});
+                        }
+                        else {
+                          res.json({error: "failed to save the event social update."});
+                        }
+                      });
+                    }
+                    else {
+                      res.json({error: "unable to find event in order to update event listing."});
+                    }
+                  });
                 }
               });
             }

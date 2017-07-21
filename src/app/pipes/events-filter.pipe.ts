@@ -31,6 +31,7 @@ export class EventsFilterPipe implements PipeTransform {
                 for (let i = 0; i < filter.friends.length; i++) {
                     for (let eventPerson = 0; eventPerson < event.social.length; eventPerson++) {
                         if (event.social[eventPerson].fbId === filter.friends[i].fbId) {
+                            event.invitedByNames = "";
                             return true;
                         }
                     }
@@ -44,6 +45,7 @@ export class EventsFilterPipe implements PipeTransform {
                 for (let i = 0; i < filter.events.length; i++) {
                     //is the current event on that list?
                     if ( (event.fbId === filter.events[i].eventId) && (filter.events[i].actionType !== "ignore") ) {
+                        event.invitedByNames = "";
                         return true;
                     }
                 }
@@ -51,10 +53,20 @@ export class EventsFilterPipe implements PipeTransform {
             });
         case "invites":
             return events.filter(function(event) {
+                event.invitedByNames = "";
                 //for each event invite
                 for (let i = 0; i < filter.eventInvites.length; i++) {
                     //is the current event on that list?
                     if ( event.fbId === filter.eventInvites[i].event) {
+                        for (let name = 0; name < filter.eventInvites[i].invitedByNames.length; name++ ) {
+                            if (event.invitedByNames === "") {
+                                event.invitedByNames = filter.eventInvites[i].invitedByNames[name];
+                            }
+                            else {
+                                event.invitedByNames = event.invitedByNames + ", " + filter.eventInvites[i].invitedByNames[name];
+                            }
+                        }
+                        event.invitedByNames += " invited you.";
                         return true;
                     }
                 }

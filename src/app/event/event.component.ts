@@ -28,7 +28,7 @@ export class EventComponent implements OnInit {
 	public ignored = false;
 	public buttonsEnabled: boolean = true;
 	public friendString = "";
-
+	public invitedByNames = "";
 	constructor(private apiService: ApiService) {
 
 	}
@@ -36,6 +36,7 @@ export class EventComponent implements OnInit {
 		// console.log("event ngOnInit");
 	}
 	ngOnInit() {
+		this.invitedByNames = this.event.invitedByNames || "";
 		//renders the event action status on the panel
 		for (let i = 0; i < this.user.events.length; i++) {
 			if (this.user.events[i].eventId === this.event.fbId) {

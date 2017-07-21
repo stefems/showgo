@@ -38,7 +38,7 @@ const ROUTES = [
   {
     path: 'events',
     component: EventsComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard]
   },
   {
     path: 'log',
@@ -51,25 +51,31 @@ const ROUTES = [
   {
     path: 'events/all',
     redirectTo: 'events',
+    canActivate: [AuthGuard],
     pathMatch: "full"
   },
   {
     path: 'events/me',
     redirectTo: 'events',
+    canActivate: [AuthGuard],
     pathMatch: "full"
   },
   {
     path: 'events/friends',
     redirectTo: 'events',
+    canActivate: [AuthGuard],
     pathMatch: "full"
   },
   {
     path: 'friends/suggestions',
-    component: SuggestionPageComponent
+    component: SuggestionPageComponent,
+    canActivate: [AuthGuard],
+    pathMatch: "full"
   },
   {
     path: 'events/invites',
     redirectTo: 'events',
+    canActivate: [AuthGuard],
     pathMatch: "full"
   }
 

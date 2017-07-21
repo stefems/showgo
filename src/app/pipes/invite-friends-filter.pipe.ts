@@ -28,7 +28,6 @@ export class InviteFriendsFilter implements PipeTransform {
                     return false;
                 }
             }
-            // console.log("invites: " + invitesAndEvent.invites.length + " social: " + invitesAndEvent.event.social.length);
             return true;
         });
 	}

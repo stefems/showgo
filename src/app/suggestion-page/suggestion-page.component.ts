@@ -12,14 +12,10 @@ import { ApiService }      from './../api.service';
 export class SuggestionPageComponent implements OnInit {
 
 	private user;
-	//private authService: AuthService, private apiService: ApiService
-	constructor() {
-		// this.authService.user().subscribe(response => {
-		// 	this.user = response;
-		// });
-		// this.apiService.clearNotifications(this.user.accessToken, "friend").subscribe(response => {
-		// 	// console.log(response);
-		// });
+	constructor(private authService: AuthService, private apiService: ApiService) {
+		this.authService.user().subscribe(response => {
+			this.user = response;	
+		});
 	}
 
 	ngOnInit() {

@@ -1,5 +1,7 @@
-<h3>Friend Suggestions</h3>
-<!-- <a *ngFor="let friend of user.friendSuggestions">
-	<friend-bubble (idSender)="addFriend($event)" [friend]="friend">
-	</friend-bubble>
-</a> -->
+<div>
+	<h3>Friend Suggestions</h3>
+	<a *ngFor="let friend of user.friendSuggestions">
+		<friend-bubble [suggestion]=true (idSender)="addFriend($event)" [friend]="friend">
+		</friend-bubble>
+	</a>
+</div>

@@ -1,5 +1,17 @@
-.personPanel{
-	background-color: rgba(0,0,0,.9);
-	width: 100%;
-	text-align: right;
+:host >>> friend-bubble button{
+	background-color: #183E64;
+	color: white;
+	margin-right: 10px;
+}
+:host >>> friend-bubble button:hover{
+	background-color: #183E64;
+}
+
+div {
+	height: 100%;
+	background-color: rgba(0,0,0,.5);
+}
+
+h3 {
+	margin: 0;
 }
