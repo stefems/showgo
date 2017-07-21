@@ -9,8 +9,8 @@ export class FriendInviteComponent implements OnInit {
 	@Output()
   	inviteSender:EventEmitter<string> = new EventEmitter();
 	@Input("friend") friend;
-	private inviteSent: boolean = false;
-	private buttonText: string = "Invite";
+	public inviteSent: boolean = false;
+	public buttonText: string = "Invite";
 
 	constructor() { }
 

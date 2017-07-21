@@ -11,7 +11,7 @@ import { ApiService }      from './../api.service';
 })
 export class SuggestionPageComponent implements OnInit {
 
-	private user;
+	public user;
 	constructor(private authService: AuthService, private apiService: ApiService) {
 		this.authService.user().subscribe(response => {
 			this.user = response;	
