@@ -25,7 +25,7 @@ var env, access_token;
 fs.stat(".env/.env.js", function(err, stat) {
   if(err == null) {
     env = require("/home/stefan/showstopper/showgo/mean-app/.env/.env.js");
-    env.home = "http://45.55.156.114:4200"
+    env.home = "http://45.55.156.114:4200";
   } 
   else if(err.code == 'ENOENT') {
     env = {
@@ -34,7 +34,7 @@ fs.stat(".env/.env.js", function(err, stat) {
       googleKey: process.env.googleKey,
       googleId: process.env.googleId,
       soundcloudSecret: process.env.soundcloudSecret,
-      home: "http://salty-citadel-53279.herokuapp.com/"
+      home: "www.showgo.io"
     };
   }
   access_token = env.facebookAppId + "|" + env.facebookAppSecret;
