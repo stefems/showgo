@@ -49,7 +49,7 @@ fs.stat(".env/.env.js", function(err, stat) {
 - run getEvents() on each venue
 =====================================
 */
-var facebookVenuePages = ["HiDiveDenver", "lostlakedenver"];
+var facebookVenuePages = ["HiDiveDenver"];
 mongoose.connect('mongodb://localhost/events');
 Event.remove({}, function(error, wut) {
 	if (error) {
@@ -67,7 +67,7 @@ Event.remove({}, function(error, wut) {
 	}
 	
 });
-
+//delete these two?
 var getEvents = function(url) {
 	/*
 	=====================================
@@ -201,6 +201,7 @@ var saveEvent = function(currentEvent) {
 	//acquireBands(newEvent);
 };
 
+//not being used, delete?
 function getAttending(event, urlGiven) {
 	var getAttendingPromise = new Promise((resolve, reject) => {
 		let url = urlGiven || "https://graph.facebook.com/" + event.eventId + "/attending?fields=name,picture&access_token=" + access_token;
@@ -231,10 +232,12 @@ function getAttending(event, urlGiven) {
 	// sendAttendenceRequest(event, url);
 }
 
+// def delete
 function sendAttendenceRequest(currentEvent, url) {
 	
 }
 
+//wat is this
 function sendUserRequest(currentEvent, peopleAttending) {
 	peopleAttending.forEach(function(item, index){
 		let attendee = item;
@@ -261,6 +264,7 @@ function sendUserRequest(currentEvent, peopleAttending) {
 	});
 }
 
+//delete?
 function getProfileImages(event) {
 	for (let i = 0; i < event.social.length; i ++) {
 		let currentPerson = event.social[i];
@@ -310,13 +314,12 @@ function acquireBands(eventPassedIn) {
 	  			}
 	  		});
 	  	}
-	    // getLinksFromDescription(eventPassedIn);
+	  	//TODO: uncomment to allow for this once the implementation is done
+	  	// if (roles.length === 0) {
+	  	// 	//get links from description
+	  	// 	getLinksFromDescription(eventPassedIn);
 
-	  	if (roles.length === 0) {
-	  		//get links from description
-	  		getLinksFromDescription(eventPassedIn);
-
-	  	}
+	  	// }
 	});
 }
 
@@ -352,6 +355,7 @@ function createNewBand(bandId, event) {
 	getWebsite(bandId, event);
 }
 
+//TODO: tweak for lost lake/globe hall/larimer lounge
 function getLinksFromDescription(eventArg) {
 	//WILL NEED TO SEARCH FOR FB URLS AND SEE IF WE HAVE THOSE BANDS, OTHERWISE BEGIN THE SHIT
 
@@ -403,7 +407,7 @@ function getWebsite(facebookPageId, event) {
 	  		}
 	  		else {
 	  			//no links were found, search google!
-				// googleSearchBand(facebookPageId, event, bandName);
+				googleSearchBand(facebookPageId, event, bandName);
 	  		}
 	  	}
 	  	else {
@@ -436,7 +440,7 @@ function websiteLinkSearch(bandId, url, event, bandName) {
 					// }
 				}
 				//no links were found, search google!
-				// googleSearchBand(bandId, event, bandName);
+				googleSearchBand(bandId, event, bandName);
 			}
 			catch (e) {
 				console.log("JSDOM error " + options.url);
@@ -489,6 +493,7 @@ function googleSearchBand(bandId, event, bandName) {
 	});
 }
 
+//def delete
 function getsoundcloudEmbed(bandId, url, event) {
 	//send request to get the user's id
 	let options = {
@@ -634,6 +639,7 @@ function saveNewBandUpdateEvent(bandId, event, bcEmbed, scEmbed) {
 	});	
 }
 
+//delete?
 function FindUser() {
 	User.findOne({ "id": "", "events.eventId": "efeafeaf"}, function(err, userFound) {
       if(err) {
@@ -652,6 +658,7 @@ function FindUser() {
   });
 }
 
+//delete?
 function addUser() {
 	var newUser = new User({
 	  oauthID: 21412515,
@@ -712,6 +719,7 @@ function acquireEvents(url) {
 			for (let i = 0; i < values.length; i++) {
 				let attendeeUrl = "https://graph.facebook.com/" + values[i].eventId + "/attending?fields=picture,name&access_token=" + access_token;
 				getPeople(attendeeUrl, [], values[i]);
+				acquireBands(values[i]);
 			}			
 		});
 		if (JSON.parse(body).paging.next) {
