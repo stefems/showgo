@@ -114,7 +114,7 @@ var userController = {
                             };
                             user.friendSuggestions.push(newFriendSuggestion);
                             //incrememt the friend suggestions notifications
-                            user.friendNotifications++;
+                            user.friendNotifications = user.friendNotifications + 1;
                           }
                           else {
 
