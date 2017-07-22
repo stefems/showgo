@@ -50,7 +50,7 @@ fs.stat(".env/.env.js", function(err, stat) {
 =====================================
 */
 var facebookVenuePages = ["HiDiveDenver"];
-mongoose.connect('mongodb://localhost/events');
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/events');
 Event.remove({}, function(error, wut) {
 	if (error) {
 		console.log(error); 
