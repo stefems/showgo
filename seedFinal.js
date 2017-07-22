@@ -48,14 +48,7 @@ Event.remove({}, function(error, wut) {
 		console.log(error); 
 	}
 	else {
-		User.remove({}, function(e, huh) {
-			if (e) {
-				console.log(e); 
-			}
-			else {
-				getAllEvents(facebookVenuePages);
-			}
-		});
+		getAllEvents(facebookVenuePages);
 	}
 });
 
@@ -242,7 +235,7 @@ function googleSearchBand(bandId, event, bandName) {
 		}
 	};
 	request(options, function(err, response, body) {
-		if (!err && JSON.parse(body) && JSON.parse(body).searchInformation.totalResults > 0) {
+		if (!err && !JSON.parse(body).error && JSON.parse(body) && JSON.parse(body).searchInformation) {
 			body = JSON.parse(body);
 			for (let i = 0; i < body.items.length; i++) {
 				if (body.items[i].link.indexOf("bandcamp.com")) {
