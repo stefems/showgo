@@ -226,16 +226,16 @@ function websiteLinkSearch(bandId, url, event, bandName) {
 /*
 dont delete
 */
-function googleSearchBand(bandId, event, bandName) {
-	console.log("googling: " + bandName + " bandcamp");
-	let options = {
+function googleSearchBand(bandId, event, bandName, options) {
+	options = {
 		url: "https://www.googleapis.com/customsearch/v1?key=" + env.googleKey + "&cx=" + env.googleId + "&q=" + bandName + "+bandcamp",
 		headers: {
 			"user-agent": "Chrome/51.0.2704.103"
 		}
-	};
+	} || options;
 	request(options, function(err, response, body) {
 		if (!err && !JSON.parse(body).error && JSON.parse(body) && JSON.parse(body).searchInformation) {
+			console.log("googled: " + bandName + " bandcamp");
 			body = JSON.parse(body);
 			for (let i = 0; i < body.items.length; i++) {
 				if (body.items[i].link.indexOf("bandcamp.com")) {
@@ -243,32 +243,32 @@ function googleSearchBand(bandId, event, bandName) {
 					return;
 				}
 			}
-			//never found a bc url
-			//TODO: make a system for keeping track of which bands didn't end up with a bc link and ignore them for future searches
-			// options = {
-			// 	url: "https://www.googleapis.com/customsearch/v1?key=" + env.googleKey + "&cx=" + env.googleId + "&q=" + bandName + "+soundcloud",
-			// 	headers: {
-			// 		"user-agent": "Chrome/51.0.2704.103"
-			// 	}
-			// };
-			// request(options, function(error, res, bod) {
-			// 	if (!error && JSON.parse(bod).searchInformation.totalResults > 0) {
-			// 		bod = JSON.parse(bod);
-			// 		for (let i = 0; i < bod.items.length; i++) {
-			// 			if (bod.items[i].link.indexOf("soundcloud.com")) {
-			// 				getsoundcloudEmbed(bandId, bod.items[i].link, event);
-			// 				return;
-			// 			}
-			// 		}
-
-			// 	}
-			// });
 		}
 		else {
 			console.log(err);
-			//replace id and key
-			env.googleKey = env.googleKey2;
-			env.googleId = env.googleId2;
+			//replace id and key to #2
+			if (env.googleKey !== env.googleKey2 && env.googleKey !== env.googleKey3) {
+				options = {
+					url: "https://www.googleapis.com/customsearch/v1?key=" + env.googleKey2 + "&cx=" + env.googleId2 + "&q=" + bandName + "+bandcamp",
+					headers: {
+						"user-agent": "Chrome/51.0.2704.103"
+					}
+				};
+				googleSearchBand(bandId, event, bandName, options);
+			}
+			//replace id and key to #3
+			else if (env.googleKey === env.googleKey2) {
+				options = {
+					url: "https://www.googleapis.com/customsearch/v1?key=" + env.googleKey3 + "&cx=" + env.googleId3 + "&q=" + bandName + "+bandcamp",
+					headers: {
+						"user-agent": "Chrome/51.0.2704.103"
+					}
+				};
+				googleSearchBand(bandId, event, bandName, options);
+			}
+			else {
+				console.log("exhausted all keys.");
+			}
 		}
 	});
 }
