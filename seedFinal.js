@@ -67,7 +67,7 @@ function acquireBands(eventPassedIn) {
 		let bandNames = eventPassedIn.eventName.split("/");
 		bandNames.splice(bandNames.length - 1, 1);
 		for (let i = 0; i < bandNames.length; i++) {
-			googleSearchBand(bandNames[i], eventPassedIn, bandNames[i]);
+			// googleSearchBand(bandNames[i], eventPassedIn, bandNames[i]);
 		}
 	}
 	//not lost lake, larimer lounge, globe hall
@@ -178,7 +178,7 @@ function getWebsite(facebookPageId, event) {
 	  		}
 	  		else {
 	  			//no links were found, search google!
-				googleSearchBand(facebookPageId, event, bandName);
+				// googleSearchBand(facebookPageId, event, bandName);
 	  		}
 	  	}
 	  	else {
@@ -214,7 +214,7 @@ function websiteLinkSearch(bandId, url, event, bandName) {
 					// }
 				}
 				//no links were found, search google!
-				googleSearchBand(bandId, event, bandName);
+				// googleSearchBand(bandId, event, bandName);
 			}
 			catch (e) {
 				console.log("JSDOM error " + options.url);
@@ -254,7 +254,7 @@ function googleSearchBand(bandId, event, bandName, options) {
 						"user-agent": "Chrome/51.0.2704.103"
 					}
 				};
-				googleSearchBand(bandId, event, bandName, options);
+				// googleSearchBand(bandId, event, bandName, options);
 			}
 			//replace id and key to #3
 			else if (env.googleKey === env.googleKey2) {
@@ -264,7 +264,7 @@ function googleSearchBand(bandId, event, bandName, options) {
 						"user-agent": "Chrome/51.0.2704.103"
 					}
 				};
-				googleSearchBand(bandId, event, bandName, options);
+				// googleSearchBand(bandId, event, bandName, options);
 			}
 			else {
 				console.log("exhausted all keys.");
