@@ -72,18 +72,17 @@ function acquireBands(eventPassedIn) {
 	{
 		let bandNames = eventPassedIn.eventName.split("/");
 		bandNames.splice(bandNames.length - 1, 1);
-		for (let i = 0; i < bandNames.length; i++) {
-			//search for band with same ID
-	  		Band.findOne({fbId: roles[i].id}, function(err, found) {
+		bandNames.forEach(function(bandName) {
+	  		Band.findOne({fbId: band}, function(err, found) {
 	  			//band found
 	  			if (!err && found) {
 	  				addBandToEvent(found, eventPassedIn);
 	  			}
 	  			else {
-	  				googleSearchBand(bandNames[i], eventPassedIn, bandNames[i]);
+	  				googleSearchBand(band, eventPassedIn, band);
 	  			}
 			});
-		}
+		});
 	}
 	//not lost lake, larimer lounge, globe hall
 	else {
@@ -121,6 +120,7 @@ function addBandToEvent(band, event) {
 			console.log(eventFindError);
 		}
 		else if (eventFound){
+			console.log(band);
 			eventFound.bands.push(band);
 			eventFound.save(function(eventSaveNewBandError) {
 				if (!eventSaveNewBandError) {
@@ -234,7 +234,7 @@ function googleSearchBand(bandId, event, band, options) {
 		}
 	} || options;
 	request(options, function(err, response, body) {
-		if (!err && !JSON.parse(body).error && JSON.parse(body) && JSON.parse(body).searchInformation) {
+		if (!err && !JSON.parse(body).error && JSON.parse(body) && JSON.parse(body).items && JSON.parse(body).searchInformation) {
 			body = JSON.parse(body);
 			for (let i = 0; i < body.items.length; i++) {
 				if (body.items[i].link.indexOf("bandcamp.com") !== -1) {
