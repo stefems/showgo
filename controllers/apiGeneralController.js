@@ -451,7 +451,33 @@ var generalApiController = {
       }
     });
   },
-  
+
+  deleteSuggestion: function (req, res) {
+    //get access token from req.params
+    let access_token = req.params.access_token;
+    let friendId = req.params.friendId;
+    User.findOne({access_token: access_token}, function(err, user) {
+      if(err) {
+        res.json({"error": "mongo error on user friend suggestion deletion"});
+      }
+      else if (!err && user !== null){
+        user.friendSuggestions.splice(user.friendSuggestions.indexOf(friendId), 1);
+        user.save(function(saveAfterSuggestionError) {
+          if (!saveAfterSuggestionError) {
+            res.json({"status": true});
+          }
+          else {
+            res.json({"error": "failed to save the user after removing the friend suggestion."});
+          }
+        });
+      }
+      else {
+        res.json({"error": "never found the user that was supposed to have a friend suggestion removed."});
+      }
+    });
+
+  },
+
   unfriendPost: function(req, res) {
     //get the access_token and friend id from params
     let access_token = req.params.access_token;

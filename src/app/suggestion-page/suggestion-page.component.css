@@ -3,8 +3,21 @@
 	color: white;
 	margin-right: 10px;
 }
+
+:host >>> friend-bubble .personPanel {
+	margin-top: 10px;
+	margin-left: 5px;
+}
+
+:host >>> friend-bubble .personPanel:active {
+	background-color: rgba(0,0,0,0);
+}
+
 :host >>> friend-bubble button:hover{
 	background-color: #183E64;
+}
+:host >>> friend-bubble .mdl-chip__text {
+	color: white;
 }
 
 div {

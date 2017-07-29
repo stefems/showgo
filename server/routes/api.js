@@ -24,6 +24,7 @@ router.get("/getId/:access_token", userController.getId);
 router.get("/findUser/:userId", apiGeneralController.getFindUser);
 router.get("/user/:userId", apiGeneralController.getUser);
 router.post("/clearNotifs/:access_token/:type", apiGeneralController.postClearNotifs);
+router.delete("/suggestion/:access_token/:friendId", apiGeneralController.deleteSuggestion);
 
 
 

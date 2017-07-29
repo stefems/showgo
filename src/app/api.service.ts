@@ -23,6 +23,7 @@ export class ApiService {
   private getFindUser = '/api/findUser';
   private getUser = '/api/user';
   private clearNotifs = '/api/clearNotifs';
+  private deleteSuggestion = '/api/suggestion';
 
   public headers = new Headers({ 'Content-Type': 'application/json' });
   public options = new RequestOptions({ headers: this.headers });
@@ -36,6 +37,21 @@ export class ApiService {
   clearNotifications(access_token: string, isFriend: string): Observable<boolean> {
     let url = this.clearNotifs + "/" + access_token + "/" + isFriend;
     return this.http.post(url, {}, this.options)
+      .map((res:Response) => {
+        // console.log(res);
+        if (!res.json().error) {
+          return true;
+        }
+        else {
+          return false;
+        }
+    });
+  }
+
+  friendSuggestionDelete(access_token: string, friendId: string): Observable<boolean> {
+    let url = this.deleteSuggestion + "/" + access_token + "/" + friendId;
+    console.log(url);
+    return this.http.delete(url, this.options)
       .map((res:Response) => {
         // console.log(res);
         if (!res.json().error) {

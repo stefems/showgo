@@ -29,7 +29,7 @@ export class AppComponent {
   hideAlerts = true;
 
   
-  constructor(private apiService: ApiService, private authService: AuthService, private router: Router, private fbloginService: FbloginService){    
+  constructor(private apiService: ApiService, private authService: AuthService, private router: Router){    
     this.authService.user().subscribe(response => {
       this.user = response;
       if (this.user.dbId !== "") {

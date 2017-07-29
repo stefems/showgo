@@ -25,11 +25,11 @@ var userController = {
     let url = "https://graph.facebook.com/me?access_token="+access_token;
     request(url, function (error, response, body) { 
       if (!error && JSON.parse(body).name && JSON.parse(body).id) {
-        res.json({id: JSON.parse(body).id});
+        res.send(JSON.stringify({"id": JSON.parse(body).id}));
       }
       else {
         console.log("failed to acquire id from access token");
-        res.json({"error":"error"});
+        res.json("");
       }
     });
   },
@@ -39,7 +39,6 @@ var userController = {
   Failure or error states will return {error: message}
   */
   getUser: function(req, res) {
-    console.log("getUser() in controller");
     //==================================================================
     //PART 1
     //==================================================================

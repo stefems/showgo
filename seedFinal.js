@@ -22,35 +22,35 @@ ENV Setup (for keys)
 =====================================
 */
 var env, access_token;
-fs.stat(".env/.env.js", function(err, stat) {
-  if(err == null) {
-    env = require("/home/stefan/showstopper/showgo/mean-app/.env/.env.js");
-    env.home = "http://45.55.156.114:4200";
-  } 
-  else if(err.code == 'ENOENT') {
-    env = {
-      facebookAppId: process.env.facebookAppId,
-      facebookAppSecret: process.env.facebookAppSecret,
-      googleKey: process.env.googleKey,
-      googleId: process.env.googleId,
-      soundcloudSecret: process.env.soundcloudSecret,
-      home: "www.showgo.io"
-    };
-  }
-  access_token = env.facebookAppId + "|" + env.facebookAppSecret;
-});
-
 //add back in 
 var facebookVenuePages = ["hidivedenver", "FillmoreAuditorium", "MarquisTheater", "gothictheatre", "ogdentheatre", "lostlakedenver", "larimerlounge", "globehalldenver"];
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/events');
-Event.remove({}, function(error, wut) {
-	if (error) {
-		console.log(error); 
+fs.stat(".env/.env.js", function(err, stat) {
+	if(err == null) {
+		env = require("/home/stefan/showstopper/showgo/mean-app/.env/.env.js");
+		env.home = "http://45.55.156.114:4200";
+	} 
+	else if(err.code == 'ENOENT') {
+		env = {
+		  facebookAppId: process.env.facebookAppId,
+		  facebookAppSecret: process.env.facebookAppSecret,
+		  googleKey: process.env.googleKey,
+		  googleId: process.env.googleId,
+		  soundcloudSecret: process.env.soundcloudSecret,
+		  home: "www.showgo.io"
+		};
 	}
-	else {
-		getAllEvents(facebookVenuePages);
-	}
+	access_token = env.facebookAppId + "|" + env.facebookAppSecret;
+	Event.remove({}, function(error, wut) {
+		if (error) {
+			console.log(error); 
+		}
+		else {
+			getAllEvents(facebookVenuePages);
+		}
+	});
 });
+
 
 /*
 =====================================
@@ -132,26 +132,6 @@ function createNewBand(bandId, event) {
 //TODO: tweak for lost lake/globe hall/larimer lounge
 function getLinksFromDescription(eventArg) {
 	//WILL NEED TO SEARCH FOR FB URLS AND SEE IF WE HAVE THOSE BANDS, OTHERWISE BEGIN THE SHIT
-
-	// if (eventArg.eventDescription && eventArg.eventDescription.indexOf("bandcamp.com") !== -1) {
-	// 	//get url
-	// 	let beforeBC = eventArg.eventDescription.split("bandcamp.com")[0];
-	// 	let urls = beforeBC.split("http");
-	// 	let website = "http" + urls[urls.length-1] + "bandcamp.com";
-	// 	//run function to acquire the embed
-	// 	getbandcampEmbed(website, eventArg);
-	// }
-	// else if (eventArg.eventDescription && eventArg.eventDescription.indexOf("soundcloud.com") !== -1) {
-	// 	//get url
-	// 	let afterSC = eventArg.eventDescription.split("soundcloud.com/")[1];
-	// 	let website = "https://soundcloud.com/" + afterSC.split(" ")[0];
-	// 	console.log("soundcloud: " + website + "\n");
-	// 	getsoundcloudEmbed(website, eventArg);
-	// }
-	// else {
-	// 	//will need to search for facebook urls
-
-	// }
 }
 
 /*
@@ -226,7 +206,12 @@ function websiteLinkSearch(bandId, url, event, bandName) {
 /*
 dont delete
 */
-function googleSearchBand(bandId, event, bandName, options) {
+function googleSearchBand(bandId, event, band, options) {
+	let bandName = band.replace(/ /g, "+");
+	if (bandName.charAt(bandName.length-1) === "+") {
+		bandName = bandName.slice(0, bandName.length-1);
+	}
+	bandName = "%22"+ bandName + "%22";
 	options = {
 		url: "https://www.googleapis.com/customsearch/v1?key=" + env.googleKey + "&cx=" + env.googleId + "&q=" + bandName + "+bandcamp",
 		headers: {
@@ -235,40 +220,42 @@ function googleSearchBand(bandId, event, bandName, options) {
 	} || options;
 	request(options, function(err, response, body) {
 		if (!err && !JSON.parse(body).error && JSON.parse(body) && JSON.parse(body).searchInformation) {
-			console.log("googled: " + bandName + " bandcamp");
 			body = JSON.parse(body);
 			for (let i = 0; i < body.items.length; i++) {
-				if (body.items[i].link.indexOf("bandcamp.com")) {
+				if (body.items[i].link.indexOf("bandcamp.com") !== -1) {
+					console.log("found bandcamp url: " + body.items[i].link);
+					console.log("for band: " + band);
 					getbandcampEmbed(bandId, body.items[i].link, event);
 					return;
 				}
 			}
+			console.log("never found a url for band: " + band);
 		}
 		else {
 			console.log(err);
 			//replace id and key to #2
-			if (env.googleKey !== env.googleKey2 && env.googleKey !== env.googleKey3) {
-				options = {
-					url: "https://www.googleapis.com/customsearch/v1?key=" + env.googleKey2 + "&cx=" + env.googleId2 + "&q=" + bandName + "+bandcamp",
-					headers: {
-						"user-agent": "Chrome/51.0.2704.103"
-					}
-				};
-				// googleSearchBand(bandId, event, bandName, options);
-			}
-			//replace id and key to #3
-			else if (env.googleKey === env.googleKey2) {
-				options = {
-					url: "https://www.googleapis.com/customsearch/v1?key=" + env.googleKey3 + "&cx=" + env.googleId3 + "&q=" + bandName + "+bandcamp",
-					headers: {
-						"user-agent": "Chrome/51.0.2704.103"
-					}
-				};
-				// googleSearchBand(bandId, event, bandName, options);
-			}
-			else {
-				console.log("exhausted all keys.");
-			}
+			// if (env.googleKey !== env.googleKey2 && env.googleKey !== env.googleKey3) {
+			// 	options = {
+			// 		url: "https://www.googleapis.com/customsearch/v1?key=" + env.googleKey2 + "&cx=" + env.googleId2 + "&q=" + bandName + "+bandcamp",
+			// 		headers: {
+			// 			"user-agent": "Chrome/51.0.2704.103"
+			// 		}
+			// 	};
+			// 	googleSearchBand(bandId, event, bandName, options);
+			// }
+			// //replace id and key to #3
+			// else if (env.googleKey === env.googleKey2) {
+			// 	options = {
+			// 		url: "https://www.googleapis.com/customsearch/v1?key=" + env.googleKey3 + "&cx=" + env.googleId3 + "&q=" + bandName + "+bandcamp",
+			// 		headers: {
+			// 			"user-agent": "Chrome/51.0.2704.103"
+			// 		}
+			// 	};
+			// 	googleSearchBand(bandId, event, bandName, options);
+			// }
+			// else {
+			// 	console.log("exhausted all keys.");
+			// }
 		}
 	});
 }
