@@ -101,25 +101,25 @@ function addBandToEvent(band, event) {
 		}
 	}
 	event.bands.push(band);
-	event.save(function(err) {
-		if (err) {
-			console.log(err);
-			console.log("failed to save band " + band.fbId + " to event " + event.eventId);
+	Event.findOne({eventId: event.eventId}, function(eventFindError, eventFound) {
+		if (eventFindError) {
+			console.log(eventFindError);
+		}
+		else if (eventFound){
+			eventFound.bands.push(band);
+			eventFound.save(function(eventSaveNewBandError) {
+				if (!eventSaveNewBandError) {
+					console.log("updated event " + event.eventName + " with band " + band.fbId);
+				}
+				else {
+					console.log("failed to save the event " + event.eventName + " with band " + band.fbId);
+				}
+			});
 		}
 		else {
-			console.log("saved existing band " + band.fbId + " to event " + event.eventId);
-
+			console.log("event was not found when trying to add a band to it.");
 		}
 	});
-
-	// Event.findOneAndUpdate({fbId: event.eventId}, {$set:{bands: event.bands}}, function(error) {
-	// 	if (error) {
-	// 		console.log(error);
-	// 	}
-	// 	else {
-	// 		console.log("updated event " + event.eventId + " with band " + band.fbId);
-	// 	}
-	// });
 }
 
 /*
@@ -230,6 +230,9 @@ function googleSearchBand(bandId, event, band, options) {
 				}
 			}
 			console.log("never found a url for band: " + band);
+		}
+		else if (!err){
+			console.log("exhausted key.");
 		}
 		// else {
 			
