@@ -213,7 +213,7 @@ function googleSearchBand(bandId, event, band, options) {
 	}
 	bandName = "%22"+ bandName + "%22";
 	options = {
-		url: "https://www.googleapis.com/customsearch/v1?key=" + env.googleKey + "&cx=" + env.googleId + "&q=" + bandName + "+bandcamp",
+		url: "https://www.googleapis.com/customsearch/v1?key=" + env.googleKey2 + "&cx=" + env.googleId2 + "&q=" + bandName + "+bandcamp",
 		headers: {
 			"user-agent": "Chrome/51.0.2704.103"
 		}
@@ -231,34 +231,34 @@ function googleSearchBand(bandId, event, band, options) {
 			}
 			console.log("never found a url for band: " + band);
 		}
-		else {
+		// else {
 			
-			//replace id and key to #2
-			if (env.googleKey !== env.googleKey2 && env.googleKey !== env.googleKey3) {
-				console.log("limit reached on key#1, attempting to use another.\n" + band);
-				options = {
-					url: "https://www.googleapis.com/customsearch/v1?key=" + env.googleKey2 + "&cx=" + env.googleId2 + "&q=" + bandName + "+bandcamp",
-					headers: {
-						"user-agent": "Chrome/51.0.2704.103"
-					}
-				};
-				googleSearchBand(bandId, event, bandName, options);
-			}
-			//replace id and key to #3
-			else if (env.googleKey === env.googleKey2) {
-				console.log("limit reached on key#2, attempting to use another.\n" + band);
-				options = {
-					url: "https://www.googleapis.com/customsearch/v1?key=" + env.googleKey3 + "&cx=" + env.googleId3 + "&q=" + bandName + "+bandcamp",
-					headers: {
-						"user-agent": "Chrome/51.0.2704.103"
-					}
-				};
-				googleSearchBand(bandId, event, bandName, options);
-			}
-			else {
-				console.log("exhausted all keys.\n"+band);
-			}
-		}
+		// 	//replace id and key to #2
+		// 	if (env.googleKey !== env.googleKey2 && env.googleKey !== env.googleKey3) {
+		// 		console.log("limit reached on key#1, attempting to use another.\n" + band);
+		// 		options = {
+		// 			url: "https://www.googleapis.com/customsearch/v1?key=" + env.googleKey2 + "&cx=" + env.googleId2 + "&q=" + bandName + "+bandcamp",
+		// 			headers: {
+		// 				"user-agent": "Chrome/51.0.2704.103"
+		// 			}
+		// 		};
+		// 		googleSearchBand(bandId, event, bandName, options);
+		// 	}
+		// 	//replace id and key to #3
+		// 	else if (env.googleKey === env.googleKey2) {
+		// 		console.log("limit reached on key#2, attempting to use another.\n" + band);
+		// 		options = {
+		// 			url: "https://www.googleapis.com/customsearch/v1?key=" + env.googleKey3 + "&cx=" + env.googleId3 + "&q=" + bandName + "+bandcamp",
+		// 			headers: {
+		// 				"user-agent": "Chrome/51.0.2704.103"
+		// 			}
+		// 		};
+		// 		googleSearchBand(bandId, event, bandName, options);
+		// 	}
+		// 	else {
+		// 		console.log("exhausted all keys.\n"+band);
+		// 	}
+		// }
 	});
 }
 
