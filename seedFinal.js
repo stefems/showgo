@@ -101,25 +101,25 @@ function addBandToEvent(band, event) {
 		}
 	}
 	event.bands.push(band);
-	// event.save(function(err) {
-	// 	if (err) {
-	// 		console.log(err);
-	// 		console.log("failed to save band " + band.fbId + " to event " + event.eventId);
-	// 	}
-	// 	else {
-	// 		console.log("saved existing band " + band.fbId + " to event " + event.eventId);
-
-	// 	}
-	// });
-
-	Event.findOneAndUpdate({fbId: event.eventId}, {$set:{bands: event.bands}}, function(error) {
-		if (error) {
-			console.log(error);
+	event.save(function(err) {
+		if (err) {
+			console.log(err);
+			console.log("failed to save band " + band.fbId + " to event " + event.eventId);
 		}
 		else {
-			console.log("updated event " + event.eventId + " with band " + band.fbId);
+			console.log("saved existing band " + band.fbId + " to event " + event.eventId);
+
 		}
 	});
+
+	// Event.findOneAndUpdate({fbId: event.eventId}, {$set:{bands: event.bands}}, function(error) {
+	// 	if (error) {
+	// 		console.log(error);
+	// 	}
+	// 	else {
+	// 		console.log("updated event " + event.eventId + " with band " + band.fbId);
+	// 	}
+	// });
 }
 
 /*
@@ -232,30 +232,32 @@ function googleSearchBand(bandId, event, band, options) {
 			console.log("never found a url for band: " + band);
 		}
 		else {
-			console.log(err);
+			
 			//replace id and key to #2
-			// if (env.googleKey !== env.googleKey2 && env.googleKey !== env.googleKey3) {
-			// 	options = {
-			// 		url: "https://www.googleapis.com/customsearch/v1?key=" + env.googleKey2 + "&cx=" + env.googleId2 + "&q=" + bandName + "+bandcamp",
-			// 		headers: {
-			// 			"user-agent": "Chrome/51.0.2704.103"
-			// 		}
-			// 	};
-			// 	googleSearchBand(bandId, event, bandName, options);
-			// }
-			// //replace id and key to #3
-			// else if (env.googleKey === env.googleKey2) {
-			// 	options = {
-			// 		url: "https://www.googleapis.com/customsearch/v1?key=" + env.googleKey3 + "&cx=" + env.googleId3 + "&q=" + bandName + "+bandcamp",
-			// 		headers: {
-			// 			"user-agent": "Chrome/51.0.2704.103"
-			// 		}
-			// 	};
-			// 	googleSearchBand(bandId, event, bandName, options);
-			// }
-			// else {
-			// 	console.log("exhausted all keys.");
-			// }
+			if (env.googleKey !== env.googleKey2 && env.googleKey !== env.googleKey3) {
+				console.log("limit reached on key#1, attempting to use another.\n" + band);
+				options = {
+					url: "https://www.googleapis.com/customsearch/v1?key=" + env.googleKey2 + "&cx=" + env.googleId2 + "&q=" + bandName + "+bandcamp",
+					headers: {
+						"user-agent": "Chrome/51.0.2704.103"
+					}
+				};
+				googleSearchBand(bandId, event, bandName, options);
+			}
+			//replace id and key to #3
+			else if (env.googleKey === env.googleKey2) {
+				console.log("limit reached on key#2, attempting to use another.\n" + band);
+				options = {
+					url: "https://www.googleapis.com/customsearch/v1?key=" + env.googleKey3 + "&cx=" + env.googleId3 + "&q=" + bandName + "+bandcamp",
+					headers: {
+						"user-agent": "Chrome/51.0.2704.103"
+					}
+				};
+				googleSearchBand(bandId, event, bandName, options);
+			}
+			else {
+				console.log("exhausted all keys.\n"+band);
+			}
 		}
 	});
 }
