@@ -37,7 +37,13 @@ fs.stat(".env/.env.js", function(err, stat) {
 		  googleKey: process.env.googleKey,
 		  googleId: process.env.googleId,
 		  soundcloudSecret: process.env.soundcloudSecret,
-		  home: "www.showgo.io"
+		  home: "www.showgo.io",
+		  googleKey2: "AIzaSyCK0QT71eCOSAfsw6ZRTFZVpI6iy3rd6qs",
+		  googleKey3: "015328260581123791867:bq9w7iv0day",
+		  googleKey4: "AIzaSyBhwiNZ9FZaZeuQSJffTqFiqQgUziSoN5U",
+		  googleId2: "015328260581123791867:7iaxxgaqpmc",
+		  googleId3: "AIzaSyBLeZAHg-F4E3D05XYg4ONsNHwJ3SLRlGE",
+		  googleId4: "015328260581123791867:z8msazjlkjq"
 		};
 	}
 	access_token = env.facebookAppId + "|" + env.facebookAppSecret;
@@ -67,7 +73,16 @@ function acquireBands(eventPassedIn) {
 		let bandNames = eventPassedIn.eventName.split("/");
 		bandNames.splice(bandNames.length - 1, 1);
 		for (let i = 0; i < bandNames.length; i++) {
-			googleSearchBand(bandNames[i], eventPassedIn, bandNames[i]);
+			//search for band with same ID
+	  		Band.findOne({fbId: roles[i].id}, function(err, found) {
+	  			//band found
+	  			if (!err && found) {
+	  				addBandToEvent(found, eventPassedIn);
+	  			}
+	  			else {
+	  				googleSearchBand(bandNames[i], eventPassedIn, bandNames[i]);
+	  			}
+			});
 		}
 	}
 	//not lost lake, larimer lounge, globe hall
@@ -100,7 +115,7 @@ function addBandToEvent(band, event) {
 			return;
 		}
 	}
-	event.bands.push(band);
+	// event.bands.push(band);
 	Event.findOne({eventId: event.eventId}, function(eventFindError, eventFound) {
 		if (eventFindError) {
 			console.log(eventFindError);
@@ -213,7 +228,7 @@ function googleSearchBand(bandId, event, band, options) {
 	}
 	bandName = "%22"+ bandName + "%22";
 	options = {
-		url: "https://www.googleapis.com/customsearch/v1?key=" + env.googleKey2 + "&cx=" + env.googleId2 + "&q=" + bandName + "+bandcamp",
+		url: "https://www.googleapis.com/customsearch/v1?key=" + env.googleKey4 + "&cx=" + env.googleId4 + "&q=" + bandName + "+bandcamp",
 		headers: {
 			"user-agent": "Chrome/51.0.2704.103"
 		}
@@ -307,17 +322,6 @@ function getbandcampEmbed(bandId, url, event) {
 					let data = liList[0].getAttribute("data-item-id").split("-");
 					albumId = data[0] + "=" + data[1];
 				}
-				//event.bcEmbeds.push("https://bandcamp.com/EmbeddedPlayer/" + albumId + "/size=small/bgcol=ffffff/linkcol=0687f5/transparent=true/");
-				// mongoose.connect('mongodb://localhost/events');
-				// event.save(function(err) {
-				// 	if (err) {
-				// 		console.log("failed to save embed");
-				// 		console.log(err);
-				// 	}
-				// 	else {
-				// 		saveBand(bandId, "https://bandcamp.com/EmbeddedPlayer/" + albumId + "/size=small/bgcol=ffffff/linkcol=0687f5/transparent=true/");
-				// 	}
-				// });
 				saveNewBandUpdateEvent(bandId, event, "https://bandcamp.com/EmbeddedPlayer/" + albumId + "/size=small/bgcol=ffffff/linkcol=0687f5/transparent=true/");
 			}
 			catch (e) {
@@ -334,43 +338,29 @@ function getbandcampEmbed(bandId, url, event) {
 /*
 dont delete
 */
-function saveNewBandUpdateEvent(bandId, event, bcEmbed, scEmbed) {
+function saveNewBandUpdateEvent(bandId, event, bcEmbed) {
 	Band.findOne({fbId: bandId}, function(error, found) {
 		if (error) {
 			console.log(error);
 		}
 		else if (found) {
 			console.log("band " + bandId + " already in db...");
-			console.log(found);
 			addBandToEvent(found, event);
-			// event.bands.push(found);
-			// event.save(function(error) {
-			// 	if (!error) {
-			// 		console.log("saved new band " + newBand.fbId + " to event " + event.eventId);
-			// 	}
-			// 	else {
-			// 		console.log(error);
-			// 	}
-			// });
 		}
 		else {
+			bcEmbed = bcEmbed || "";
 			var newBand = new Band({
-			fbId: bandId,
-			bcUrl: bcEmbed || "",
-			scId: scEmbed || ""
-		});
-		newBand.save(function(err) {
-			if (!err) {
-				event.bands.push(newBand);
-				event.save(function(error) {
-					if (!error) {
-						console.log("saved new band " + newBand.fbId + " to event " + event.eventId);
-					}
-				});
-			}
-			else {
-			}
-	});
+				fbId: bandId,
+				bcUrl: bcEmbed
+			});
+			newBand.save(function(err) {
+				if (!err) {
+					addBandToEvent(newBand, event);
+				}
+				else {
+					console.log("failed to save the new band to the db.");
+				}
+			});
 		}
 	});	
 }
