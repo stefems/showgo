@@ -5,7 +5,7 @@
 		  	<h4 class="titleText">{{event.name}}</h4>
 		</div>
 		<!-- Play Button -->
-	  	<div class="mdl-cell mdl-cell--2-col mdl-cell--1-col-tablet mdl-cell--1-col-phone playButtonDiv">
+	  	<div *ngIf="event.bands.length!==0" class="mdl-cell mdl-cell--2-col mdl-cell--1-col-tablet mdl-cell--1-col-phone playButtonDiv">
 		  	<i [class.showing]="showBands" (click)="toggleBands()" class="material-icons">play_circle_filled</i>
 		</div>
 	</div>
