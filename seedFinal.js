@@ -353,33 +353,38 @@ function getAllEvents(venues) {
 
 function acquireEvents(url) {
 	request(url, function (error, response, body) {
-		let events = JSON.parse(body).data;
-		Promise.all(getEventPromiseArray(events)).then(values => {
-			let attendeeUrl = "https://graph.facebook.com/" + values[0].eventId + "/attending?fields=picture,name&access_token=" + access_token;
-			for (let i = 0; i < values.length; i++) {
-				let attendeeUrl = "https://graph.facebook.com/" + values[i].eventId + "/attending?fields=picture,name&access_token=" + access_token;
-				let currentEventPromise = values[i];
-				let getPeoplePromise = new Promise( (resolve, reject) => {
-					getPeople(attendeeUrl, [], currentEventPromise, resolve, reject);
-				});
-				getPeoplePromise.then(eventToSave => {
-					Promise.all(acquireBandsPromiseArray(eventToSave)).then(bandsToAdd => {
-						console.log(bandsToAdd);
-						eventToSave.bands = bandsToAdd;
-						eventToSave.save(function(finalEventSaveError) {
-							if (finalEventSaveError) {
-								console.log("failed to save event.");
-							}
-							else {
-								console.log("event saved.");
-							}
+		if (!error && body && JSON.parse(body).data && JSON.parse(body).paging) {
+			let events = JSON.parse(body).data;
+			Promise.all(getEventPromiseArray(events)).then(values => {
+				let attendeeUrl = "https://graph.facebook.com/" + values[0].eventId + "/attending?fields=picture,name&access_token=" + access_token;
+				for (let i = 0; i < values.length; i++) {
+					let attendeeUrl = "https://graph.facebook.com/" + values[i].eventId + "/attending?fields=picture,name&access_token=" + access_token;
+					let currentEventPromise = values[i];
+					let getPeoplePromise = new Promise( (resolve, reject) => {
+						getPeople(attendeeUrl, [], currentEventPromise, resolve, reject);
+					});
+					getPeoplePromise.then(eventToSave => {
+						Promise.all(acquireBandsPromiseArray(eventToSave)).then(bandsToAdd => {
+							console.log(bandsToAdd);
+							eventToSave.bands = bandsToAdd;
+							eventToSave.save(function(finalEventSaveError) {
+								if (finalEventSaveError) {
+									console.log("failed to save event.");
+								}
+								else {
+									console.log("event saved.");
+								}
+							});
 						});
 					});
-				});
-			}			
-		});
-		if (JSON.parse(body).paging.next) {
-			acquireEvents(JSON.parse(body).paging.next);
+				}			
+			});
+			if (JSON.parse(body).paging.next) {
+				acquireEvents(JSON.parse(body).paging.next);
+			}
+		}
+		else if (error) {
+			console.log(error);
 		}
 	});
 }
