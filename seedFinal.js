@@ -132,7 +132,7 @@ function getWebsite(facebookPageId, event, resolve) {
 	  	}
 	  	else {
 	  		console.log(error);
-	  		resolve();
+	  		// resolve();
 	  	}
 	});
 }
@@ -168,7 +168,7 @@ function websiteLinkSearch(bandId, url, event, bandName, resolve) {
 			}
 			catch (e) {
 				console.log("JSDOM error " + options.url);
-				resolve();
+				// resolve();
 			}
 		}
 	});
@@ -185,7 +185,7 @@ function googleSearchBand(bandId, event, band, options, resolve) {
 		}
 		bandName = "%22"+ bandName + "%22";
 		options = {
-			url: "https://www.googleapis.com/customsearch/v1?key=" + env.googleKey + "&cx=" + env.googleId + "&q=" + bandName + "+bandcamp",
+			url: "https://www.googleapis.com/customsearch/v1?key=" + env.googleKey2 + "&cx=" + env.googleId2 + "&q=" + bandName + "+bandcamp",
 			headers: {
 				"user-agent": "Chrome/51.0.2704.103"
 			}
@@ -201,11 +201,11 @@ function googleSearchBand(bandId, event, band, options, resolve) {
 				}
 			}
 			console.log("never found a url for band: " + band);
-			resolve();
+			// resolve();
 		}
 		else if (!err) {
 			console.log("exhausted key.");
-			resolve();
+			// resolve();
 		}
 		// else {
 		// 	//replace id and key to #2
@@ -282,11 +282,11 @@ function getbandcampEmbed(bandId, url, event, resolve) {
 			}
 			catch (e) {
 				console.log("JSDOM error " + options.url);
-				resolve();
+				// resolve();
 			}
 		}
 		else {
-			resolve();
+			// resolve();
 			// console.log("URL error from website");
 			//use same url but replace the album= with track=
 		}
@@ -300,11 +300,12 @@ function saveNewBandUpdateEvent(bandId, event, bcEmbed, resolve) {
 	Band.findOne({fbId: bandId}, function(error, found) {
 		if (error) {
 			console.log(error);
-			resolve();
+			// resolve();
 		}
 		else if (found) {
-			console.log("band " + bandId + " already in db...");
+			// console.log("band " + bandId + " already in db...");
 			//addBandToEvent(found, event);
+			console.log("resolved band: " + found.fbId + " for event: " + eventPassedIn.eventName);
 			resolve(found);
 		}
 		else {
@@ -315,12 +316,13 @@ function saveNewBandUpdateEvent(bandId, event, bcEmbed, resolve) {
 			});
 			newBand.save(function(err) {
 				if (!err) {
+			  		console.log("resolved band: " + found.fbId + " for event: " + eventPassedIn.eventName);
 					resolve(newBand);
 					//addBandToEvent(newBand, event);
 				}
 				else {
 					console.log("failed to save the new band to the db.");
-					resolve();
+					// resolve();
 				}
 			});
 		}
@@ -370,6 +372,9 @@ function acquireEvents(url) {
 					});
 					getPeoplePromise.then(eventToSave => {
 						Promise.all(acquireBandsPromiseArray(eventToSave)).then(bandsToAdd => {
+							console.log("total resolved bands: ")
+							console.log(bandsToAdd);
+							console.log("for event: " + eventToSave.eventName);
 							for (let i = 0; i < bandsToAdd.length; i++) {
 								if (bandsToAdd[i]) {
 									eventToSave.bands.push(bandsToAdd);
@@ -378,6 +383,7 @@ function acquireEvents(url) {
 							eventToSave.save(function(finalEventSaveError) {
 								if (finalEventSaveError) {
 									console.log("failed to save event.");
+									console.log(finalEventSaveError);
 								}
 								else {
 									console.log("event " + eventToSave.eventName + " saved with " + eventToSave.bands.length + " bands added.");
@@ -416,12 +422,12 @@ function acquireBandsPromiseArray(eventPassedIn) {
 		  		Band.findOne({fbId: band}, function(err, found) {
 		  			//band found
 		  			if (!err && found) {
-		  				console.log("found band already created for this event.");
+		  				console.log("resolved band: " + found.fbId + " for event: " + eventPassedIn.eventName);
 		  				resolve(found);
 		  			}
 		  			else {
 		  				//----->
-		  				console.log("need to create a band for this event.");
+		  				// console.log("need to create a band for this event.");
 		  				googleSearchBand(band, eventPassedIn, band, null, resolve);
 		  			}
 				});
@@ -439,6 +445,7 @@ function acquireBandsPromiseArray(eventPassedIn) {
 			  		Band.findOne({fbId: roles[i].id}, function(err, found) {
 			  			//band found
 			  			if (!err && found) {
+			  				console.log("resolved band: " + found.fbId + " for event: " + eventPassedIn.eventName);
 			  				resolve(found);
 			  				//addBandToEvent(found, eventPassedIn);
 			  			}
