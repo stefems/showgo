@@ -312,8 +312,7 @@ function saveNewBandUpdateEvent(bandId, event, bcEmbed, resolve) {
 			bcEmbed = bcEmbed || "";
 			var newBand = new Band({
 				fbId: bandId,
-				bcUrl: bcEmbed,
-				scId: ""
+				bcUrl: bcEmbed
 			});
 			newBand.save(function(err) {
 				if (!err) {
