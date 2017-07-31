@@ -312,7 +312,8 @@ function saveNewBandUpdateEvent(bandId, event, bcEmbed, resolve) {
 			bcEmbed = bcEmbed || "";
 			var newBand = new Band({
 				fbId: bandId,
-				bcUrl: bcEmbed
+				bcUrl: bcEmbed,
+				scId: ""
 			});
 			newBand.save(function(err) {
 				if (!err) {
@@ -439,10 +440,10 @@ function acquireBandsPromiseArray(eventPassedIn) {
 		request(facebookEventURL, function (error, response, body) {
 	  		let roles = JSON.parse(body).data;
 	  		//for each role
-		  	for (let i = 0; i < roles.length; i++) {
-		  		bandsPromiseArray.push(new Promise( (resolve) => {
+	  		roles.forEach(function(role) {
+				bandsPromiseArray.push(new Promise( (resolve) => {
 			  		//search for band with same ID
-			  		Band.findOne({fbId: roles[i].id}, function(err, found) {
+			  		Band.findOne({fbId: role.id}, function(err, found) {
 			  			//band found
 			  			if (!err && found) {
 			  				console.log("resolved band: " + found.fbId + " for event: " + eventPassedIn.eventName);
@@ -451,11 +452,11 @@ function acquireBandsPromiseArray(eventPassedIn) {
 			  			}
 			  			else {
 			  				//--->
-			  				createNewBand(roles[i].id, eventPassedIn, resolve);
+			  				createNewBand(role.id, eventPassedIn, resolve);
 			  			}
 			  		});
 			  	}));
-		  	}
+	  		});
 		});
 	}
 	return bandsPromiseArray;
