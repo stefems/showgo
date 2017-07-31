@@ -58,57 +58,13 @@ fs.stat(".env/.env.js", function(err, stat) {
 });
 
 
-/*
-=====================================
-acquireBands() is called for each event
-1. Use the "with" tag if not ll
-=====================================
-*/
-function acquireBands(eventPassedIn) {
-	let facebookEventURL = "https://graph.facebook.com/v2.9/" + eventPassedIn.eventId + "/roles?access_token=" + access_token;
-	if (eventPassedIn.eventVenue === "Larimer Lounge" || 
-		eventPassedIn.eventVenue === "Lost Lake" ||
-		eventPassedIn.eventVenue === "Globe Hall")
-	{
-		let bandNames = eventPassedIn.eventName.split("/");
-		bandNames.splice(bandNames.length - 1, 1);
-		bandNames.forEach(function(bandName) {
-	  		Band.findOne({fbId: band}, function(err, found) {
-	  			//band found
-	  			if (!err && found) {
-	  				addBandToEvent(found, eventPassedIn);
-	  			}
-	  			else {
-	  				googleSearchBand(band, eventPassedIn, band);
-	  			}
-			});
-		});
-	}
-	//not lost lake, larimer lounge, globe hall
-	else {
-		request(facebookEventURL, function (error, response, body) {
-	  		let roles = JSON.parse(body).data;
-	  		//for each role
-		  	for (let i = 0; i < roles.length; i++) {
-		  		//search for band with same ID
-		  		Band.findOne({fbId: roles[i].id}, function(err, found) {
-		  			//band found
-		  			if (!err && found) {
-		  				addBandToEvent(found, eventPassedIn);
-		  			}
-		  			else {
-		  				createNewBand(roles[i].id, eventPassedIn);
-		  			}
-		  		});
-		  	}
-		});
-	}
-}
+
 
 /*
 ADD COMMENT< DONT DELETE
 */
 function addBandToEvent(band, event) {
+	console.log("\naddBandToEvent()");
 	for (let i = 0; i < event.bands.length; i++) {
 		if (event.bands[i].fbId === band.fbId) {
 			return;
@@ -120,7 +76,6 @@ function addBandToEvent(band, event) {
 			console.log(eventFindError);
 		}
 		else if (eventFound){
-			console.log(band);
 			eventFound.bands.push(band);
 			eventFound.save(function(eventSaveNewBandError) {
 				if (!eventSaveNewBandError) {
@@ -140,8 +95,8 @@ function addBandToEvent(band, event) {
 /*
 ADD COMMENT< DONT DELETE
 */
-function createNewBand(bandId, event) {
-	getWebsite(bandId, event);
+function createNewBand(bandId, event, resolve) {
+	getWebsite(bandId, event, resolve);
 }
 
 //TODO: tweak for lost lake/globe hall/larimer lounge
@@ -152,7 +107,7 @@ function getLinksFromDescription(eventArg) {
 /*
 ADD COMMENT< DONT DELETE
 */
-function getWebsite(facebookPageId, event) {
+function getWebsite(facebookPageId, event, resolve) {
 	let facebookAboutURL = "https://graph.facebook.com/v2.9/" + facebookPageId + "?fields=website,name&access_token=" + access_token;
 	request(facebookAboutURL, function (error, response, body) {
 		if (!error) {
@@ -165,15 +120,15 @@ function getWebsite(facebookPageId, event) {
 	  			let urls = beforeBC.split("http");
 	  			website = "http" + urls[urls.length-1] + "bandcamp.com";
 	  			//run function to acquire the embed
-	 			getbandcampEmbed(facebookPageId, website, event);
+	 			getbandcampEmbed(facebookPageId, website, event, resolve);
 	  		}
 	  		//custom website
 	  		else if (website) {
-	  			websiteLinkSearch(facebookPageId, response.website, event, bandName);
+	  			websiteLinkSearch(facebookPageId, response.website, event, bandName, resolve);
 	  		}
 	  		else {
 	  			//no links were found, search google!
-				googleSearchBand(facebookPageId, event, bandName);
+				googleSearchBand(facebookPageId, event, bandName, resolve);
 	  		}
 	  	}
 	  	else {
@@ -185,7 +140,7 @@ function getWebsite(facebookPageId, event) {
 /*
 dont delete
 */
-function websiteLinkSearch(bandId, url, event, bandName) {
+function websiteLinkSearch(bandId, url, event, bandName, resolve) {
 	var options = {
 		url: url,
 		headers: {
@@ -200,7 +155,7 @@ function websiteLinkSearch(bandId, url, event, bandName) {
 				var aTags = dom.window.document.getElementsByTagName("a");
 				for (let i = 0; i < aTags.length; i++) {
 					if (aTags[i].getAttribute("href") && aTags[i].getAttribute("href").indexOf("bandcamp") !== -1) {
-						getbandcampEmbed(bandId, aTags[i].getAttribute("href"), event);
+						getbandcampEmbed(bandId, aTags[i].getAttribute("href"), event, resolve);
 						return;
 					}
 					// else if (aTags[i].getAttribute("href") && aTags[i].getAttribute("href").indexOf("soundcloud") !== -1) {
@@ -209,7 +164,7 @@ function websiteLinkSearch(bandId, url, event, bandName) {
 					// }
 				}
 				//no links were found, search google!
-				googleSearchBand(bandId, event, bandName);
+				googleSearchBand(bandId, event, bandName, resolve);
 			}
 			catch (e) {
 				console.log("JSDOM error " + options.url);
@@ -221,36 +176,36 @@ function websiteLinkSearch(bandId, url, event, bandName) {
 /*
 dont delete
 */
-function googleSearchBand(bandId, event, band, options) {
-	let bandName = band.replace(/ /g, "+");
-	if (bandName.charAt(bandName.length-1) === "+") {
-		bandName = bandName.slice(0, bandName.length-1);
-	}
-	bandName = "%22"+ bandName + "%22";
-	options = {
-		url: "https://www.googleapis.com/customsearch/v1?key=" + env.googleKey4 + "&cx=" + env.googleId4 + "&q=" + bandName + "+bandcamp",
-		headers: {
-			"user-agent": "Chrome/51.0.2704.103"
+function googleSearchBand(bandId, event, band, options, resolve) {
+	console.log("\ngoogleSearchBand()");
+	if (!options) {
+		let bandName = band.replace(/ /g, "+");
+		if (bandName.charAt(bandName.length-1) === "+") {
+			bandName = bandName.slice(0, bandName.length-1);
 		}
-	} || options;
+		bandName = "%22"+ bandName + "%22";
+		options = {
+			url: "https://www.googleapis.com/customsearch/v1?key=" + env.googleKey + "&cx=" + env.googleId + "&q=" + bandName + "+bandcamp",
+			headers: {
+				"user-agent": "Chrome/51.0.2704.103"
+			}
+		};
+	}
 	request(options, function(err, response, body) {
 		if (!err && !JSON.parse(body).error && JSON.parse(body) && JSON.parse(body).items && JSON.parse(body).searchInformation) {
 			body = JSON.parse(body);
 			for (let i = 0; i < body.items.length; i++) {
 				if (body.items[i].link.indexOf("bandcamp.com") !== -1) {
-					console.log("found bandcamp url: " + body.items[i].link);
-					console.log("for band: " + band);
-					getbandcampEmbed(bandId, body.items[i].link, event);
+					getbandcampEmbed(bandId, body.items[i].link, event, resolve);
 					return;
 				}
 			}
 			console.log("never found a url for band: " + band);
 		}
-		else if (!err){
+		else if (!err) {
 			console.log("exhausted key.");
 		}
 		// else {
-			
 		// 	//replace id and key to #2
 		// 	if (env.googleKey !== env.googleKey2 && env.googleKey !== env.googleKey3) {
 		// 		console.log("limit reached on key#1, attempting to use another.\n" + band);
@@ -283,7 +238,8 @@ function googleSearchBand(bandId, event, band, options) {
 /*
 dont delete
 */
-function getbandcampEmbed(bandId, url, event) {
+function getbandcampEmbed(bandId, url, event, resolve) {
+	console.log("\ngetbandcampEmbed()");
 	var options = {
 		url: url,
 		headers: {
@@ -305,7 +261,6 @@ function getbandcampEmbed(bandId, url, event) {
 				if (content !== "" && content.indexOf("track=") === -1) {
 					let albumURL = content.split("album=")[1];
 					if (albumURL) {
-						//
 						albumId = "album=" + albumURL.split("/")[0];
 					}
 				}
@@ -322,7 +277,7 @@ function getbandcampEmbed(bandId, url, event) {
 					let data = liList[0].getAttribute("data-item-id").split("-");
 					albumId = data[0] + "=" + data[1];
 				}
-				saveNewBandUpdateEvent(bandId, event, "https://bandcamp.com/EmbeddedPlayer/" + albumId + "/size=small/bgcol=ffffff/linkcol=0687f5/transparent=true/");
+				saveNewBandUpdateEvent(bandId, event, "https://bandcamp.com/EmbeddedPlayer/" + albumId + "/size=small/bgcol=ffffff/linkcol=0687f5/transparent=true/", resolve);
 			}
 			catch (e) {
 				console.log("JSDOM error " + options.url);
@@ -338,14 +293,15 @@ function getbandcampEmbed(bandId, url, event) {
 /*
 dont delete
 */
-function saveNewBandUpdateEvent(bandId, event, bcEmbed) {
+function saveNewBandUpdateEvent(bandId, event, bcEmbed, resolve) {
 	Band.findOne({fbId: bandId}, function(error, found) {
 		if (error) {
 			console.log(error);
 		}
 		else if (found) {
 			console.log("band " + bandId + " already in db...");
-			addBandToEvent(found, event);
+			//addBandToEvent(found, event);
+			resolve(found);
 		}
 		else {
 			bcEmbed = bcEmbed || "";
@@ -355,7 +311,8 @@ function saveNewBandUpdateEvent(bandId, event, bcEmbed) {
 			});
 			newBand.save(function(err) {
 				if (!err) {
-					addBandToEvent(newBand, event);
+					resolve(newBand);
+					//addBandToEvent(newBand, event);
 				}
 				else {
 					console.log("failed to save the new band to the db.");
@@ -398,18 +355,92 @@ function acquireEvents(url) {
 	request(url, function (error, response, body) {
 		let events = JSON.parse(body).data;
 		Promise.all(getEventPromiseArray(events)).then(values => {
-			for (let i = 0; i < values.length; i++) {
-				let attendeeUrl = "https://graph.facebook.com/" + values[i].eventId + "/attending?fields=picture,name&access_token=" + access_token;
-				getPeople(attendeeUrl, [], values[i]);
-				acquireBands(values[i]);
-			}			
+			let attendeeUrl = "https://graph.facebook.com/" + values[0].eventId + "/attending?fields=picture,name&access_token=" + access_token;
+			let currentEventPromise = values[0];
+			let getPeoplePromise = new Promise( (resolve, reject) => {
+				getPeople(attendeeUrl, [], currentEventPromise, resolve, reject);
+			});
+			getPeoplePromise.then(eventToSave => {
+				Promise.all(acquireBandsPromiseArray(eventToSave)).then(bandsToAdd => {
+					console.log(bandsToAdd);
+					eventToSave.bands = bandsToAdd;
+					eventToSave.save(function(finalEventSaveError) {
+						if (finalEventSaveError) {
+							console.log("failed to save event.");
+						}
+						else {
+							console.log("event saved.");
+						}
+					});
+				});
+			});
+
+			// for (let i = 0; i < values.length; i++) {
+			// 	let attendeeUrl = "https://graph.facebook.com/" + values[i].eventId + "/attending?fields=picture,name&access_token=" + access_token;
+			// 	getPeople(attendeeUrl, [], values[i]);
+			// 	acquireBands(values[i]);
+			// }			
 		});
 		if (JSON.parse(body).paging.next) {
 			acquireEvents(JSON.parse(body).paging.next);
 		}
 	});
 }
-
+/*
+=====================================
+acquireBands() is called for each event
+1. Use the "with" tag if not ll
+=====================================
+*/
+function acquireBandsPromiseArray(eventPassedIn) {
+	let bandsPromiseArray = [];
+	let facebookEventURL = "https://graph.facebook.com/v2.9/" + eventPassedIn.eventId + "/roles?access_token=" + access_token;
+	if (eventPassedIn.eventVenue === "Larimer Lounge" || 
+		eventPassedIn.eventVenue === "Lost Lake" ||
+		eventPassedIn.eventVenue === "Globe Hall")
+	{
+		let bandNames = eventPassedIn.eventName.split("/");
+		bandNames.splice(bandNames.length - 1, 1);
+		bandNames.forEach(function(band) {
+			bandsPromiseArray.push(new Promise( (resolve) => {
+		  		Band.findOne({fbId: band}, function(err, found) {
+		  			//band found
+		  			if (!err && found) {
+		  				console.log("found band already created for this event.");
+		  				resolve(found);
+		  			}
+		  			else {
+		  				//----->
+		  				console.log("need to create a band for this event.");
+		  				googleSearchBand(band, eventPassedIn, band, null, resolve);
+		  			}
+				});
+			}))
+		});
+	}
+	//not lost lake, larimer lounge, globe hall
+	else {
+		request(facebookEventURL, function (error, response, body) {
+	  		let roles = JSON.parse(body).data;
+	  		//for each role
+		  	for (let i = 0; i < roles.length; i++) {
+		  		//search for band with same ID
+		  		Band.findOne({fbId: roles[i].id}, function(err, found) {
+		  			//band found
+		  			if (!err && found) {
+		  				resolve(found);
+		  				//addBandToEvent(found, eventPassedIn);
+		  			}
+		  			else {
+		  				//--->
+		  				createNewBand(roles[i].id, eventPassedIn, resolve);
+		  			}
+		  		});
+		  	}
+		});
+	}
+	return bandsPromiseArray;
+}
 function getEventPromiseArray(events) {
 	let promiseArray = [];
 	for (let i = 0; i < events.length; i++) {
@@ -460,7 +491,7 @@ function getEventPromiseArray(events) {
 					console.log(saveError);
 				}
 				else {
-					// console.log("saved: " + newEvent.eventName);
+					console.log("saved: " + newEvent.eventName);
 					resolve(newEvent);
 				}
 			});
@@ -469,7 +500,7 @@ function getEventPromiseArray(events) {
     return promiseArray;
 }
 
-function getPeople(url, array, event) {
+function getPeople(url, array, event, resolve, reject) {
 	request(url, function (error, response, body) {
 		if (!error && JSON.parse(body) && JSON.parse(body).paging && (JSON.parse(body).data.length > 0)) {
 			let people = JSON.parse(body).data;
@@ -483,15 +514,16 @@ function getPeople(url, array, event) {
 				array.push(attendee);
 			}
 			if (JSON.parse(body).paging.next) {
-				getPeople(JSON.parse(body).paging.next, array, event);
+				getPeople(JSON.parse(body).paging.next, array, event, resolve, reject);
 			}
 			else {
-				event.social = array;
-				event.save(function(e) {
-					if (e) {
-						console.log(e);
-					}
-				});
+				if (array) {
+					event.social = array;
+					resolve(event);
+				}
+				else {
+					reject();
+				}
 			}
 		}
 		else {
