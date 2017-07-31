@@ -127,7 +127,7 @@ function getWebsite(facebookPageId, event, resolve) {
 	  		}
 	  		else {
 	  			//no links were found, search google!
-				googleSearchBand(facebookPageId, event, bandName, resolve);
+				googleSearchBand(facebookPageId, event, bandName, null, resolve);
 	  		}
 	  	}
 	  	else {
@@ -164,7 +164,7 @@ function websiteLinkSearch(bandId, url, event, bandName, resolve) {
 					// }
 				}
 				//no links were found, search google!
-				googleSearchBand(bandId, event, bandName, resolve);
+				googleSearchBand(bandId, event, bandName, null, resolve);
 			}
 			catch (e) {
 				console.log("JSDOM error " + options.url);
@@ -185,7 +185,7 @@ function googleSearchBand(bandId, event, band, options, resolve) {
 		}
 		bandName = "%22"+ bandName + "%22";
 		options = {
-			url: "https://www.googleapis.com/customsearch/v1?key=" + env.googleKey3 + "&cx=" + env.googleId3 + "&q=" + bandName + "+bandcamp",
+			url: "https://www.googleapis.com/customsearch/v1?key=" + env.googleKey4 + "&cx=" + env.googleId4 + "&q=" + bandName + "+bandcamp",
 			headers: {
 				"user-agent": "Chrome/51.0.2704.103"
 			}
@@ -296,7 +296,7 @@ function getbandcampEmbed(bandId, url, event, resolve) {
 /*
 dont delete
 */
-function saveNewBandUpdateEvent(bandId, event, bcEmbed, resolve) {
+function saveNewBandUpdateEvent(bandId, eventPassedIn, bcEmbed, resolve) {
 	Band.findOne({fbId: bandId}, function(error, found) {
 		if (error) {
 			console.log(error);
@@ -377,13 +377,13 @@ function acquireEvents(url) {
 						{
 							let bandNames = eventToSave.eventName.split("/");
 							bandNames.splice(bandNames.length - 1, 1);
-							Promise.all(acquireBandsPromiseArray(bandNames, true)).then(bandsToAdd => {
+							Promise.all(acquireBandsPromiseArray(bandNames, true, eventToSave)).then(bandsToAdd => {
 								console.log("total resolved bands: ");
 								console.log(bandsToAdd);
 								console.log("for event: " + eventToSave.eventName);
 								for (let i = 0; i < bandsToAdd.length; i++) {
 									if (bandsToAdd[i]) {
-										eventToSave.bands.push(bandsToAdd);
+										eventToSave.bands.push(bandsToAdd[i]);
 									}
 								}
 								eventToSave.save(function(finalEventSaveError) {
@@ -405,13 +405,13 @@ function acquireEvents(url) {
 									JSON.parse(body).data.forEach(function(role) {
 										roles.push(role.id);
 									});
-									Promise.all(acquireBandsPromiseArray(roles, false)).then(bandsToAdd => {
+									Promise.all(acquireBandsPromiseArray(roles, false, eventToSave)).then(bandsToAdd => {
 										console.log("total resolved bands: ");
 										console.log(bandsToAdd);
 										console.log("for event: " + eventToSave.eventName);
 										for (let i = 0; i < bandsToAdd.length; i++) {
 											if (bandsToAdd[i]) {
-												eventToSave.bands.push(bandsToAdd);
+												eventToSave.bands.push(bandsToAdd[i]);
 											}
 										}
 										eventToSave.save(function(finalEventSaveError) {
@@ -448,10 +448,10 @@ acquireBands() is called for each event
 1. Use the "with" tag if not ll
 =====================================
 */
-function acquireBandsPromiseArray(bandIds, isLL) {
+function acquireBandsPromiseArray(bandIds, isLL, eventPassedIn) {
 	let bandsPromiseArray = [];
 	bandIds.forEach(function(band) {
-		bandsPromiseArray.push(new Promise( (resolve) => {
+		bandsPromiseArray.push(new Promise( resolve => {
 			Band.findOne({fbId: band}, function(err, found) {
 	  			//band found
 	  			if (!err && found) {
@@ -469,6 +469,9 @@ function acquireBandsPromiseArray(bandIds, isLL) {
 	  		});
 		}));
 	});
+	if (bandIds.length !== 0) {
+		console.log(bandsPromiseArray.length + " band promises for " + eventPassedIn.eventName);
+	}
 	return bandsPromiseArray;
 }
 function getEventPromiseArray(events) {
