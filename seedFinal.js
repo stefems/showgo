@@ -372,7 +372,7 @@ function acquireEvents(url) {
 									console.log("failed to save event.");
 								}
 								else {
-									console.log("event saved.");
+									console.log("event " + eventToSave.eventName + " saved with " + eventToSave.bands.length + " bands added.");
 								}
 							});
 						});
@@ -426,18 +426,20 @@ function acquireBandsPromiseArray(eventPassedIn) {
 	  		let roles = JSON.parse(body).data;
 	  		//for each role
 		  	for (let i = 0; i < roles.length; i++) {
-		  		//search for band with same ID
-		  		Band.findOne({fbId: roles[i].id}, function(err, found) {
-		  			//band found
-		  			if (!err && found) {
-		  				resolve(found);
-		  				//addBandToEvent(found, eventPassedIn);
-		  			}
-		  			else {
-		  				//--->
-		  				createNewBand(roles[i].id, eventPassedIn, resolve);
-		  			}
-		  		});
+		  		bandsPromiseArray.push(new Promise( (resolve) => {
+			  		//search for band with same ID
+			  		Band.findOne({fbId: roles[i].id}, function(err, found) {
+			  			//band found
+			  			if (!err && found) {
+			  				resolve(found);
+			  				//addBandToEvent(found, eventPassedIn);
+			  			}
+			  			else {
+			  				//--->
+			  				createNewBand(roles[i].id, eventPassedIn, resolve);
+			  			}
+			  		});
+			  	}));
 		  	}
 		});
 	}
@@ -493,7 +495,6 @@ function getEventPromiseArray(events) {
 					console.log(saveError);
 				}
 				else {
-					console.log("saved: " + newEvent.eventName);
 					resolve(newEvent);
 				}
 			});
