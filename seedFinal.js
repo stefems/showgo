@@ -64,7 +64,6 @@ fs.stat(".env/.env.js", function(err, stat) {
 ADD COMMENT< DONT DELETE
 */
 function addBandToEvent(band, event) {
-	console.log("\naddBandToEvent()");
 	for (let i = 0; i < event.bands.length; i++) {
 		if (event.bands[i].fbId === band.fbId) {
 			return;
@@ -133,6 +132,7 @@ function getWebsite(facebookPageId, event, resolve) {
 	  	}
 	  	else {
 	  		console.log(error);
+	  		resolve();
 	  	}
 	});
 }
@@ -168,6 +168,7 @@ function websiteLinkSearch(bandId, url, event, bandName, resolve) {
 			}
 			catch (e) {
 				console.log("JSDOM error " + options.url);
+				resolve();
 			}
 		}
 	});
@@ -177,7 +178,6 @@ function websiteLinkSearch(bandId, url, event, bandName, resolve) {
 dont delete
 */
 function googleSearchBand(bandId, event, band, options, resolve) {
-	console.log("\ngoogleSearchBand()");
 	if (!options) {
 		let bandName = band.replace(/ /g, "+");
 		if (bandName.charAt(bandName.length-1) === "+") {
@@ -201,9 +201,11 @@ function googleSearchBand(bandId, event, band, options, resolve) {
 				}
 			}
 			console.log("never found a url for band: " + band);
+			resolve();
 		}
 		else if (!err) {
 			console.log("exhausted key.");
+			resolve();
 		}
 		// else {
 		// 	//replace id and key to #2
@@ -239,7 +241,6 @@ function googleSearchBand(bandId, event, band, options, resolve) {
 dont delete
 */
 function getbandcampEmbed(bandId, url, event, resolve) {
-	console.log("\ngetbandcampEmbed()");
 	var options = {
 		url: url,
 		headers: {
@@ -281,9 +282,11 @@ function getbandcampEmbed(bandId, url, event, resolve) {
 			}
 			catch (e) {
 				console.log("JSDOM error " + options.url);
+				resolve();
 			}
 		}
 		else {
+			resolve();
 			// console.log("URL error from website");
 			//use same url but replace the album= with track=
 		}
@@ -297,6 +300,7 @@ function saveNewBandUpdateEvent(bandId, event, bcEmbed, resolve) {
 	Band.findOne({fbId: bandId}, function(error, found) {
 		if (error) {
 			console.log(error);
+			resolve();
 		}
 		else if (found) {
 			console.log("band " + bandId + " already in db...");
@@ -316,6 +320,7 @@ function saveNewBandUpdateEvent(bandId, event, bcEmbed, resolve) {
 				}
 				else {
 					console.log("failed to save the new band to the db.");
+					resolve();
 				}
 			});
 		}
@@ -365,8 +370,11 @@ function acquireEvents(url) {
 					});
 					getPeoplePromise.then(eventToSave => {
 						Promise.all(acquireBandsPromiseArray(eventToSave)).then(bandsToAdd => {
-							console.log(bandsToAdd);
-							eventToSave.bands = bandsToAdd;
+							for (let i = 0; i < bandsToAdd.length; i++) {
+								if (bandsToAdd[i]) {
+									eventToSave.bands.push(bandsToAdd);
+								}
+							}
 							eventToSave.save(function(finalEventSaveError) {
 								if (finalEventSaveError) {
 									console.log("failed to save event.");
@@ -417,7 +425,7 @@ function acquireBandsPromiseArray(eventPassedIn) {
 		  				googleSearchBand(band, eventPassedIn, band, null, resolve);
 		  			}
 				});
-			}))
+			}));
 		});
 	}
 	//not lost lake, larimer lounge, globe hall
@@ -525,12 +533,14 @@ function getPeople(url, array, event, resolve, reject) {
 					resolve(event);
 				}
 				else {
+					console.log("rejected, undefined social for event " + event.eventName);
 					reject();
 				}
 			}
 		}
 		else {
-
+			event.social = array;
+			resolve(event);
 		}
 	});
 }
