@@ -134,7 +134,7 @@ function getWebsite(facebookPageId, event, resolve) {
 	  	}
 	  	else {
 	  		console.log(error);
-	  		// resolve();
+	  		resolve();
 	  	}
 	});
 }
@@ -170,7 +170,7 @@ function websiteLinkSearch(bandId, url, event, bandName, resolve) {
 			}
 			catch (e) {
 				console.log("JSDOM error " + options.url);
-				// resolve();
+				resolve();
 			}
 		}
 	});
@@ -202,7 +202,7 @@ function googleSearchBand(bandId, event, band, options, resolve) {
 				}
 			}
 			console.log("never found a url for band: " + band);
-			// resolve();
+			resolve();
 		}
 		else if (err) {
 			console.log("usage exceeded.");
@@ -244,6 +244,7 @@ function googleSearchBand(bandId, event, band, options, resolve) {
 			}
 			else {
 				console.log("exhausted all keys.\n"+band);
+				resolve();
 			}
 		}
 	});
@@ -294,11 +295,11 @@ function getbandcampEmbed(bandId, url, event, resolve) {
 			}
 			catch (e) {
 				console.log("JSDOM error " + options.url);
-				// resolve();
+				resolve();
 			}
 		}
 		else {
-			// resolve();
+			resolve();
 			// console.log("URL error from website");
 			//use same url but replace the album= with track=
 		}
@@ -312,7 +313,7 @@ function saveNewBandUpdateEvent(bandId, eventPassedIn, bcEmbed, resolve) {
 	Band.findOne({fbId: bandId}, function(error, found) {
 		if (error) {
 			console.log(error);
-			// resolve();
+			resolve();
 		}
 		else if (found) {
 			// console.log("band " + bandId + " already in db...");
@@ -334,7 +335,7 @@ function saveNewBandUpdateEvent(bandId, eventPassedIn, bcEmbed, resolve) {
 				}
 				else {
 					console.log("failed to save the new band to the db.");
-					// resolve();
+					resolve();
 				}
 			});
 		}
@@ -481,9 +482,7 @@ function acquireBandsPromiseArray(bandIds, isLL, eventPassedIn) {
 	  		});
 		}));
 	});
-	if (bandIds.length !== 0) {
-		console.log(bandsPromiseArray.length + " band promises for " + eventPassedIn.eventName);
-	}
+	console.log(bandsPromiseArray.length + " band promises for " + eventPassedIn.eventName);
 	return bandsPromiseArray;
 }
 function getEventPromiseArray(events) {
