@@ -186,7 +186,7 @@ function googleSearchBand(bandId, event, band, options, resolve) {
 		}
 		bandName = "%22"+ bandName + "%22";
 		options = {
-			url: "https://www.googleapis.com/customsearch/v1?key=" + env.googleKey + "&cx=" + env.googleId + "&q=" + bandName + "+bandcamp",
+			url: "https://www.googleapis.com/customsearch/v1?key=" + env.googleKey2 + "&cx=" + env.googleId2 + "&q=" + bandName + "+bandcamp",
 			headers: {
 				"user-agent": "Chrome/51.0.2704.103"
 			}
@@ -322,7 +322,7 @@ function saveNewBandUpdateEvent(bandId, eventPassedIn, bcEmbed, resolve) {
 		else if (found) {
 			// console.log("band " + bandId + " already in db...");
 			//addBandToEvent(found, event);
-			console.log("resolved band: " + found.fbId + " for event: " + eventPassedIn.eventName);
+			console.log("found existing band: " + found.fbId + " for event: " + eventPassedIn.eventName);
 			resolve(found);
 		}
 		else {
@@ -406,7 +406,7 @@ function acquireEvents(url) {
 								}
 								eventToSave.save(function(finalEventSaveError) {
 									if (finalEventSaveError) {
-										console.log("failed to save event.");
+										console.log("failed to save event: " + eventToSave.eventName);
 										console.log(finalEventSaveError);
 									}
 									else {
@@ -436,7 +436,7 @@ function acquireEvents(url) {
 										}
 										eventToSave.save(function(finalEventSaveError) {
 											if (finalEventSaveError) {
-												console.log("failed to save event.");
+												console.log("failed to save event: " + eventToSave.eventName);
 												console.log(finalEventSaveError);
 											}
 											else {
@@ -478,7 +478,7 @@ function acquireBandsPromiseArray(bandIds, isLL, eventPassedIn) {
 			Band.findOne({fbId: band}, function(err, found) {
 	  			//band found
 	  			if (!err && found) {
-	  				console.log("resolved band: " + found.fbId + " for event: " + eventPassedIn.eventName);
+	  				console.log("found existing band: " + found.fbId + " for event: " + eventPassedIn.eventName);
 	  				resolve(found);
 	  			}
 	  			else {
