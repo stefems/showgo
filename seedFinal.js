@@ -178,7 +178,7 @@ function websiteLinkSearch(bandId, url, event, bandName, resolve) {
 /*
 dont delete
 */
-function googleSearchBand(bandId, event, band, options, resolve) {
+function googleSearchBand(bandId, event, band, options, resolve) {	
 	if (!options) {
 		let bandName = band.replace(/ /g, "+");
 		if (bandName.charAt(bandName.length-1) === "+") {
@@ -248,6 +248,7 @@ function googleSearchBand(bandId, event, band, options, resolve) {
 			}
 		}
 	});
+	
 }
 
 /*
@@ -376,21 +377,21 @@ function acquireEvents(url) {
 		if (!error && body && JSON.parse(body).data && JSON.parse(body).paging) {
 			let events = JSON.parse(body).data;
 			Promise.all(getEventPromiseArray(events)).then(values => {
-				let attendeeUrl = "https://graph.facebook.com/" + values[0].eventId + "/attending?fields=picture,name&access_token=" + access_token;
-				for (let i = 0; i < values.length; i++) {
-					let attendeeUrl = "https://graph.facebook.com/" + values[i].eventId + "/attending?fields=picture,name&access_token=" + access_token;
-					let currentEventPromise = values[i];
+				values.forEach(function(currentEvent) {
+					let attendeeUrl = "https://graph.facebook.com/" + currentEvent.eventId + "/attending?fields=picture,name&access_token=" + access_token;
+					let currentEventPromise = currentEvent;
 					let getPeoplePromise = new Promise( (resolve, reject) => {
 						getPeople(attendeeUrl, [], currentEventPromise, resolve, reject);
 					});
 					getPeoplePromise.then(eventToSave => {
+						console.log(eventToSave.social.length);
 						if (eventToSave.eventVenue === "Larimer Lounge" || 
 							eventToSave.eventVenue === "Lost Lake" ||
 							eventToSave.eventVenue === "Globe Hall")
 						{
 							let bandNames = eventToSave.eventName.split("/");
 							bandNames.splice(bandNames.length - 1, 1);
-							Promise.all(acquireBandsPromiseArray(bandNames, true, eventToSave)).then(bandsToAdd => {
+							Promise.all(acquireBandsPromiseArray(bandNames, true, eventToSave)).then((bandsToAdd) => {
 								console.log("total resolved bands: ");
 								console.log(bandsToAdd);
 								console.log("for event: " + eventToSave.eventName);
@@ -408,6 +409,8 @@ function acquireEvents(url) {
 										console.log("event " + eventToSave.eventName + " saved with " + eventToSave.bands.length + " bands added.");
 									}
 								});
+							}, (rejection) => {
+								console.log("acquireBandsPromiseArray() was rejected, meaning the final save for bands never happened.");
 							});
 						}
 						else {
@@ -443,8 +446,10 @@ function acquireEvents(url) {
 								}
 							});
 						}
+					}, (rejection) => {
+						console.log("getPeople() was rejected, band acquisition never happened for event: " + currentEvent.eventName);
 					});
-				}			
+				});			
 			});
 			if (JSON.parse(body).paging.next) {
 				acquireEvents(JSON.parse(body).paging.next);
@@ -545,7 +550,7 @@ function getEventPromiseArray(events) {
 
 function getPeople(url, array, event, resolve, reject) {
 	request(url, function (error, response, body) {
-		if (!error && JSON.parse(body) && JSON.parse(body).paging && (JSON.parse(body).data.length > 0)) {
+		if (!error && JSON.parse(body) && (JSON.parse(body).data.length > 0)) {
 			let people = JSON.parse(body).data;
 			for (let i = 0; i < people.length; i++) {
 				let attendee = {
@@ -560,13 +565,24 @@ function getPeople(url, array, event, resolve, reject) {
 				getPeople(JSON.parse(body).paging.next, array, event, resolve, reject);
 			}
 			else {
-				if (array) {
+				if (array.length !== 0) {
 					event.social = array;
+					event.save(function(postSocialEventSaveError) {
+						if (!postSocialEventSaveError) {
+							resolve(event);
+						}
+						else {
+							console.log("we failed to save the event after adding social.");
+							console.log(postSocialEventSaveError);
+							event.social = [];
+							resolve(event);
+						}
+					})
 					resolve(event);
 				}
 				else {
 					console.log("rejected, undefined social for event " + event.eventName);
-					reject();
+					resolve(event);
 				}
 			}
 		}
