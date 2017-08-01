@@ -179,6 +179,8 @@ function websiteLinkSearch(bandId, url, event, bandName, resolve) {
 dont delete
 */
 function googleSearchBand(bandId, event, band, options, resolve) {	
+	resolve();
+	/*
 	if (!options) {
 		let bandName = band.replace(/ /g, "+");
 		if (bandName.charAt(bandName.length-1) === "+") {
@@ -248,7 +250,7 @@ function googleSearchBand(bandId, event, band, options, resolve) {
 			}
 		}
 	});
-	
+	*/	
 }
 
 /*
@@ -467,6 +469,7 @@ acquireBands() is called for each event
 =====================================
 */
 function acquireBandsPromiseArray(bandIds, isLL, eventPassedIn) {
+	console.log("trying to acquire bands for: " + eventPassedIn.eventName);
 	let bandsPromiseArray = [];
 	bandIds.forEach(function(band) {
 		bandsPromiseArray.push(new Promise( resolve => {
