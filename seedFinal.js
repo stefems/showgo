@@ -204,7 +204,7 @@ function googleSearchBand(bandId, event, band, options, resolve) {
 			console.log("never found a url for band: " + band);
 			// resolve();
 		}
-		if (JSON.parse(body).error) {
+		else if (err) {
 			console.log("usage exceeded.");
 			//replace id and key to #2
 			if (currentKeyNumber === 1) {
