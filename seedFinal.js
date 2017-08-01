@@ -21,6 +21,8 @@ var Band = require("./models/band");
 ENV Setup (for keys)
 =====================================
 */
+let currentKeyNumber = 1;
+
 var env, access_token;
 //add back in 
 var facebookVenuePages = ["hidivedenver", "FillmoreAuditorium", "MarquisTheater", "gothictheatre", "ogdentheatre", "lostlakedenver", "larimerlounge", "globehalldenver"];
@@ -173,7 +175,6 @@ function websiteLinkSearch(bandId, url, event, bandName, resolve) {
 		}
 	});
 }
-
 /*
 dont delete
 */
@@ -185,7 +186,7 @@ function googleSearchBand(bandId, event, band, options, resolve) {
 		}
 		bandName = "%22"+ bandName + "%22";
 		options = {
-			url: "https://www.googleapis.com/customsearch/v1?key=" + env.googleKey4 + "&cx=" + env.googleId4 + "&q=" + bandName + "+bandcamp",
+			url: "https://www.googleapis.com/customsearch/v1?key=" + env.googleKey + "&cx=" + env.googleId + "&q=" + bandName + "+bandcamp",
 			headers: {
 				"user-agent": "Chrome/51.0.2704.103"
 			}
@@ -203,37 +204,48 @@ function googleSearchBand(bandId, event, band, options, resolve) {
 			console.log("never found a url for band: " + band);
 			// resolve();
 		}
-		else if (!err) {
-			console.log("exhausted key.");
-			// resolve();
+		if (JSON.parse(body).error) {
+			console.log("usage exceeded.");
+			//replace id and key to #2
+			if (currentKeyNumber === 1) {
+				console.log("limit reached on key#1, attempting to use another.\n" + band);
+				options = {
+					url: "https://www.googleapis.com/customsearch/v1?key=" + env.googleKey2 + "&cx=" + env.googleId2 + "&q=" + bandName + "+bandcamp",
+					headers: {
+						"user-agent": "Chrome/51.0.2704.103"
+					}
+				};
+				currentKeyNumber = 2;
+				googleSearchBand(bandId, event, bandName, options, resolve);
+			}
+			//replace id and key to #3
+			else if (currentKeyNumber === 2) {
+				console.log("limit reached on key#2, attempting to use 3.\n" + band);
+				options = {
+					url: "https://www.googleapis.com/customsearch/v1?key=" + env.googleKey3 + "&cx=" + env.googleId3 + "&q=" + bandName + "+bandcamp",
+					headers: {
+						"user-agent": "Chrome/51.0.2704.103"
+					}
+				};
+				currentKeyNumber = 3;
+				googleSearchBand(bandId, event, bandName, options, resolve);
+			}
+			//replace id and key to #4
+			else if (currentKeyNumber === 3) {
+				console.log("limit reached on key#2, attempting to use 3.\n" + band);
+				options = {
+					url: "https://www.googleapis.com/customsearch/v1?key=" + env.googleKey4 + "&cx=" + env.googleId4 + "&q=" + bandName + "+bandcamp",
+					headers: {
+						"user-agent": "Chrome/51.0.2704.103"
+					}
+				};
+				currentKeyNumber = 4;
+				googleSearchBand(bandId, event, bandName, options, resolve);
+			}
+			else {
+				console.log("exhausted all keys.\n"+band);
+			}
 		}
-		// else {
-		// 	//replace id and key to #2
-		// 	if (env.googleKey !== env.googleKey2 && env.googleKey !== env.googleKey3) {
-		// 		console.log("limit reached on key#1, attempting to use another.\n" + band);
-		// 		options = {
-		// 			url: "https://www.googleapis.com/customsearch/v1?key=" + env.googleKey2 + "&cx=" + env.googleId2 + "&q=" + bandName + "+bandcamp",
-		// 			headers: {
-		// 				"user-agent": "Chrome/51.0.2704.103"
-		// 			}
-		// 		};
-		// 		googleSearchBand(bandId, event, bandName, options);
-		// 	}
-		// 	//replace id and key to #3
-		// 	else if (env.googleKey === env.googleKey2) {
-		// 		console.log("limit reached on key#2, attempting to use another.\n" + band);
-		// 		options = {
-		// 			url: "https://www.googleapis.com/customsearch/v1?key=" + env.googleKey3 + "&cx=" + env.googleId3 + "&q=" + bandName + "+bandcamp",
-		// 			headers: {
-		// 				"user-agent": "Chrome/51.0.2704.103"
-		// 			}
-		// 		};
-		// 		googleSearchBand(bandId, event, bandName, options);
-		// 	}
-		// 	else {
-		// 		console.log("exhausted all keys.\n"+band);
-		// 	}
-		// }
 	});
 }
 
