@@ -179,8 +179,6 @@ function websiteLinkSearch(bandId, url, event, bandName, resolve) {
 dont delete
 */
 function googleSearchBand(bandId, event, band, options, resolve) {	
-	resolve();
-	/*
 	if (!options) {
 		let bandName = band.replace(/ /g, "+");
 		if (bandName.charAt(bandName.length-1) === "+") {
@@ -199,58 +197,61 @@ function googleSearchBand(bandId, event, band, options, resolve) {
 			body = JSON.parse(body);
 			for (let i = 0; i < body.items.length; i++) {
 				if (body.items[i].link.indexOf("bandcamp.com") !== -1) {
+					console.log("google search found a band.");
 					getbandcampEmbed(bandId, body.items[i].link, event, resolve);
-					return;
 				}
 			}
 			console.log("never found a url for band: " + band);
 			resolve();
 		}
-		else if (err) {
-			console.log("usage exceeded.");
-			//replace id and key to #2
-			if (currentKeyNumber === 1) {
-				console.log("limit reached on key#1, attempting to use another.\n" + band);
-				options = {
-					url: "https://www.googleapis.com/customsearch/v1?key=" + env.googleKey2 + "&cx=" + env.googleId2 + "&q=" + bandName + "+bandcamp",
-					headers: {
-						"user-agent": "Chrome/51.0.2704.103"
-					}
-				};
-				currentKeyNumber = 2;
-				googleSearchBand(bandId, event, bandName, options, resolve);
-			}
-			//replace id and key to #3
-			else if (currentKeyNumber === 2) {
-				console.log("limit reached on key#2, attempting to use 3.\n" + band);
-				options = {
-					url: "https://www.googleapis.com/customsearch/v1?key=" + env.googleKey3 + "&cx=" + env.googleId3 + "&q=" + bandName + "+bandcamp",
-					headers: {
-						"user-agent": "Chrome/51.0.2704.103"
-					}
-				};
-				currentKeyNumber = 3;
-				googleSearchBand(bandId, event, bandName, options, resolve);
-			}
-			//replace id and key to #4
-			else if (currentKeyNumber === 3) {
-				console.log("limit reached on key#2, attempting to use 3.\n" + band);
-				options = {
-					url: "https://www.googleapis.com/customsearch/v1?key=" + env.googleKey4 + "&cx=" + env.googleId4 + "&q=" + bandName + "+bandcamp",
-					headers: {
-						"user-agent": "Chrome/51.0.2704.103"
-					}
-				};
-				currentKeyNumber = 4;
-				googleSearchBand(bandId, event, bandName, options, resolve);
-			}
-			else {
-				console.log("exhausted all keys.\n"+band);
-				resolve();
-			}
+		else {
+			console.log("google search failed.");
+			resolve();
 		}
+		// else if (err) {
+		// 	console.log("usage exceeded.");
+		// 	//replace id and key to #2
+		// 	if (currentKeyNumber === 1) {
+		// 		console.log("limit reached on key#1, attempting to use another.\n" + band);
+		// 		options = {
+		// 			url: "https://www.googleapis.com/customsearch/v1?key=" + env.googleKey2 + "&cx=" + env.googleId2 + "&q=" + bandName + "+bandcamp",
+		// 			headers: {
+		// 				"user-agent": "Chrome/51.0.2704.103"
+		// 			}
+		// 		};
+		// 		currentKeyNumber = 2;
+		// 		googleSearchBand(bandId, event, bandName, options, resolve);
+		// 	}
+		// 	//replace id and key to #3
+		// 	else if (currentKeyNumber === 2) {
+		// 		console.log("limit reached on key#2, attempting to use 3.\n" + band);
+		// 		options = {
+		// 			url: "https://www.googleapis.com/customsearch/v1?key=" + env.googleKey3 + "&cx=" + env.googleId3 + "&q=" + bandName + "+bandcamp",
+		// 			headers: {
+		// 				"user-agent": "Chrome/51.0.2704.103"
+		// 			}
+		// 		};
+		// 		currentKeyNumber = 3;
+		// 		googleSearchBand(bandId, event, bandName, options, resolve);
+		// 	}
+		// 	//replace id and key to #4
+		// 	else if (currentKeyNumber === 3) {
+		// 		console.log("limit reached on key#2, attempting to use 3.\n" + band);
+		// 		options = {
+		// 			url: "https://www.googleapis.com/customsearch/v1?key=" + env.googleKey4 + "&cx=" + env.googleId4 + "&q=" + bandName + "+bandcamp",
+		// 			headers: {
+		// 				"user-agent": "Chrome/51.0.2704.103"
+		// 			}
+		// 		};
+		// 		currentKeyNumber = 4;
+		// 		googleSearchBand(bandId, event, bandName, options, resolve);
+		// 	}
+		// 	else {
+		// 		console.log("exhausted all keys.\n"+band);
+		// 		resolve();
+		// 	}
+		// }
 	});
-	*/	
 }
 
 /*
@@ -383,6 +384,7 @@ function acquireEvents(url) {
 					let attendeeUrl = "https://graph.facebook.com/" + currentEvent.eventId + "/attending?fields=picture,name&access_token=" + access_token;
 					let currentEventPromise = currentEvent;
 					let getPeoplePromise = new Promise( (resolve, reject) => {
+						console.log("Getting people for " + currentEventPromise.eventName);
 						getPeople(attendeeUrl, [], currentEventPromise, resolve, reject);
 					});
 					getPeoplePromise.then(eventToSave => {
