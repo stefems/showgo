@@ -6,6 +6,7 @@ export class Event {
 	private location: string;
 	private timeString: string;
 	private time: string;
+	private timeData = {day: "", hour: "", year: "", month: ""};
 	private social;
 	private bcEmbeds;
 	private scEmbeds;
@@ -37,6 +38,10 @@ export class Event {
 			this.scEmbeds = inputJson.scEmbeds;
 			this.bands = inputJson.bands;
 			this.time = inputJson.eventTime.start_time;
+			this.timeData.hour = timeHour;
+			this.timeData.year = inputJson.eventTime.eventYear;
+			this.timeData.month = inputJson.eventTime.eventMonth;
+			this.timeData.day = inputJson.eventTime.eventDay;
 		}
 		else {
 			this.name = "";

@@ -8,7 +8,11 @@
 	font-size: 60px;
 	cursor: pointer;
 }
-
+hr {
+	border-color: darkgrey;
+	width: 100%;
+	margin: 5px 0;
+}
 .mdl-cell {
 	margin: 0;
 }
@@ -21,8 +25,14 @@
 	margin: 0 auto;
 	text-align: left;
 }
+.eventContainer .middleRow .extra {
+	margin: 0 0;
+	display: inline;
+	vertical-align: text-bottom;
+}
 .eventContainer .middleRow h6{
 	margin: 0;
+	text-overflow: ellipsis;
 }
 .eventContainer .middleRow .location {
 	color: darkgrey;
@@ -32,30 +42,69 @@
 	font-size: 14px;
 	display: inline;
 }
+.eventContainer .middleRow .othersDiv {
+	height: 40px;
+    overflow-y: hidden;
+    font-size: 1em;
+}
+.eventContainer .middleRow .othersDiv .beTheFirst {
+	text-align: center;
+}
+.eventContainer .middleRow .others {
+	white-space: nowrap;
+	overflow-x: auto;
+	overflow-y: hidden;
+}
+.eventContainer .middleRow .others img{
+	margin-bottom: 10px;
+}
+.eventContainer .middleRow .friends {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 1em;
+}
 .eventContainer .middleRow .addressIcon{
 	vertical-align: top;
 }
 
 .eventContainer .bottomRow div{
 	text-align: center;
-	margin: 0 auto;
+	margin: auto auto;
 }
 .eventContainer .bottomRow h5{
 	margin: 0;
 	margin-bottom: 4px;
 }
+.eventContainer .bottomRow .date {
+    background-color: white;
+    color: black;
+}
+.eventContainer .bottomRow .date * {
+	margin: 0 0;
+}
+.eventContainer .bottomRow .date .hour {
+	background-color: #183E64;
+	color: white;
+}
+
 .bottomRow .friendString {
 	text-align: left;
 }
 .bottomRow .fbButton {
-	min-width: 40px;
-	width: 40px;
+    width: 100%;
+    text-transform: none;
+    display: block;
+    font-size: x-large;
+    text-align: center;
+    margin-bottom: 5px;
 }
 .fbButton.clicked {
 	background-color: #009688;
 }
 .bottomRow .fbButton i{
-	margin-left: -8px;
+	float: left;
+    margin-top: 5px;
 }
 .bottomRow .fbButton .calIcon{
 	margin-left: -6px;

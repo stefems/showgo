@@ -19,18 +19,34 @@
 			<i class="material-icons addressIcon">place</i>
 			<h6 class="address">{{event.location}}</h6>
 		</div>
-	</div>
-	<div class="mdl-grid middleRow">
+		<hr>
 		<!-- friends -->
 		<div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--4-col-phone">
-			<h6>Friends: {{event.friendString}}</h6>
+			<h6 *ngIf="event.friendString!==''" class="friends">{{event.friendString}}</h6>
 		</div>
 		<!-- Others -->
-		<div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--4-col-phone">
-			<h6>Others: <img *ngFor="let bubble of event.social" [attr.src]="bubble.picture" /></h6>
+		<div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--4-col-phone othersDiv">
+			<div *ngIf="socialPreview.length !== 0" class="others"><img class="mdl-chip__contact" *ngFor="let bubble of socialPreview" [attr.src]="bubble.picture" /><h6 class="extra">{{socialPreviewExtra}}</h6></div>
+			<h6 class="beTheFirst" *ngIf="socialPreview.length === 0">Be the first to RSVP!</h6>
 		</div>
 	</div>
-	
+	<div class="mdl-grid bottomRow">
+		<div class="mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--2-col-phone eventActions">
+			<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent fbButton" (click)="eventAction('join')" [disabled]="!buttonsEnabled" [class.clicked]="joined">
+			  		<i class="fa fa-facebook" aria-hidden="true"></i>Go
+				</button>
+				<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent fbButton" (click)="eventAction('interested')" [disabled]="!buttonsEnabled" [class.clicked]="interest">
+		  			<i class="fa fa-facebook" aria-hidden="true"></i>Maybe
+				</button>
+		</div>
+		<div class="mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--2-col-phone date">
+			<h6 class="hour">{{event.timeData.hour}}</h6>
+			<h5>{{event.timeData.month}}</h5>
+			<h2>{{event.timeData.day}}</h2>
+			<h6>{{event.timeData.year}}</h6>
+		</div>
+
+	</div>
 	<!-- USEFUL FOR LATER SOCIAL POPUP
 	<div *ngIf="showFriends" >
 			<friend-bubble *ngFor="let friend of event.social" (idSender)="addFriend($event)" [friend]="friend"></friend-bubble>

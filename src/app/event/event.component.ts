@@ -29,6 +29,8 @@ export class EventComponent implements OnInit {
 	public buttonsEnabled: boolean = true;
 	public friendString = "";
 	public invitedByNames = "";
+	public socialPreview = [];
+	public socialPreviewExtra = "";
 	constructor(private apiService: ApiService) {
 
 	}
@@ -85,7 +87,10 @@ export class EventComponent implements OnInit {
 				break;
 		}
 		this.event.friendString = this.friendString;
-		// console.log("event ngOnInit");
+		this.socialPreview = this.event.social.slice(0, 10);
+		if (this.event.social.length > 10) {
+			this.socialPreviewExtra = "+" + (this.event.social.length-10);
+		}
 	}
 
 	public toggleBands() {
