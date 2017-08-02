@@ -28,8 +28,8 @@ export class EventsComponent implements OnInit {
   public currentEvent = new Event(0);
   public interval;
   @ViewChild("show") show;
-  @ViewChild("showCopyText") showCopyText;
-  @ViewChild("linkText") linkText;
+  // @ViewChild("showCopyText") showCopyText;
+  // @ViewChild("linkText") linkText;
   @ViewChildren("eventComps") eventComps: QueryList<EventComponent>;
   @Input("user") user;
   @ViewChild('drawer') drawer: ElementRef;
@@ -68,8 +68,8 @@ export class EventsComponent implements OnInit {
 
   }
   public detectLoad(): void{
-    if(this.socialDrawer && this.socialDrawer.nativeElement && this.socialDrawer.nativeElement.MaterialLayout &&
-       this.showCopyText && this.showCopyText.nativeElement && this.showCopyText.nativeElement.MaterialSnackbar) {
+    //removed these after removing snackbar this.showCopyText && this.showCopyText.nativeElement && this.showCopyText.nativeElement.MaterialSnackbar
+    if(this.socialDrawer && this.socialDrawer.nativeElement && this.socialDrawer.nativeElement.MaterialLayout) {
       // console.log("loaded!");
       this.loaded = true;
       clearInterval(this.interval);
@@ -85,22 +85,22 @@ export class EventsComponent implements OnInit {
   }
 
   public copyText(): void {
-    this.linkText.nativeElement.select();
-    if (document.execCommand("copy")) {
-      this.showCopyText.nativeElement.querySelector("button").innerHTML = "Copied";
-    }
+    // this.linkText.nativeElement.select();
+    // if (document.execCommand("copy")) {
+    //   this.showCopyText.nativeElement.querySelector("button").innerHTML = "Copied";
+    // }
   }
 
   public openLinkCopier(eventUrl): void {
-    this.copyTextActive = true;
-    this.copyLinkText = eventUrl;
-    let data = { 
-      message: '',
-      timeout: 50000,
-      actionHandler: this.copyText.bind(this),
-      actionText: 'Copy'
-    };
-    this.showCopyText.nativeElement.MaterialSnackbar.showSnackbar(data);
+    // this.copyTextActive = true;
+    // this.copyLinkText = eventUrl;
+    // let data = { 
+    //   message: '',
+    //   timeout: 50000,
+    //   actionHandler: this.copyText.bind(this),
+    //   actionText: 'Copy'
+    // };
+    // this.showCopyText.nativeElement.MaterialSnackbar.showSnackbar(data);
   }
 
   ngAfterViewInit() {
@@ -109,12 +109,12 @@ export class EventsComponent implements OnInit {
   }
 
   public showInviteUser(friendName) {
-    this.copyTextActive = false;
-    let data = { 
-      message: "You're now tracking " + friendName + ", but they're not using ShowGo. Would you like to send them a message to join our app?",
-      timeout: 5000
-    };
-    this.showCopyText.nativeElement.MaterialSnackbar.showSnackbar(data);
+    // this.copyTextActive = false;
+    // let data = { 
+    //   message: "You're now tracking " + friendName + ", but they're not using ShowGo. Would you like to send them a message to join our app?",
+    //   timeout: 5000
+    // };
+    // this.showCopyText.nativeElement.MaterialSnackbar.showSnackbar(data);
   }
 
   public addFriend(event){

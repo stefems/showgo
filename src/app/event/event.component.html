@@ -11,47 +11,35 @@
 	</div>
 	<div class="mdl-grid middleRow">
 		<!-- Venue -->
-		<div class="mdl-cell mdl-cell--4-col mdl-cell--2-col-tablet mdl-cell--1-col-phone">
+		<div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--4-col-phone">
 			<h6>{{event.venue}}</h6>
 		</div>
 		<!-- Location -->
-		<div class="mdl-cell mdl-cell--4-col mdl-cell--4-col-tablet mdl-cell--2-col-phone">
-			<h6>{{event.location}}</h6>
-		</div>
-		<!-- Date -->
-		<div class="mdl-cell mdl-cell--4-col mdl-cell--2-col-tablet mdl-cell--1-col-phone">
-			<h6>{{event.timeString}}</h6>
+		<div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--4-col-phone location">
+			<i class="material-icons addressIcon">place</i>
+			<h6 class="address">{{event.location}}</h6>
 		</div>
 	</div>
-	<div class="mdl-grid bottomRow">
-		<!-- Social & Copy Link -->
-		<div class="mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--2-col-phone">
-			<h5 class="friendString">{{friendString}} {{event.invitedByNames}}</h5>
-
-			<button (click)="openSocial()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect socialButton">Social</button>
-			<button (click)="copyLink()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect copyLinkButton">Copy Link</button>
+	<div class="mdl-grid middleRow">
+		<!-- friends -->
+		<div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+			<h6>Friends: {{event.friendString}}</h6>
 		</div>
-		<div class="mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--2-col-phone">
-			<h5>Attend?</h5>
-			<span>
-				<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent fbButton" (click)="eventAction('join')" [disabled]="!buttonsEnabled" [class.clicked]="joined">
-			  		<i class="material-icons">event_available</i>
-				</button>
-				<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent fbButton" (click)="eventAction('interested')" [disabled]="!buttonsEnabled" [class.clicked]="interest">
-		  			<i class="fa fa-question questionIcon" aria-hidden="true"></i>
-		  			<i class="fa fa-calendar-o fa-lg calIcon" aria-hidden="true"></i>
-				</button>
-				<!-- <button class="mdl-button mdl-js-button mdl-button-/-raised mdl-js-ripple-effect mdl-button-/-accent fbButton" (click)="eventAction('ignore')" [disabled]="!buttonsEnabled" [class.clicked]="ignored">
-		  			<i class="material-icons">event_busy</i>
-				</button> -->
-			</span>
+		<!-- Others -->
+		<div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+			<h6>Others: <img *ngFor="let bubble of event.social" [attr.src]="bubble.picture" /></h6>
 		</div>
 	</div>
+	
 	<!-- USEFUL FOR LATER SOCIAL POPUP
 	<div *ngIf="showFriends" >
 			<friend-bubble *ngFor="let friend of event.social" (idSender)="addFriend($event)" [friend]="friend"></friend-bubble>
 	</div>
 	-->
+	<!-- Date -->
+	<!-- <div class="mdl-cell mdl-cell-/-4-col mdl-cell-/-2-col-tablet mdl-cell-/-1-col-phone">
+		<h6>{{event.timeString}}</h6>
+	</div> -->
 	<div *ngIf="showBands">
 		<band *ngFor="let band of event.bands" [band]="band"></band>
 	</div>

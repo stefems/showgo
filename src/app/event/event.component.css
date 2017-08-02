@@ -2,11 +2,10 @@
 	margin: 0;
 }
 .topRow .playButtonDiv {
-	text-align: right;
-	margin: 0 auto;
+	margin: auto auto;
 }
 .topRow .playButtonDiv i{
-	font-size: 45px;
+	font-size: 60px;
 	cursor: pointer;
 }
 
@@ -15,13 +14,26 @@
 }
 .eventContainer .middleRow {
 	text-align: center;
-	font-style: italic;
+	background-color: white;
+	color: black;
 }
 .eventContainer .middleRow div{
 	margin: 0 auto;
+	text-align: left;
 }
 .eventContainer .middleRow h6{
 	margin: 0;
+}
+.eventContainer .middleRow .location {
+	color: darkgrey;
+}
+.eventContainer .middleRow .address{
+	font-style: italic;
+	font-size: 14px;
+	display: inline;
+}
+.eventContainer .middleRow .addressIcon{
+	vertical-align: top;
 }
 
 .eventContainer .bottomRow div{

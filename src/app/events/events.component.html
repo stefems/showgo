@@ -28,11 +28,11 @@
 			</div>
 		</div>
 	</div>
-	<div #showCopyText id="popup" class="mdl-js-snackbar mdl-snackbar">
+	<!-- <div #showCopyText id="popup" class="mdl-js-snackbar mdl-snackbar">
 	  <div class="mdl-snackbar__text"></div>
 	  <input *ngIf="copyTextActive" #linkText type="text" value="{{copyLinkText}}">
 	  <button class="mdl-snackbar__action" type="button"></button>
-	</div>
+	</div> -->
 	<!-- EVENT LISTING -->
 	<event #eventComps *ngFor="let event of events | eventsFilter:filterArgs" [event]="event" [user]="user" (socialSender)="openSocial($event)" (copyLinkSender)="openLinkCopier($event)">
 	</event>

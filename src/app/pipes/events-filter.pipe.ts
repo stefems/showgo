@@ -16,10 +16,13 @@ export class EventsFilterPipe implements PipeTransform {
 
     //always do a date filter
     events = events.sort(function(eventA, eventB) {
-        let eventADate = new Date(eventA.time);
-        let eventBDate = new Date(eventB.time);
+        var a = eventA.time.split(/[^0-9]/);
+        var b = eventB.time.split(/[^0-9]/);
+        let eventADate = new Date(a[0],a[1]-1,a[2],a[3],a[4],a[5]);
+        let eventBDate = new Date(b[0],b[1]-1,b[2],b[3],b[4],b[5]);
         return (eventADate < eventBDate) ? -1 : (eventADate > eventBDate) ? 1 : 0;
     });
+
 
     //if no filter nor events
     if (!events || !filter) {
