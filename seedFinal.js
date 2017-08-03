@@ -264,50 +264,52 @@ function getbandcampEmbed(bandId, url, event, resolve) {
 			"user-agent": "Chrome/51.0.2704.103"
 		}
 	};
-	request(options, function (error, response, body) {
-		if (!error) {
-			try {
-				const dom = new JSDOM(body);
-				var metaTags = dom.window.document.getElementsByTagName("meta");
-				let content = "";
-				for (var i = 0; i < metaTags.length; i++) {
-				    if (metaTags[i].getAttribute("property") == "og:video") {
-				        content = metaTags[i].getAttribute("content");
-				    }
-				}
-				let albumId = "";
-				if (content !== "" && content.indexOf("track=") === -1) {
-					let albumURL = content.split("album=")[1];
-					if (albumURL) {
-						albumId = "album=" + albumURL.split("/")[0];
+	setTimeout(function(){
+		request(options, function (error, response, body) {
+			if (!error) {
+				try {
+					const dom = new JSDOM(body);
+					var metaTags = dom.window.document.getElementsByTagName("meta");
+					let content = "";
+					for (var i = 0; i < metaTags.length; i++) {
+					    if (metaTags[i].getAttribute("property") == "og:video") {
+					        content = metaTags[i].getAttribute("content");
+					    }
 					}
-				}
-				else if (content.indexOf("track") !== -1) {
-					let albumURL = content.split("track=")[1];
-					if (albumURL) {
-						albumId = "track=" + albumURL.split("/")[0];
+					let albumId = "";
+					if (content !== "" && content.indexOf("track=") === -1) {
+						let albumURL = content.split("album=")[1];
+						if (albumURL) {
+							albumId = "album=" + albumURL.split("/")[0];
+						}
 					}
+					else if (content.indexOf("track") !== -1) {
+						let albumURL = content.split("track=")[1];
+						if (albumURL) {
+							albumId = "track=" + albumURL.split("/")[0];
+						}
+					}
+					else {
+						let div = dom.window.document.getElementsByClassName("leftMiddleColumns")[0];
+						let liList = div.getElementsByTagName("li");
+						// albumId = "album=" + liList[0].getAttribute("data-item-id").split("-")[1];
+						let data = liList[0].getAttribute("data-item-id").split("-");
+						albumId = data[0] + "=" + data[1];
+					}
+					saveNewBandUpdateEvent(bandId, event, "https://bandcamp.com/EmbeddedPlayer/" + albumId + "/size=small/bgcol=ffffff/linkcol=0687f5/transparent=true/", resolve);
 				}
-				else {
-					let div = dom.window.document.getElementsByClassName("leftMiddleColumns")[0];
-					let liList = div.getElementsByTagName("li");
-					// albumId = "album=" + liList[0].getAttribute("data-item-id").split("-")[1];
-					let data = liList[0].getAttribute("data-item-id").split("-");
-					albumId = data[0] + "=" + data[1];
+				catch (e) {
+					console.log("JSDOM error " + options.url);
+					resolve();
 				}
-				saveNewBandUpdateEvent(bandId, event, "https://bandcamp.com/EmbeddedPlayer/" + albumId + "/size=small/bgcol=ffffff/linkcol=0687f5/transparent=true/", resolve);
 			}
-			catch (e) {
-				console.log("JSDOM error " + options.url);
+			else {
 				resolve();
+				// console.log("URL error from website");
+				//use same url but replace the album= with track=
 			}
-		}
-		else {
-			resolve();
-			// console.log("URL error from website");
-			//use same url but replace the album= with track=
-		}
-	});	
+		});	
+	}, 3000);
 }
 
 /*
