@@ -28,6 +28,8 @@ import { FriendInviteComponent } from './friend-invite/friend-invite.component';
 import { SuggestionPageComponent } from './suggestion-page/suggestion-page.component';
 import { EventInvitesComponent } from './event-invites/event-invites.component';
 
+import { ScrollDirective } from './scroll.directive';
+
 // Define the routes
 const ROUTES = [
   {
@@ -100,7 +102,8 @@ const ROUTES = [
     SplashComponent,
     FriendInviteComponent,
     SuggestionPageComponent,
-    EventInvitesComponent
+    EventInvitesComponent,
+    ScrollDirective
   ],
   imports: [
     BrowserModule,

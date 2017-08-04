@@ -41,7 +41,6 @@ export class FbloginService {
   	// }
     // fb.init(initParams);
     this.fb.init(initParams);
-    console.log("fb is init: ");
     this.fb.Event.subscribe('auth.statusChange', this.auth_status_change_callback);
   }
   auth_status_change_callback(response): void {

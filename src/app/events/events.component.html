@@ -1,6 +1,6 @@
 <!-- <a href="sms:Stefan&body=lol">Send SMS</a>
  -->
- <div [hidden]="!loaded" class="eventsContainer">
+ <div #eventsContainer class="eventsContainer">
 	<div id="socialDrawerDiv" #socialContainer class="mdl-layout__container socialDrawerContainer">
 		<div #socialDrawer  id="socialDrawer" class="demo-layout-transparent mdl-layout mdl-js-layout mdl-layout--fixed-header">
 			<header id="socialDrawerHeader" class="mdl-layout__header">
@@ -28,16 +28,13 @@
 			</div>
 		</div>
 	</div>
-	<!-- <div #showCopyText id="popup" class="mdl-js-snackbar mdl-snackbar">
-	  <div class="mdl-snackbar__text"></div>
-	  <input *ngIf="copyTextActive" #linkText type="text" value="{{copyLinkText}}">
-	  <button class="mdl-snackbar__action" type="button"></button>
-	</div> -->
-	<!-- EVENT LISTING -->
-	<event #eventComps *ngFor="let event of events | eventsFilter:filterArgs" [event]="event" [user]="user" (socialSender)="openSocial($event)" (copyLinkSender)="openLinkCopier($event)">
-	</event>
+	<!-- EVENT LISTING  -->
+	<div *ngIf="eventsLoaded">
+		<event #eventComps *ngFor="let event of events | eventsFilter:filterArgs" [event]="event" [user]="user" (socialSender)="openSocial($event)" >
+		</event>
+	</div>
 </div>
-<div class="text-center">
+<!--div class="text-center">
 	<i [hidden]="loaded" class="fa fa-music fa-spin fa-5x"></i>
 	<h4>Loading Events!</h4>
-</div>
+</div-->

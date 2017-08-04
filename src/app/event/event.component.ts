@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { ApiService }      from './../api.service';
-import { FriendBubbleComponent }      from './../friend-bubble/friend-bubble.component';
+// import { FriendBubbleComponent }      from './../friend-bubble/friend-bubble.component';
 import {BcPlayerComponent} from './../bc-player/bc-player.component';
 import { Event } from './../event';
 
@@ -31,8 +31,9 @@ export class EventComponent implements OnInit {
 	public invitedByNames = "";
 	public socialPreview = [];
 	public socialPreviewExtra = "";
-	constructor(private apiService: ApiService) {
 
+	constructor(private apiService: ApiService) {
+		
 	}
 	ngAfterViewInit() {
 		// console.log("event ngOnInit");
@@ -55,6 +56,7 @@ export class EventComponent implements OnInit {
 				}
 			}
 		}
+		
 		let friendsGoing = [];
 		//for each attendee, is that a friend
 		for (let i = 0; i < this.event.social.length; i++) {
@@ -87,6 +89,7 @@ export class EventComponent implements OnInit {
 				break;
 		}
 		this.event.friendString = this.friendString;
+
 		this.socialPreview = this.event.social.slice(0, 10);
 		if (this.event.social.length > 10) {
 			this.socialPreviewExtra = "+" + (this.event.social.length-10);

@@ -394,8 +394,13 @@ var generalApiController = {
   getEvents: function(req, res) {
     // mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/events');
     //get events from db
-    Event.find({}, function(err, docs) {
-      res.json(docs);
+    Event.find({}).sort('eventTime.start_time').exec(function(eventsFindError, eventsFound) {
+      if (!eventsFindError && eventsFound) {
+        res.json(eventsFound);
+      }
+      else {
+        res.json([]);
+      }
     });
   },
 

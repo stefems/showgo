@@ -16,9 +16,11 @@ declare var componentHandler:any;
 })
 export class EventsComponent implements OnInit {
 
-  public loaded = false;
+  public loaded = true;
+  public eventsLoaded = false;
   public inviteOpen = false;
   public events = [];
+  public eventsToShow = 10;
   public copyLinkText = "";
   public copyTextActive;
   private userAccessToken = "";
@@ -27,9 +29,10 @@ export class EventsComponent implements OnInit {
   private eventFilter = "";
   public currentEvent = new Event(0);
   public interval;
+  private currentScroll;
+  private time = 0;
   @ViewChild("show") show;
-  // @ViewChild("showCopyText") showCopyText;
-  // @ViewChild("linkText") linkText;
+  @ViewChild("eventsContainer") eventsContainer: ElementRef;;
   @ViewChildren("eventComps") eventComps: QueryList<EventComponent>;
   @Input("user") user;
   @ViewChild('drawer') drawer: ElementRef;
@@ -37,22 +40,31 @@ export class EventsComponent implements OnInit {
   @ViewChild('socialContainer') socialContainer: ElementRef;
   
   constructor(private router: Router, private apiService: ApiService, private authService: AuthService) {
+    // setInterval(function() {
+    //   this.time++;
+    //   console.log(this.time);
+    // }.bind(this), 1000);
+    
+    this.filterArgs = {type: "", events: [], totalEventCount: this.eventsToShow};
+    
     // console.log("constructor");
     this.router.events.subscribe((val) => {
       // console.log(val);
       this.eventFilter = val.url;
+      // console.log("eventsfilter set at " + this.time);
       switch (val.url) {
         case "/events/me":
-          this.filterArgs = {type: "mine", events: this.user.events};
+          this.filterArgs = {type: "mine", events: this.user.events, totalEventCount: this.eventsToShow};
           break;
         case "/events/friends":
-          this.filterArgs = {type: "friends", friends: this.user.friends};
-          break;
-        case "/events/all":
-          this.filterArgs = null;
+          this.filterArgs = {type: "friends", friends: this.user.friends, totalEventCount: this.eventsToShow};
           break;
         case "/events/invites":
-          this.filterArgs = {type: "invites", eventInvites: this.user.eventInvites};
+          this.filterArgs = {type: "invites", eventInvites: this.user.eventInvites, totalEventCount: this.eventsToShow};
+          break;
+        case "/events/all":
+          default:
+          this.filterArgs = {totalEventCount: this.eventsToShow};
           break;
       }
     });
@@ -64,9 +76,20 @@ export class EventsComponent implements OnInit {
     this.apiService.getEvents().subscribe(response => {
       // console.log(response);
       this.events = response;
+      this.eventsLoaded = true;
+      // console.log("events received at " + this.time);
     });
-
   }
+  public loadMoreEvents(): void {
+    if (this.filterArgs) {
+      this.filterArgs.totalEventCount+=10;
+    }
+    else {
+      this.filterArgs = {type: "", eventInvites: [], totalEventCount: 20};
+    }
+    console.log('loadmoreEvents() ' + this.filterArgs.totalEventCount);
+  }
+
   public detectLoad(): void{
     //removed these after removing snackbar this.showCopyText && this.showCopyText.nativeElement && this.showCopyText.nativeElement.MaterialSnackbar
     if(this.socialDrawer && this.socialDrawer.nativeElement && this.socialDrawer.nativeElement.MaterialLayout) {
@@ -105,7 +128,15 @@ export class EventsComponent implements OnInit {
 
   ngAfterViewInit() {
     // console.log("ngAfterViewInit");
-    this.interval = setInterval(this.detectLoad.bind(this), 2000);
+    // this.interval = setInterval(this.detectLoad.bind(this), 2000);
+    this.eventsContainer.nativeElement.addEventListener("scroll", () => {
+      //if they're the same and the scroll value isn't at the top, that
+      //  means that they reached the bottom.
+      if (this.eventsContainer.nativeElement.scrollTop > (this.eventsContainer.nativeElement.scrollHeight - this.eventsContainer.nativeElement.offsetHeight) && this.eventsContainer.nativeElement.scrollTop !== 0) {
+        console.log("attempting to emit.");
+        this.loadMoreEvents();
+      }
+    }); 
   }
 
   public showInviteUser(friendName) {
@@ -218,6 +249,7 @@ export class EventsComponent implements OnInit {
     this.inviteOpen = false;
   }
 
+//REMOVE THIS?
   public filter(type): void {
     switch (type) {
       case "all":
