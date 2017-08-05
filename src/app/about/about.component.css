@@ -1,0 +1,28 @@
+img {
+	border-radius: 50%;
+	width: 50%;
+}
+.container {
+	background-color: rgba(0,0,0,.7);
+}
+h3, h4, h5{
+	margin: 0 0;
+    margin-bottom: 10px;
+    text-align: center;
+}
+div img{
+	display: block;
+	margin: 0 auto;
+}
+p {
+	margin-bottom: 0;
+}
+footer {
+    text-align: center;
+    background-color: rgba(0,0,0,.7);
+    color: white;
+}
+footer p {
+    margin: 0 0;
+    font-size: 11px;
+}

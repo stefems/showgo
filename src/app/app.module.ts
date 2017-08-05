@@ -29,6 +29,7 @@ import { SuggestionPageComponent } from './suggestion-page/suggestion-page.compo
 import { EventInvitesComponent } from './event-invites/event-invites.component';
 
 import { ScrollDirective } from './scroll.directive';
+import { AboutComponent } from './about/about.component';
 
 // Define the routes
 const ROUTES = [
@@ -49,6 +50,10 @@ const ROUTES = [
   {
     path: 'splash',
     component: SplashComponent
+  },
+  {
+    path: 'about',
+    component: AboutComponent
   },
   {
     path: 'events/all',
@@ -103,7 +108,8 @@ const ROUTES = [
     FriendInviteComponent,
     SuggestionPageComponent,
     EventInvitesComponent,
-    ScrollDirective
+    ScrollDirective,
+    AboutComponent
   ],
   imports: [
     BrowserModule,

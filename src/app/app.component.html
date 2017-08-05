@@ -32,10 +32,12 @@
       <a (click)="filter('all')" class="mdl-navigation__link" >All Shows</a>
       <a (click)="filter('me')" class="mdl-navigation__link" >My Shows</a>
       <a (click)="filter('friends')" class="mdl-navigation__link" >Friends' Shows</a>
+      <a (click)="goToAbout()" class="mdl-navigation__link" >About</a>
     </nav>
   </div>
-  <main class="mdl-layout__content">
+  <main #main class="mdl-layout__content">
     <router-outlet></router-outlet>
   </main>
+
 </div>
 

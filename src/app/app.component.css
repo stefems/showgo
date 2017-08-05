@@ -17,6 +17,7 @@
 #badge{
     margin-right: 0;
 }
+
 #badge::after {
     top: 5px;
     right: -13px;

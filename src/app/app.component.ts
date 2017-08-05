@@ -15,6 +15,8 @@ import {EventsComponent} from './events/events.component';
   ]
 })
 export class AppComponent {
+
+  @ViewChild('main') main: ElementRef;
   @ViewChild('badge') badge: ElementRef;
   @ViewChild('drawer') drawer: ElementRef;
   @ViewChild("friendAlerts") friendAlerts: ElementRef;
@@ -41,6 +43,7 @@ export class AppComponent {
         this.router.navigate(['/events']);
       }
     });
+
   }
 
   ngOnInit(){
@@ -48,6 +51,9 @@ export class AppComponent {
   }
   ngAfterViewInit() {
     // console.log("app ngAfterViewInit");
+    if (window.location.href.indexOf("events") === -1) {
+      this.main.nativeElement.style.overflow = "auto";
+    }
   }
   
   filter(type): void {
@@ -55,6 +61,12 @@ export class AppComponent {
     this.drawer.nativeElement.MaterialLayout.toggleDrawer();
     this.router.navigate(['/events/'+type]);
   }
+
+  goToAbout(): void {
+    this.drawer.nativeElement.MaterialLayout.toggleDrawer();
+    this.router.navigate(['/about']);
+  }
+
   friendAlertsNav(): void {
     //remove user friend notifications
     this.user.friendNotifications = 0;

@@ -28,7 +28,7 @@
 			<h6 *ngIf="event.friendString!==''" class="friends">{{event.friendString}}</h6>
 		</div>
 		<!-- Others -->
-		<div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--4-col-phone othersDiv">
+		<div (click)="openSocial()" class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--4-col-phone othersDiv">
 			<div *ngIf="socialPreview.length !== 0" class="others"><img class="mdl-chip__contact" *ngFor="let bubble of socialPreview" [attr.src]="bubble.picture" /><h6 class="extra">{{socialPreviewExtra}}</h6></div>
 			<h6 class="beTheFirst" *ngIf="socialPreview.length === 0">Be the first to RSVP!</h6>
 		</div>
