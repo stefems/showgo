@@ -12,7 +12,7 @@ router.get('/', (req, res) => {
 
 
 /* GET api listing. */
-router.get('/events', apiGeneralController.getEvents);
+router.get('/events/:lastToLoad', apiGeneralController.getEvents);
 
 //TODO: change these to include access_token, not fbid
 router.get('/getUser/:fbId/:access_token', userController.getUser);

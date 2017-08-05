@@ -28,9 +28,9 @@
 			</div>
 		</div>
 	</div>
-	<!-- EVENT LISTING  -->
+	<!-- EVENT LISTING  | eventsFilter:filterArgs-->
 	<div *ngIf="eventsLoaded">
-		<event #eventComps *ngFor="let event of events | eventsFilter:filterArgs" [event]="event" [user]="user" (socialSender)="openSocial($event)" >
+		<event #eventComps *ngFor="let event of events " [event]="event" [user]="user" (socialSender)="openSocial($event)" >
 		</event>
 	</div>
 </div>

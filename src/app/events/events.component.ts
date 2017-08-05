@@ -18,9 +18,11 @@ export class EventsComponent implements OnInit {
 
   public loaded = true;
   public eventsLoaded = false;
+  private loading = false;
   public inviteOpen = false;
   public events = [];
   public eventsToShow = 10;
+  public eventsToLoad = 16;
   public copyLinkText = "";
   public copyTextActive;
   private userAccessToken = "";
@@ -74,20 +76,40 @@ export class EventsComponent implements OnInit {
       this.user = response;
     });
     this.apiService.getEvents().subscribe(response => {
+      // console.log("events.comp api call res");
       // console.log(response);
-      this.events = response;
-      this.eventsLoaded = true;
-      // console.log("events received at " + this.time);
+      if (response && response.length > 0) {
+        console.log("events received " + response.length);
+        this.events = this.events.concat(response);
+        this.eventsLoaded = true;
+        this.loading = false;
+        // this.eventsContainer.nativeElement.style.overflow = "auto";
+      }
+      else {
+        this.eventsContainer.nativeElement.removeEventListener("scroll", this.eventScrollLoader);
+        console.log("erm empty right now");
+
+      }
     });
   }
   public loadMoreEvents(): void {
-    if (this.filterArgs) {
-      this.filterArgs.totalEventCount+=10;
+
+    // if (this.filterArgs) {
+    //   this.filterArgs.totalEventCount+=10;
+    // }
+    // else {
+    //   this.filterArgs = {type: "", eventInvites: [], totalEventCount: 20};
+    // }
+    // this.eventsContainer.nativeElement.style.overflow = "hidden";
+    if (!this.loading) {
+      this.loading = true;
+      this.eventsToLoad += 16;
+      this.apiService.loadMoreEvents(this.eventsToLoad);
     }
     else {
-      this.filterArgs = {type: "", eventInvites: [], totalEventCount: 20};
+      console.log("still loading, wait.");
     }
-    console.log('loadmoreEvents() ' + this.filterArgs.totalEventCount);
+
   }
 
   public detectLoad(): void{
@@ -125,18 +147,17 @@ export class EventsComponent implements OnInit {
     // };
     // this.showCopyText.nativeElement.MaterialSnackbar.showSnackbar(data);
   }
-
+  private eventScrollLoader() {
+    //if they're the same and the scroll value isn't at the top, that
+    //  means that they reached the bottom.
+    if (this.eventsContainer.nativeElement.scrollTop > (this.eventsContainer.nativeElement.scrollHeight - this.eventsContainer.nativeElement.offsetHeight) && this.eventsContainer.nativeElement.scrollTop !== 0) {
+      this.loadMoreEvents();
+    }
+  }
   ngAfterViewInit() {
     // console.log("ngAfterViewInit");
     // this.interval = setInterval(this.detectLoad.bind(this), 2000);
-    this.eventsContainer.nativeElement.addEventListener("scroll", () => {
-      //if they're the same and the scroll value isn't at the top, that
-      //  means that they reached the bottom.
-      if (this.eventsContainer.nativeElement.scrollTop > (this.eventsContainer.nativeElement.scrollHeight - this.eventsContainer.nativeElement.offsetHeight) && this.eventsContainer.nativeElement.scrollTop !== 0) {
-        console.log("attempting to emit.");
-        this.loadMoreEvents();
-      }
-    }); 
+    this.eventsContainer.nativeElement.addEventListener("scroll", this.eventScrollLoader.bind(this)); 
   }
 
   public showInviteUser(friendName) {

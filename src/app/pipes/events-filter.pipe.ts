@@ -24,22 +24,22 @@ export class EventsFilterPipe implements PipeTransform {
     // });
 
 
-    //if no events
-    if (events.length === 0) {
-        console.log("no events");
-        return events;
-    }
-    else if (!filter) {
-        events = events.slice(0, 11);
-        console.log("filter amount: " + events.length);
-        return events;
-    }
-    else if (filter) {
-        // console.log("filter found, total event count: " + filter.totalEventCount);
-        events = events.slice(0, filter.totalEventCount);
-        console.log("filter amount: " + events.length);
-        return events;
-    }
+    // //if no events
+    // if (events.length === 0) {
+    //     console.log("no events");
+    //     return events;
+    // }
+    // else if (!filter) {
+    //     events = events.slice(0, 11);
+    //     console.log("filter amount: " + events.length);
+    //     return events;
+    // }
+    // else if (filter) {
+    //     // console.log("filter found, total event count: " + filter.totalEventCount);
+    //     events = events.slice(0, filter.totalEventCount);
+    //     console.log("filter amount: " + events.length);
+    //     return events;
+    // }
     switch (filter.type) {
         case "friends":
             return events.filter(function(event) {

@@ -1,12 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { Subject }    from 'rxjs/Subject';
+import {BehaviorSubject} from "rxjs/Rx";
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
 
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/delay';
 import 'rxjs/add/operator/toPromise';
-import { Subject }    from 'rxjs/Subject';
+
+
 import {User} from './user';
 import {Event} from './event';
 
@@ -28,11 +31,19 @@ export class ApiService {
   public headers = new Headers({ 'Content-Type': 'application/json' });
   public options = new RequestOptions({ headers: this.headers });
 
+  private eventsProvided: BehaviorSubject<Event[]> = new BehaviorSubject([]);
 
   // store the URL so we can redirect after logging in
   redirectUrl: string;
 
-  constructor (private http: Http) {}
+  constructor (private http: Http) {
+    this.loadEvents(16).subscribe(res => {
+      // console.log("api service load events res");
+      // console.log(res);
+      this.eventsProvided.next(res);
+    });
+  }
+
 
   clearNotifications(access_token: string, isFriend: string): Observable<boolean> {
     let url = this.clearNotifs + "/" + access_token + "/" + isFriend;
@@ -142,9 +153,13 @@ export class ApiService {
         return false;
       });*/
   }
-  
+
   getEvents(): Observable<Event[]> {
-    return this.http.get(this.getEventsUrl)
+    return this.eventsProvided.asObservable();
+  }
+
+  loadEvents(last): Observable<Event[]> {
+    return this.http.get(this.getEventsUrl+"/"+last)
       .map((res:Response) => {
         let eventArray = [];
         for (let i = 0; i < res.json().length; i++) {
@@ -154,6 +169,15 @@ export class ApiService {
         res.json()
         return eventArray;  
       });
+  }
+
+  loadMoreEvents(lastEventToLoad): void {
+    console.log("loadMoreEvents() " + lastEventToLoad);
+    this.loadEvents(lastEventToLoad).subscribe(res => {
+      // console.log("api service load events res");
+      // console.log(res);
+      this.eventsProvided.next(res);
+    });
   }
 
   findUser(friendId): Observable<boolean> {
