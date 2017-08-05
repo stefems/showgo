@@ -31,12 +31,16 @@ export class EventComponent implements OnInit {
 	public invitedByNames = "";
 	public socialPreview = [];
 	public socialPreviewExtra = "";
+	public address: string = "";
 
 	constructor(private apiService: ApiService) {
 		
 	}
 	ngAfterViewInit() {
-		// console.log("event ngOnInit");
+		let address;
+		address = encodeURIComponent(this.event.location);
+		address = "https://maps.google.com/maps?daddr="+address+ "&travelmode=driving&dir_action=navigate";
+		this.address = address;
 	}
 	ngOnInit() {
 		this.invitedByNames = this.event.invitedByNames || "";
@@ -99,8 +103,9 @@ export class EventComponent implements OnInit {
 	public toggleBands() {
 		this.showBands = !this.showBands;
 	}
-
-
+	public openDirections() {
+		window.open(this.address);
+	}
 
 	public updateAfterFriend(friendList): void {
 		let friendsGoing = [];

@@ -36,7 +36,13 @@ hr {
 }
 .eventContainer .middleRow .location {
 	color: darkgrey;
+	cursor: pointer;
 }
+
+.eventContainer .middleRow .directionsDiv {
+	cursor: pointer;
+}
+
 .eventContainer .middleRow .address{
 	font-style: italic;
 	font-size: 14px;
@@ -46,6 +52,7 @@ hr {
 	height: 40px;
     overflow-y: hidden;
     font-size: 1em;
+    cursor: pointer;
 }
 .eventContainer .middleRow .othersDiv .beTheFirst {
 	text-align: center;

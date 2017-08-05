@@ -87,6 +87,9 @@ export class EventsFilterPipe implements PipeTransform {
                 }
                 return false;
             });
+        default: 
+            return events;
     }
+
   }
 }

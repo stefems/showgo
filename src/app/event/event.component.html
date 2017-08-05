@@ -10,14 +10,17 @@
 		</div>
 	</div>
 	<div class="mdl-grid middleRow">
-		<!-- Venue -->
-		<div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--4-col-phone">
-			<h6>{{event.venue}}</h6>
-		</div>
-		<!-- Location -->
-		<div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--4-col-phone location">
-			<i class="material-icons addressIcon">place</i>
-			<h6 class="address">{{event.location}}</h6>
+
+		<div (click)="openDirections()" class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--4-col-phone directionsDiv">
+			<!-- Venue -->
+			<div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--4-col-phone">
+				<h6>{{event.venue}}</h6>
+			</div>
+			<!-- Location -->
+			<div (click)="openDirections()" class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--4-col-phone location">
+				<i class="material-icons addressIcon">place</i>
+				<h6 class="address">{{event.location}}</h6>
+			</div>
 		</div>
 		<hr>
 		<!-- friends -->
