@@ -15,7 +15,7 @@ export class EventComponent implements OnInit {
 	@Input("user") user;
 	@ViewChild("linkText") linkText;
 	@Output()
-  	socialSender:EventEmitter<Event> = new EventEmitter<Event>();
+  	socialSender:EventEmitter<any> = new EventEmitter();
   	@Output()
   	copyLinkSender:EventEmitter<string> = new EventEmitter<string>();
   	
@@ -89,14 +89,14 @@ export class EventComponent implements OnInit {
 				this.friendString = friendsGoing[0] + " and " + friendsGoing[1] + " are going.";
 				break;
 			default:
-				this.friendString = friendsGoing[0] + ", " + friendsGoing[1] + " and " + (friendsGoing.length - 2) + " more.";
+				this.friendString = friendsGoing[0] + ", " + friendsGoing[1] + " +" + (friendsGoing.length - 2);
 				break;
 		}
 		this.event.friendString = this.friendString;
 
-		this.socialPreview = this.event.social.slice(0, 10);
-		if (this.event.social.length > 10) {
-			this.socialPreviewExtra = "+" + (this.event.social.length-10);
+		this.socialPreview = this.event.social.slice(0, 8);
+		if (this.event.social.length > 8) {
+			this.socialPreviewExtra = "+" + (this.event.social.length-8);
 		}
 	}
 
@@ -148,7 +148,6 @@ export class EventComponent implements OnInit {
 	}	
 	
 	public changeUser(actionType) {
-		console.log("adding/updating user event: " + actionType + " " + this.event.fbId);
 		let found = false;
 		//find the event that needs to be changed
 		for (let i = 0; i < this.user.events.length; i++) {
@@ -169,9 +168,10 @@ export class EventComponent implements OnInit {
 		this.copyLinkSender.emit("facebook.com/" + this.event.fbId);
 	}
 
-	public openSocial() {
+	public openSocial(invite) {
 		// console.log("emitting " + this.event.name);
-		this.socialSender.emit(this.event);
+		invite = invite || false;
+		this.socialSender.emit({event: this.event, isInvite: invite});
 	}
 
 	public eventAction(eventType: string) {
@@ -195,7 +195,8 @@ export class EventComponent implements OnInit {
 				break;
 		}
 		if (undo) {
-			console.log("undoing/ignoring");
+			// console.log("undoing/ignoring");
+			eventType = "ignore"
 			//by default we need to add the event to ignore
 			this.apiService.eventPost("ignore", this.event.fbId, this.user.dbId).subscribe(response => {
 				if(response) {
@@ -206,7 +207,12 @@ export class EventComponent implements OnInit {
 					//after button changes have been made
 					this.buttonsEnabled = true;
 					// this.calImage.nativeElement.style.color = "white";
-					//make changes to the user ... is this sent to all users?
+					//make changes to the user
+					for (let i = 0; i < this.event.social.length; i++) {
+						if (this.event.social[i].picture === this.user.picture) {
+							this.event.social.splice(i, 1);
+						}
+					}
 					this.changeUser(eventType);
 					// this.popupSender.emit("You're not interested in " + this.event.eventName + " on facebook.");
 				}
@@ -225,6 +231,27 @@ export class EventComponent implements OnInit {
 						this.joined = true;
 						this.interest = false;
 						this.ignored = false;
+						let shouldAdd = true;
+						for (let i = 0; i < this.event.social.length; i++) {
+							if (this.event.social[i].picture === this.user.picture) {
+								shouldAdd = false;
+								break;
+							}
+						}	
+						if (shouldAdd) {
+							this.event.social.push({
+								name: this.user.displayName,
+								picture: this.user.picture,
+								fbId: this.user.fbId
+							});
+							if (this.socialPreview.length < 8) {
+								this.socialPreview.push({
+									name: this.user.displayName,
+									picture: this.user.picture,
+									fbId: this.user.fbId
+								});
+							}
+						}
 						// this.popupSender.emit("You've rsvp'd for " + this.event.eventName + " on facebook.");
 					}
 					else {

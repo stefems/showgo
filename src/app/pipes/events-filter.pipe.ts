@@ -5,41 +5,10 @@ import { Pipe, PipeTransform } from '@angular/core';
     pure: false
 })
 export class EventsFilterPipe implements PipeTransform {
-	/*
- * Usage:
- *   value | exponentialStrength:exponent
- * Example:
- *   {{ 2 |  exponentialStrength:10}}
- *   formats to: 1024
-*/
+
   transform(events: any[], filter): any {
 
-    //always do a date filter
-    // events = events.sort(function(eventA, eventB) {
-    //     var a = eventA.time.split(/[^0-9]/);
-    //     var b = eventB.time.split(/[^0-9]/);
-    //     let eventADate = new Date(a[0],a[1]-1,a[2],a[3],a[4],a[5]);
-    //     let eventBDate = new Date(b[0],b[1]-1,b[2],b[3],b[4],b[5]);
-    //     return (eventADate < eventBDate) ? -1 : (eventADate > eventBDate) ? 1 : 0;
-    // });
-
-
-    // //if no events
-    // if (events.length === 0) {
-    //     console.log("no events");
-    //     return events;
-    // }
-    // else if (!filter) {
-    //     events = events.slice(0, 11);
-    //     console.log("filter amount: " + events.length);
-    //     return events;
-    // }
-    // else if (filter) {
-    //     // console.log("filter found, total event count: " + filter.totalEventCount);
-    //     events = events.slice(0, filter.totalEventCount);
-    //     console.log("filter amount: " + events.length);
-    //     return events;
-    // }
+    
     switch (filter.type) {
         case "friends":
             return events.filter(function(event) {

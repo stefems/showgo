@@ -6,12 +6,15 @@
 		</div>
 		<!-- Play Button -->
 	  	<div *ngIf="event.bands.length!==0" class="mdl-cell mdl-cell--2-col mdl-cell--1-col-tablet mdl-cell--1-col-phone playButtonDiv">
-		  	<i [class.showing]="showBands" (click)="toggleBands()" class="material-icons">play_circle_filled</i>
+		  	<i [class.isShowing]="showBands" (click)="toggleBands()" class="material-icons">queue_music</i>
+		</div>
+		<div class="bands" *ngIf="showBands">
+			<band *ngFor="let band of event.bands" [band]="band"></band>
 		</div>
 	</div>
 	<div class="mdl-grid middleRow">
-
 		<div (click)="openDirections()" class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--4-col-phone directionsDiv">
+			<hr class="topHr">
 			<!-- Venue -->
 			<div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--4-col-phone">
 				<h6>{{event.venue}}</h6>
@@ -20,18 +23,24 @@
 			<div (click)="openDirections()" class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--4-col-phone location">
 				<i class="material-icons addressIcon">place</i>
 				<h6 class="address">{{event.location}}</h6>
+				<i class="material-icons directions">directions</i>
 			</div>
 		</div>
 		<hr>
 		<!-- friends -->
-		<div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--4-col-phone">
-			<h6 *ngIf="event.friendString!==''" class="friends">{{event.friendString}}</h6>
+		<div *ngIf="event.friendString!==''" class="mdl-cell mdl-cell--10-col mdl-cell--6-col-tablet mdl-cell--3-col-phone">
+			<h6 class="friends">{{event.friendString}} </h6>
+		</div>
+		<div *ngIf="socialPreview.length !== 0" (click)="openSocial(true)" [class.invitefriends]="event.friendString ===''" class="mdl-cell mdl-cell--2-col mdl-cell--2-col-tablet mdl-cell--1-col-phone">
+			<u *ngIf="event.friendString !==''" >Invite</u>
+			<u class="inviteFriends" *ngIf="event.friendString ===''" >Invite Friends</u>
 		</div>
 		<!-- Others -->
 		<div (click)="openSocial()" class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--4-col-phone othersDiv">
 			<div *ngIf="socialPreview.length !== 0" class="others"><img class="mdl-chip__contact" *ngFor="let bubble of socialPreview" [attr.src]="bubble.picture" /><h6 class="extra">{{socialPreviewExtra}}</h6></div>
-			<h6 class="beTheFirst" *ngIf="socialPreview.length === 0">Be the first to RSVP!</h6>
+			<h6 class="beTheFirst" *ngIf="socialPreview.length === 0">Invite friends and be the first to RSVP!</h6>
 		</div>
+		<hr>
 	</div>
 	<div class="mdl-grid bottomRow">
 		<div class="mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--2-col-phone eventActions">
@@ -50,18 +59,5 @@
 		</div>
 
 	</div>
-	<!-- USEFUL FOR LATER SOCIAL POPUP
-	<div *ngIf="showFriends" >
-			<friend-bubble *ngFor="let friend of event.social" (idSender)="addFriend($event)" [friend]="friend"></friend-bubble>
-	</div>
-	-->
-	<!-- Date -->
-	<!-- <div class="mdl-cell mdl-cell-/-4-col mdl-cell-/-2-col-tablet mdl-cell-/-1-col-phone">
-		<h6>{{event.timeString}}</h6>
-	</div> -->
-	<div *ngIf="showBands">
-		<band *ngFor="let band of event.bands" [band]="band"></band>
-	</div>
-	<hr>
 </div>
 

@@ -193,13 +193,13 @@ var generalApiController = {
                       if (actionType === "join") {
                         let alreadyJoined = false;
                         for (let i = 0; i < eventFound.social.length; i++) {
-                          //if found, remove the user from the social listing
                           if (eventFound.social[i].fbId === user.id) {
                             alreadyJoined = true;
                             break;
                           }
                         }
                         if (!alreadyJoined){
+                          console.log("pushing the user to the event");
                           eventFound.social.push({
                             name: user.name,
                             picture: user.picture,
@@ -209,6 +209,7 @@ var generalApiController = {
                       }
                       else if (actionType === "ignore") {
                         //look for the user in the listing
+                        console.log("removing the user from the event");
                         for (let i = 0; i < eventFound.social.length; i++) {
                           //if found, remove the user from the social listing
                           if (eventFound.social[i].fbId === user.id) {
@@ -219,6 +220,7 @@ var generalApiController = {
                       }
                       eventFound.save(function(eventSaveError) {
                         if (!eventSaveError) {
+                          console.log("saved the event");
                           res.json({status: "true"});
                         }
                         else {

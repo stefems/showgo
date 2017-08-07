@@ -16,7 +16,7 @@ declare var componentHandler:any;
 })
 export class EventsComponent implements OnInit {
 
-  public loaded = true;
+  public loaded = false;
   public eventsLoaded = false;
   private loading = false;
   public inviteOpen = false;
@@ -75,6 +75,7 @@ export class EventsComponent implements OnInit {
       // console.log(response);
       this.user = response;
     });
+
     this.apiService.getEvents().subscribe(response => {
       // console.log("events.comp api call res");
       // console.log(response);
@@ -92,15 +93,9 @@ export class EventsComponent implements OnInit {
       }
     });
   }
+
   public loadMoreEvents(): void {
 
-    // if (this.filterArgs) {
-    //   this.filterArgs.totalEventCount+=10;
-    // }
-    // else {
-    //   this.filterArgs = {type: "", eventInvites: [], totalEventCount: 20};
-    // }
-    // this.eventsContainer.nativeElement.style.overflow = "hidden";
     if (!this.loading) {
       this.loading = true;
       this.eventsToLoad += 16;
@@ -109,7 +104,6 @@ export class EventsComponent implements OnInit {
     else {
       console.log("still loading, wait.");
     }
-
   }
 
   public detectLoad(): void{
@@ -121,7 +115,6 @@ export class EventsComponent implements OnInit {
     }
     else {
       componentHandler.upgradeDom();
-      // console.log("not yet loaded");
     }
   }
 
@@ -147,16 +140,18 @@ export class EventsComponent implements OnInit {
     // };
     // this.showCopyText.nativeElement.MaterialSnackbar.showSnackbar(data);
   }
+
   private eventScrollLoader() {
-    //if they're the same and the scroll value isn't at the top, that
-    //  means that they reached the bottom.
+
+    //maybe test out a higher trigger zone so that they never hit the bottom...?
     if (this.eventsContainer.nativeElement.scrollTop > (this.eventsContainer.nativeElement.scrollHeight - this.eventsContainer.nativeElement.offsetHeight) && this.eventsContainer.nativeElement.scrollTop !== 0) {
       this.loadMoreEvents();
     }
   }
+
   ngAfterViewInit() {
     // console.log("ngAfterViewInit");
-    // this.interval = setInterval(this.detectLoad.bind(this), 2000);
+    this.interval = setInterval(this.detectLoad.bind(this), 500);
     this.eventsContainer.nativeElement.addEventListener("scroll", this.eventScrollLoader.bind(this)); 
   }
 
@@ -242,7 +237,8 @@ export class EventsComponent implements OnInit {
   }
 
   public openSocial(event): void {
-    this.currentEvent = event;
+    this.currentEvent = event.event;
+    this.inviteOpen = event.isInvite;
     this.socialDrawer.nativeElement.MaterialLayout.toggleDrawer();
     this.socialContainer.nativeElement.style.width="100%";
     this.socialContainer.nativeElement.style.height="100%";

@@ -3,6 +3,7 @@ export class User {
 	private accessToken = "";
 	private displayName = "";
   	private dbId: "";
+  	private fbId: "";
   	private ignoredList = [];
   	private friends = [];
   	private events = [];
@@ -16,6 +17,7 @@ export class User {
 	constructor(inputJson: any) {
 		if (inputJson !== 0) {
 			this.dbId = inputJson._id;
+			this.fbId = inputJson.id;
 			this.displayName = inputJson.name;
 			this.ignoredList = inputJson.show_ignored;
 			this.venues = inputJson.venue_pages;
@@ -32,6 +34,7 @@ export class User {
 		}
 		else {
 			this.dbId = "";
+			this.fbId = "";
 			this.displayName = "";
 			this.ignoredList = [];
 			this.venues = [];

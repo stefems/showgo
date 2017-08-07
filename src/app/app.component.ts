@@ -43,7 +43,14 @@ export class AppComponent {
         this.router.navigate(['/events']);
       }
     });
-
+    this.router.events.subscribe((val) => {
+      if (window.location.href.indexOf("about") !== -1) {
+        this.main.nativeElement.style.overflow = "auto";
+      }
+      else {
+        this.main.nativeElement.style.overflow = "hidden";
+      }
+    });
   }
 
   ngOnInit(){
@@ -51,9 +58,7 @@ export class AppComponent {
   }
   ngAfterViewInit() {
     // console.log("app ngAfterViewInit");
-    if (window.location.href.indexOf("events") === -1) {
-      this.main.nativeElement.style.overflow = "auto";
-    }
+
   }
   
   filter(type): void {
@@ -73,7 +78,7 @@ export class AppComponent {
     this.friendAlerts.nativeElement.setAttribute("data-badge", this.user.friendNotifications);
     this.badge.nativeElement.setAttribute("data-badge", this.user.inviteNotifications);
     this.apiService.clearNotifications(this.user.accessToken, "friend").subscribe(response => {
-      console.log(response);
+      // console.log(response);
     });
     this.router.navigate(['/friends/suggestions']);
   }

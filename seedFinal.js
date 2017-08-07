@@ -40,12 +40,12 @@ fs.stat(".env/.env.js", function(err, stat) {
 		  googleId: process.env.googleId,
 		  soundcloudSecret: process.env.soundcloudSecret,
 		  home: "www.showgo.io",
-		  googleKey2: "AIzaSyCK0QT71eCOSAfsw6ZRTFZVpI6iy3rd6qs",
-		  googleKey3: "015328260581123791867:bq9w7iv0day",
-		  googleKey4: "AIzaSyBhwiNZ9FZaZeuQSJffTqFiqQgUziSoN5U",
-		  googleId2: "015328260581123791867:7iaxxgaqpmc",
-		  googleId3: "AIzaSyBLeZAHg-F4E3D05XYg4ONsNHwJ3SLRlGE",
-		  googleId4: "015328260581123791867:z8msazjlkjq"
+		  googleKey2: process.env.googleKey2,
+		  googleKey3: process.env.googleKey3,
+		  googleKey4: process.env.googleKey4,
+		  googleId2: process.env.googleId2,
+		  googleId3: process.env.googleId3,
+		  googleId4: process.env.googleId4
 		};
 	}
 	access_token = env.facebookAppId + "|" + env.facebookAppSecret;

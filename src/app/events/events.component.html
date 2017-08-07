@@ -7,11 +7,10 @@
 			</header>
 			<div id="drawer" #drawer class="mdl-grid mdl-layout__drawer">
 				<!--SOCIAL-->
-    	    	<h3 id="socialH3" class="mdl-cell mdl-cell--7-col mdl-cell--5-col-tablet mdl-cell--1-col-phone">Social</h3>
-    	    	<!--INVITE/ATTENDANCE TOGGLE-->
-    	    	<button (click)="openInvite()" id="socialButton" class="mdl-cell mdl-cell--4-col mdl-cell--2-col-tablet mdl-cell--2-col-phone mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"><p *ngIf="!inviteOpen">Invite Friends</p><p *ngIf="inviteOpen">See Attendance</p></button>
+				<a [class.underlined]="!inviteOpen" (click)="openInvite()" class="mdl-cell mdl-cell--5-col mdl-cell--3-col-tablet mdl-cell--1-col-phone going">Going</a>
+				<a [class.underlined]="inviteOpen" (click)="openInvite()" class="mdl-cell mdl-cell--5-col mdl-cell--3-col-tablet mdl-cell--1-col-phone invites">Invite</a>
 				<!--CLOSE-->
-				<i id="socialMinimize" class="fa fa-times-circle fa-2x mdl-cell mdl-cell--1-col mdl-cell--1-col-tablet mdl-cell--1-col-phone" (click)="closeSocial()"></i>
+				<i id="socialMinimize" class="fa fa-times-circle fa-2x mdl-cell mdl-cell--2-col mdl-cell--1-col-tablet mdl-cell--1-col-phone" (click)="closeSocial()"></i>
 				<!--ATTENDANCE LISTING-->
 	    	    <nav *ngIf="!inviteOpen"  id="socialNav" class="mdl-navigation nav">
 					<a *ngFor="let friend of currentEvent.social" class="mdl-navigation__link navLink">
