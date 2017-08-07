@@ -69,6 +69,7 @@ hr {
 }
 .bands {
 	margin-top: 3px;
+	width: 100%;
 }
 .eventContainer .middleRow .address{
 	font-style: italic;
