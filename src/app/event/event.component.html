@@ -6,7 +6,7 @@
 		</div>
 		<!-- Play Button -->
 	  	<div *ngIf="event.bands.length!==0" class="mdl-cell mdl-cell--2-col mdl-cell--1-col-tablet mdl-cell--1-col-phone playButtonDiv">
-		  	<i [class.isShowing]="showBands" (click)="toggleBands()" class="material-icons">queue_music</i>
+		  	<i [class.isShowing]="showBands" (click)="toggleBands()" class="material-icons">play_circle_outline</i>
 		</div>
 		<div class="bands" *ngIf="showBands">
 			<band *ngFor="let band of event.bands" [band]="band"></band>
