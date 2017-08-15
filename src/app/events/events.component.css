@@ -41,6 +41,11 @@
 	width: 100%;
 	height: 100%;
 }
+
+.events {
+	margin-left: 8%;
+	margin-right: 8%;
+}
 #socialSpan {
 	margin: 0;
 	width: 100%;
@@ -108,8 +113,9 @@
 	cursor: pointer;
 }
 
- @media screen and (min-width: 480px) {
- 	#socialButton p {
- 		font-size: 2vw;
- 	}
+ @media screen and (max-width: 480px) {
+	.events {
+		margin-left: 0;
+		margin-right: 0;
+	}
  }

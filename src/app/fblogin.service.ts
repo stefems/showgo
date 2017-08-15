@@ -19,29 +19,26 @@ export class FbloginService {
 
   constructor (private http: Http, public fbNgx: FacebookService) {
     this.fb = FB;
-  	let initParams: InitParams;
+  	let initParams;
   	//if showgo.io is in use, use the prod app's id
-  	// if (window.location.href.indexOf("ShowGo.io") === -1) {
-      // console.log("prod");
-  		initParams = {
-	      appId: '1928641050691340',
+  	if (window.location.href.indexOf("ShowGo.io") === -1) {
+      initParams = {
+	      appId: '1957677144454397',
 	      xfbml: true,
-	      version: 'v2.9',
-        status: true
-    	};
-  	// }
+	      version: 'v2.9'
+      };
+  	}
   	//else, use the dev app id
-  	// else {
-   //    console.log("dev");
-  	// 	initParams = {
-	  //     appId: '634739066720402',
-	  //     xfbml: true,
-	  //     version: 'v2.8',
-	  //   };
-  	// }
-    // fb.init(initParams);
+  	else {
+  		initParams = {
+	      appId: '634739066720402',
+	      xfbml: true,
+	      version: 'v2.8',
+	    };
+  	}
+    // console.log(initParams.appId);
     this.fb.init(initParams);
-    this.fb.Event.subscribe('auth.statusChange', this.auth_status_change_callback);
+    // this.fb.Event.subscribe('auth.statusChange', this.auth_status_change_callback);
   }
   auth_status_change_callback(response): void {
     console.log("auth_response_change_callback");

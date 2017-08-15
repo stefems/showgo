@@ -105,7 +105,9 @@ export class EventsComponent implements OnInit {
       console.log("still loading, wait.");
     }
   }
-
+  public onResize(event):void {
+    console.log(event.target.innerWidth);
+  }
   public detectLoad(): void{
     //removed these after removing snackbar this.showCopyText && this.showCopyText.nativeElement && this.showCopyText.nativeElement.MaterialSnackbar
     if(this.socialDrawer && this.socialDrawer.nativeElement && this.socialDrawer.nativeElement.MaterialLayout) {

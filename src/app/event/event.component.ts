@@ -34,7 +34,6 @@ export class EventComponent implements OnInit {
 	public address: string = "";
 
 	constructor(private apiService: ApiService) {
-		
 	}
 	ngAfterViewInit() {
 		let address;
@@ -93,10 +92,13 @@ export class EventComponent implements OnInit {
 				break;
 		}
 		this.event.friendString = this.friendString;
-
-		this.socialPreview = this.event.social.slice(0, 8);
-		if (this.event.social.length > 8) {
-			this.socialPreviewExtra = "+" + (this.event.social.length-8);
+		let peopleToShow = 8;
+		if (window.innerWidth > 480) {
+			peopleToShow = 14;
+		}
+		this.socialPreview = this.event.social.slice(0, peopleToShow);
+		if (this.event.social.length > peopleToShow) {
+			this.socialPreviewExtra = "+" + (this.event.social.length-peopleToShow);
 		}
 	}
 

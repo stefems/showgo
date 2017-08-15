@@ -95,7 +95,14 @@ export class AuthService {
   }
 
   login(): void {
-    window.location.href="https://www.facebook.com/v2.9/dialog/oauth?client_id=1928641050691340&redirect_uri="+window.location.href+"&response_type=token&scope=user_friends,rsvp_event,user_events";
+    let fbId = "";
+    if (window.location.href.indexOf("ShowGo.io") === -1) {
+      fbId = '634739066720402';
+    } 
+    else {
+      fbId = '1928641050691340';
+    }
+    window.location.href="https://www.facebook.com/v2.9/dialog/oauth?client_id=" + fbId + "&redirect_uri="+window.location.href+"&response_type=token&scope=user_friends,rsvp_event,user_events";
     // this.fb.getLoginStatus()
     // .then((response: LoginResponse) => {
     //   console.log("fb login status: " + response.status);

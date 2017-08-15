@@ -122,6 +122,9 @@ u.inviteFriends{
 .eventContainer .middleRow  u {
 	font-size: 16px;
 	color: #183E64;
+	text-align: center;
+    margin-right: auto;
+    margin-left: auto;
 }
 .eventContainer .middleRow .addressIcon{
 	vertical-align: top;
@@ -139,6 +142,7 @@ u.inviteFriends{
 }
 .eventContainer .bottomRow .date {
     background-color: rgba(0,0,0,.1);
+    max-width: 250px;
     color: black;
     box-shadow: 0 2px 2px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 }
@@ -155,6 +159,9 @@ u.inviteFriends{
 }
 .bottomRow .fbButton {
     width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 200px;
     text-transform: none;
     display: block;
     font-size: x-large;

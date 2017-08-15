@@ -11,7 +11,7 @@ import { FacebookService, LoginResponse } from 'ngx-facebook';
 })
 export class SplashComponent implements OnInit {
 
-  constructor(private authService: AuthService, private router: Router, private fb: FacebookService, private fbloginService: FbloginService) { }
+  constructor(private authService: AuthService, private router: Router, private fb: FacebookService) { }
 
   ngOnInit() {
   }

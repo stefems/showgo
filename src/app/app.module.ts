@@ -13,6 +13,8 @@ import { AuthService }      from './auth.service';
 import { ApiService }      from './api.service';
 import { EventComponent } from './event/event.component';
 import { FbloginService}  from './fblogin.service';
+import { WindowRef } from './window.service';
+
 import { FacebookModule } from 'ngx-facebook';
 import { AddFriendsComponent } from './add-friends/add-friends.component';
 import { FriendBubbleComponent } from './friend-bubble/friend-bubble.component';
@@ -118,7 +120,7 @@ const ROUTES = [
     FacebookModule.forRoot(),
     RouterModule.forRoot(ROUTES) // Add routes to the app,
     ],
-  providers: [AuthGuard, AuthService, ApiService, FbloginService],
+  providers: [AuthGuard, AuthService, ApiService, FbloginService, WindowRef],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
