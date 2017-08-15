@@ -21,7 +21,7 @@ export class FbloginService {
     this.fb = FB;
   	let initParams;
   	//if showgo.io is in use, use the prod app's id
-  	if (window.location.href.indexOf("ShowGo.io") === -1) {
+  	if (window.location.href.indexOf("showgo.io") === -1) {
       initParams = {
 	      appId: '1957677144454397',
 	      xfbml: true,

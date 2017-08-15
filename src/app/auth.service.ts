@@ -96,7 +96,7 @@ export class AuthService {
 
   login(): void {
     let fbId = "";
-    if (window.location.href.indexOf("ShowGo.io") === -1) {
+    if (window.location.href.indexOf("showgo.io") === -1) {
       fbId = '634739066720402';
     } 
     else {
