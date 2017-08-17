@@ -97,7 +97,19 @@ function addBandToEvent(band, event) {
 ADD COMMENT< DONT DELETE
 */
 function createNewBand(bandId, event, resolve) {
-	getWebsite(bandId, event, resolve);
+	//send request to get this id's category to ensure they're a musician and not a venue or other shit
+	let facebookEventURL = "https://graph.facebook.com/v2.9/" + bandId + "?fields=category&access_token=" + access_token;
+	request(facebookEventURL, function (error, response, body) {
+		//Musician/Band or Musician
+		if (!error && JSON.parse(body) && JSON.parse(body).category && (JSON.parse(body).category.indexOf("Musician") !== -1 || JSON.parse(body).category.indexOf("Artist") !== -1)) {
+			// console.log("found tagged band " + bandId);
+			getWebsite(bandId, event, resolve);
+		}
+		else {
+			resolve();
+			// console.log("tagged page: " + bandId + " not a band");
+		}
+	});
 }
 
 //TODO: tweak for lost lake/globe hall/larimer lounge
@@ -119,7 +131,7 @@ function getWebsite(facebookPageId, event, resolve) {
 	  		if (website && website.indexOf("bandcamp") !== -1) {
 	  			let beforeBC = website.split("bandcamp.com")[0];
 	  			let urls = beforeBC.split("http");
-	  			website = "http" + urls[urls.length-1] + "bandcamp.com";
+	  			website = urls[urls.length-1] + "bandcamp.com";
 	  			//run function to acquire the embed
 	 			getbandcampEmbed(facebookPageId, website, event, resolve);
 	  		}
@@ -129,10 +141,11 @@ function getWebsite(facebookPageId, event, resolve) {
 	  		}
 	  		else {
 	  			//no links were found, search google!
-				googleSearchBand(facebookPageId, event, bandName, null, resolve);
+				// googleSearchBand(facebookPageId, event, bandName, null, resolve);
 	  		}
 	  	}
 	  	else {
+	  		console.log("failed to get website from facebook website search");
 	  		console.log(error);
 	  		resolve();
 	  	}
@@ -157,7 +170,9 @@ function websiteLinkSearch(bandId, url, event, bandName, resolve) {
 				var aTags = dom.window.document.getElementsByTagName("a");
 				for (let i = 0; i < aTags.length; i++) {
 					if (aTags[i].getAttribute("href") && aTags[i].getAttribute("href").indexOf("bandcamp") !== -1) {
-						getbandcampEmbed(bandId, aTags[i].getAttribute("href"), event, resolve);
+						let urlToUse = aTags[i].getAttribute("href").slice(0, aTags[i].getAttribute("href").indexOf(".com") + 4);
+						console.log("found bandcamp url: " + urlToUse);
+						getbandcampEmbed(bandId, urlToUse, event, resolve);
 						return;
 					}
 					// else if (aTags[i].getAttribute("href") && aTags[i].getAttribute("href").indexOf("soundcloud") !== -1) {
@@ -165,13 +180,19 @@ function websiteLinkSearch(bandId, url, event, bandName, resolve) {
 					// 	return;
 					// }
 				}
+				// console.log("failed to find a bandcamp url from " + options.url);
+				resolve();
 				//no links were found, search google!
-				googleSearchBand(bandId, event, bandName, null, resolve);
+				// googleSearchBand(bandId, event, bandName, null, resolve);
 			}
 			catch (e) {
 				console.log("JSDOM error " + options.url);
 				resolve();
 			}
+		}
+		else {
+			resolve();
+			console.log("failed to get custom band website");
 		}
 	});
 }
@@ -264,52 +285,49 @@ function getbandcampEmbed(bandId, url, event, resolve) {
 			"user-agent": "Chrome/51.0.2704.103"
 		}
 	};
-	setTimeout(function(){
-		request(options, function (error, response, body) {
-			if (!error) {
-				try {
-					const dom = new JSDOM(body);
-					var metaTags = dom.window.document.getElementsByTagName("meta");
-					let content = "";
-					for (var i = 0; i < metaTags.length; i++) {
-					    if (metaTags[i].getAttribute("property") == "og:video") {
-					        content = metaTags[i].getAttribute("content");
-					    }
-					}
-					let albumId = "";
-					if (content !== "" && content.indexOf("track=") === -1) {
-						let albumURL = content.split("album=")[1];
-						if (albumURL) {
-							albumId = "album=" + albumURL.split("/")[0];
-						}
-					}
-					else if (content.indexOf("track") !== -1) {
-						let albumURL = content.split("track=")[1];
-						if (albumURL) {
-							albumId = "track=" + albumURL.split("/")[0];
-						}
-					}
-					else {
-						let div = dom.window.document.getElementsByClassName("leftMiddleColumns")[0];
-						let liList = div.getElementsByTagName("li");
-						// albumId = "album=" + liList[0].getAttribute("data-item-id").split("-")[1];
-						let data = liList[0].getAttribute("data-item-id").split("-");
-						albumId = data[0] + "=" + data[1];
-					}
-					saveNewBandUpdateEvent(bandId, event, "https://bandcamp.com/EmbeddedPlayer/" + albumId + "/size=small/bgcol=ffffff/linkcol=0687f5/transparent=true/", resolve);
+	request(options, function (error, response, body) {
+		if (!error) {
+			try {
+				const dom = new JSDOM(body);
+				var metaTags = dom.window.document.getElementsByTagName("meta");
+				let content = "";
+				for (var i = 0; i < metaTags.length; i++) {
+				    if (metaTags[i].getAttribute("property") == "og:video") {
+				        content = metaTags[i].getAttribute("content");
+				    }
 				}
-				catch (e) {
-					console.log("JSDOM error " + options.url);
-					resolve();
+				let albumId = "";
+				if (content !== "" && content.indexOf("track=") === -1) {
+					let albumURL = content.split("album=")[1];
+					if (albumURL) {
+						albumId = "album=" + albumURL.split("/")[0];
+					}
 				}
+				else if (content.indexOf("track") !== -1) {
+					let albumURL = content.split("track=")[1];
+					if (albumURL) {
+						albumId = "track=" + albumURL.split("/")[0];
+					}
+				}
+				else {
+					let div = dom.window.document.getElementsByClassName("leftMiddleColumns")[0];
+					let liList = div.getElementsByTagName("li");
+					// albumId = "album=" + liList[0].getAttribute("data-item-id").split("-")[1];
+					let data = liList[0].getAttribute("data-item-id").split("-");
+					albumId = data[0] + "=" + data[1];
+				}
+				saveNewBandUpdateEvent(bandId, event, "https://bandcamp.com/EmbeddedPlayer/" + albumId + "/size=small/bgcol=ffffff/linkcol=0687f5/transparent=true/", resolve);
 			}
-			else {
+			catch (e) {
+				console.log("JSDOM error " + options.url);
 				resolve();
-				// console.log("URL error from website");
-				//use same url but replace the album= with track=
 			}
-		});	
-	}, 3000);
+		}
+		else {
+			console.log("failed to load bandcamp site: " + options.url);
+			resolve();
+		}
+	});	
 }
 
 /*
@@ -321,7 +339,7 @@ function saveNewBandUpdateEvent(bandId, eventPassedIn, bcEmbed, resolve) {
 			console.log(error);
 			resolve();
 		}
-		else if (found) {
+		else if (found && found !== "null" && typeof found !== "null" ) {
 			// console.log("band " + bandId + " already in db...");
 			//addBandToEvent(found, event);
 			console.log("found existing band: " + found.fbId + " for event: " + eventPassedIn.eventName);
@@ -386,48 +404,49 @@ function acquireEvents(url) {
 					let attendeeUrl = "https://graph.facebook.com/" + currentEvent.eventId + "/attending?fields=picture,name&access_token=" + access_token;
 					let currentEventPromise = currentEvent;
 					let getPeoplePromise = new Promise( (resolve, reject) => {
-						console.log("Getting people for " + currentEventPromise.eventName);
+						// console.log("Getting people for " + currentEventPromise.eventName);
 						getPeople(attendeeUrl, [], currentEventPromise, resolve, reject);
 					});
 					getPeoplePromise.then(eventToSave => {
-						console.log(eventToSave.social.length);
-						if (eventToSave.eventVenue === "Larimer Lounge" || 
-							eventToSave.eventVenue === "Lost Lake" ||
-							eventToSave.eventVenue === "Globe Hall")
-						{
-							let bandNames = eventToSave.eventName.split("/");
-							bandNames.splice(bandNames.length - 1, 1);
-							Promise.all(acquireBandsPromiseArray(bandNames, true, eventToSave)).then((bandsToAdd) => {
-								console.log("total resolved bands: ");
-								console.log(bandsToAdd);
-								console.log("for event: " + eventToSave.eventName);
-								for (let i = 0; i < bandsToAdd.length; i++) {
-									if (bandsToAdd[i]) {
-										eventToSave.bands.push(bandsToAdd[i]);
-									}
-								}
-								eventToSave.save(function(finalEventSaveError) {
-									if (finalEventSaveError) {
-										console.log("failed to save event: " + eventToSave.eventName);
-										console.log(finalEventSaveError);
-									}
-									else {
-										console.log("event " + eventToSave.eventName + " saved with " + eventToSave.bands.length + " bands added.");
-									}
-								});
-							}, (rejection) => {
-								console.log("acquireBandsPromiseArray() was rejected, meaning the final save for bands never happened.");
-							});
-						}
-						else {
-							let facebookEventURL = "https://graph.facebook.com/v2.9/" + eventToSave.eventId + "/roles?access_token=" + access_token;
+						// console.log(eventToSave.social.length);
+						// if (eventToSave.eventVenue === "Larimer Lounge" || 
+						// 	eventToSave.eventVenue === "Lost Lake" ||
+						// 	eventToSave.eventVenue === "Globe Hall") {
+						// 	let bandNames = eventToSave.eventName.split("/");
+						// 	bandNames.splice(bandNames.length - 1, 1);
+						// 	Promise.all(acquireBandsPromiseArray(bandNames, true, eventToSave)).then((bandsToAdd) => {
+						// 		console.log("total resolved bands: ");
+						// 		console.log(bandsToAdd);
+						// 		console.log("for event: " + eventToSave.eventName);
+						// 		for (let i = 0; i < bandsToAdd.length; i++) {
+						// 			if (bandsToAdd[i]) {
+						// 				eventToSave.bands.push(bandsToAdd[i]);
+						// 			}
+						// 		}
+						// 		eventToSave.save(function(finalEventSaveError) {
+						// 			if (finalEventSaveError) {
+						// 				console.log("failed to save event: " + eventToSave.eventName);
+						// 				console.log(finalEventSaveError);
+						// 			}
+						// 			else {
+						// 				console.log("event " + eventToSave.eventName + " saved with " + eventToSave.bands.length + " bands added.");
+						// 			}
+						// 		});
+						// 	}, (rejection) => {
+						// 		console.log("acquireBandsPromiseArray() was rejected, meaning the final save for bands never happened.");
+						// 	});
+						// }
+						// else {
+							let facebookEventURL = "https://graph.facebook.com/v2.9/" + eventToSave.eventId + "?fields=admins&access_token=" + access_token;
 							request(facebookEventURL, function (error, response, body) {
-								if (!error && JSON.parse(body).data) {
+								if (!error && JSON.parse(body).admins && JSON.parse(body).admins.data.length > 0) {
 									let roles = [];
-									JSON.parse(body).data.forEach(function(role) {
+									JSON.parse(body).admins.data.forEach(function(role) {
 										roles.push(role.id);
+										// console.log(role.name + " was found on event " + eventToSave.eventName);
 									});
-									Promise.all(acquireBandsPromiseArray(roles, false, eventToSave)).then(bandsToAdd => {
+									Promise.all(acquireBandsPromiseArray(roles, false, eventToSave))
+										.then(bandsToAdd => {
 										console.log("total resolved bands: ");
 										console.log(bandsToAdd);
 										console.log("for event: " + eventToSave.eventName);
@@ -445,13 +464,13 @@ function acquireEvents(url) {
 												console.log("event " + eventToSave.eventName + " saved with " + eventToSave.bands.length + " bands added.");
 											}
 										});
+									}).catch( rejection => {
+										console.log("acquireBandsPromiseArray was rejected");
+										console.log(rejection);
 									});
 								}
-								else {
-									console.log("event role request failed.");
-								}
 							});
-						}
+						// }
 					}, (rejection) => {
 						console.log("getPeople() was rejected, band acquisition never happened for event: " + currentEvent.eventName);
 					});
@@ -473,28 +492,29 @@ acquireBands() is called for each event
 =====================================
 */
 function acquireBandsPromiseArray(bandIds, isLL, eventPassedIn) {
-	console.log("trying to acquire bands for: " + eventPassedIn.eventName);
+	// console.log("trying to acquire bands for: " + eventPassedIn.eventName);
 	let bandsPromiseArray = [];
 	bandIds.forEach(function(band) {
-		bandsPromiseArray.push(new Promise( resolve => {
+		bandsPromiseArray.push(new Promise( (resolve) => {
 			Band.findOne({fbId: band}, function(err, found) {
 	  			//band found
 	  			if (!err && found) {
-	  				console.log("found existing band: " + found.fbId + " for event: " + eventPassedIn.eventName);
+	  				// console.log("found existing band: " + found.fbId + " for event: " + eventPassedIn.eventName);
 	  				resolve(found);
 	  			}
 	  			else {
-	  				if (isLL) {
-	  					googleSearchBand(band, eventPassedIn, band, null, resolve);
-	  				}
-	  				else {
-						createNewBand(band, eventPassedIn, resolve);
-	  				}
+	  				createNewBand(band, eventPassedIn, resolve);
+	  			// 	if (isLL) {
+	  			// 		googleSearchBand(band, eventPassedIn, band, null, resolve);
+	  			// 	}
+	  			// 	else {
+						// createNewBand(band, eventPassedIn, resolve);
+	  			// 	}
 	  			}
 	  		});
 		}));
 	});
-	console.log(bandsPromiseArray.length + " band promises for " + eventPassedIn.eventName);
+	// console.log(bandsPromiseArray.length + " band promises for " + eventPassedIn.eventName);
 	return bandsPromiseArray;
 }
 function getEventPromiseArray(events) {
