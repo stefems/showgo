@@ -591,7 +591,7 @@ function getEventPromiseArray(events) {
 
 function getPeople(url, array, event, resolve, reject) {
 	request(url, function (error, response, body) {
-		if (!error && JSON.parse(body) && (JSON.parse(body).data.length > 0)) {
+		if (!error && JSON.parse(body) && && JSON.parse(body).data && (JSON.parse(body).data.length > 0)) {
 			let people = JSON.parse(body).data;
 			for (let i = 0; i < people.length; i++) {
 				let attendee = {
