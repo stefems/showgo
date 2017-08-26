@@ -19,6 +19,7 @@ var UserSchema = new mongoose.Schema({
     actionType: String
   }],
   venue_pages: [String],
+  genres: [String],
   id: String,
   picture: String,
   friendSuggestions: [{

@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, ViewChildren, EventEmitter, ElementRef, I
 import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot, NavigationEnd } from '@angular/router';
 import { ApiService }      from './../api.service';
 import { AuthService }      from './../auth.service';
+import {FilterService} from '../filter.service'
 import {EventComponent}				from './../event/event.component';
 import {User} from '../user';
 import {Event} from '../event'
@@ -41,7 +42,7 @@ export class EventsComponent implements OnInit {
   @ViewChild('socialDrawer') socialDrawer: ElementRef;
   @ViewChild('socialContainer') socialContainer: ElementRef;
   
-  constructor(private router: Router, private apiService: ApiService, private authService: AuthService) {
+  constructor(private filterService: FilterService, private router: Router, private apiService: ApiService, private authService: AuthService) {
     // setInterval(function() {
     //   this.time++;
     //   console.log(this.time);

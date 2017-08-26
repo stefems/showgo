@@ -25,7 +25,8 @@ let currentKeyNumber = 1;
 
 var env, access_token;
 //add back in 
-var facebookVenuePages = ["hidivedenver", "FillmoreAuditorium", "MarquisTheater", "gothictheatre", "ogdentheatre", "lostlakedenver", "larimerlounge", "globehalldenver"];
+//Hi-Dive Denver Dazzle
+var facebookVenuePages = ["hidivedenver", "dazzledenver", 'nocturnejazz', 'bluebirdtheater', "lionslairdenver", '3kingstavern', "thesummitmusichall", "FillmoreAuditorium", "MarquisTheater", "gothictheatre", "ogdentheatre", "lostlakedenver", "larimerlounge", "globehalldenver"];
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/events');
 fs.stat(".env/.env.js", function(err, stat) {
 	if(err == null) {
@@ -127,22 +128,18 @@ function getWebsite(facebookPageId, event, resolve) {
 	  		response = JSON.parse(body);
 	  		let website = response.website;
 	  		let bandName = response.name;
-	  		//bandcamp
-	  		if (website && website.indexOf("bandcamp") !== -1) {
-	  			let beforeBC = website.split("bandcamp.com")[0];
-	  			let urls = beforeBC.split("http");
-	  			website = urls[urls.length-1] + "bandcamp.com";
-	  			//run function to acquire the embed
-	 			getbandcampEmbed(facebookPageId, website, event, resolve);
-	  		}
-	  		//custom website
-	  		else if (website) {
-	  			websiteLinkSearch(facebookPageId, response.website, event, bandName, resolve);
-	  		}
-	  		else {
-	  			//no links were found, search google!
-				// googleSearchBand(facebookPageId, event, bandName, null, resolve);
-	  		}
+	  		if (website) {
+	  			let websites = website.split(" ");
+		  		websites.forEach(function(site) {
+					//bandcamp	
+					if (site.indexOf(".bandcamp.com") !== -1) {
+						//run function to acquire the embed
+						getbandcampEmbed(facebookPageId, website, event, resolve);
+						return;
+					}
+		  		});
+		  		websiteLinkSearch(facebookPageId, response.website, event, bandName, resolve);
+		  	}
 	  	}
 	  	else {
 	  		console.log("failed to get website from facebook website search");
@@ -169,7 +166,7 @@ function websiteLinkSearch(bandId, url, event, bandName, resolve) {
 				const dom = new JSDOM(body);
 				var aTags = dom.window.document.getElementsByTagName("a");
 				for (let i = 0; i < aTags.length; i++) {
-					if (aTags[i].getAttribute("href") && aTags[i].getAttribute("href").indexOf("bandcamp") !== -1) {
+					if (aTags[i].getAttribute("href") && aTags[i].getAttribute("href").indexOf(".bandcamp.com") !== -1) {
 						let urlToUse = aTags[i].getAttribute("href").slice(0, aTags[i].getAttribute("href").indexOf(".com") + 4);
 						console.log("found bandcamp url: " + urlToUse);
 						getbandcampEmbed(bandId, urlToUse, event, resolve);
@@ -279,16 +276,32 @@ function googleSearchBand(bandId, event, band, options, resolve) {
 dont delete
 */
 function getbandcampEmbed(bandId, url, event, resolve) {
+	if (url.indexOf("http") === -1) {
+		url = "http://" + url;
+	}
 	var options = {
 		url: url,
 		headers: {
 			"user-agent": "Chrome/51.0.2704.103"
 		}
 	};
+
 	request(options, function (error, response, body) {
 		if (!error) {
 			try {
 				const dom = new JSDOM(body);
+				//Get Tags
+				let tags = [];
+				let acceptedTags = ['rock', 'indie', 'jazz', 'country', 'blues', 'soul', 'electronic', 'hip-hop', 'punk', 'metal', 'ambient', 'pop', 'shoegaze', 'experimental', 'garage', 'folk', 'psychedelic', 'lo-fi'];
+				var tagsFound = dom.window.document.getElementsByClassName("tag");
+				console.log("found " + tagsFound.length + " tags");
+				for (var i = 1; i < tagsFound.length; i++) {
+				    if (acceptedTags.indexOf(tagsFound[i].text) !== -1) {
+				    	console.log("found tag " + tagsFound[i].text);
+				    	tags.push(tagsFound[i].text);
+				    }
+				}
+				//Get Embed
 				var metaTags = dom.window.document.getElementsByTagName("meta");
 				let content = "";
 				for (var i = 0; i < metaTags.length; i++) {
@@ -316,7 +329,7 @@ function getbandcampEmbed(bandId, url, event, resolve) {
 					let data = liList[0].getAttribute("data-item-id").split("-");
 					albumId = data[0] + "=" + data[1];
 				}
-				saveNewBandUpdateEvent(bandId, event, "https://bandcamp.com/EmbeddedPlayer/" + albumId + "/size=small/bgcol=ffffff/linkcol=0687f5/transparent=true/", resolve);
+				saveNewBandUpdateEvent(bandId, event, "https://bandcamp.com/EmbeddedPlayer/" + albumId + "/size=small/bgcol=ffffff/linkcol=0687f5/transparent=true/", tags, resolve);
 			}
 			catch (e) {
 				console.log("JSDOM error " + options.url);
@@ -333,7 +346,7 @@ function getbandcampEmbed(bandId, url, event, resolve) {
 /*
 dont delete
 */
-function saveNewBandUpdateEvent(bandId, eventPassedIn, bcEmbed, resolve) {
+function saveNewBandUpdateEvent(bandId, eventPassedIn, bcEmbed, tags, resolve) {
 	Band.findOne({fbId: bandId}, function(error, found) {
 		if (error) {
 			console.log(error);
@@ -349,7 +362,8 @@ function saveNewBandUpdateEvent(bandId, eventPassedIn, bcEmbed, resolve) {
 			bcEmbed = bcEmbed || "";
 			var newBand = new Band({
 				fbId: bandId,
-				bcUrl: bcEmbed
+				bcUrl: bcEmbed,
+				tags: tags
 			});
 			newBand.save(function(err) {
 				if (!err) {

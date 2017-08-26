@@ -27,6 +27,7 @@ export class ApiService {
   private getUser = '/api/user';
   private clearNotifs = '/api/clearNotifs';
   private deleteSuggestion = '/api/suggestion';
+  private saveUserUrl = '/api/saveUser';
 
   public headers = new Headers({ 'Content-Type': 'application/json' });
   public options = new RequestOptions({ headers: this.headers });
@@ -58,10 +59,27 @@ export class ApiService {
         }
     });
   }
+  saveUser(user): Observable<any> {
+    let url = this.saveUserUrl;
+    let body = JSON.stringify(user);
+    console.log("api saveUser");
+    return this.http.post(url, body, this.options)
+      .map((res:Response) => {
+        console.log(res);
+        if (!res.json().error) {
+          console.log("success");
+          return true;
+        }
+        else {
+          console.log("error")
+          return false;
+        }
+      });
+  }
 
   friendSuggestionDelete(access_token: string, friendId: string): Observable<boolean> {
     let url = this.deleteSuggestion + "/" + access_token + "/" + friendId;
-    console.log(url);
+    // console.log(url);
     return this.http.delete(url, this.options)
       .map((res:Response) => {
         // console.log(res);

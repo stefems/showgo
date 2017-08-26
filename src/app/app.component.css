@@ -8,6 +8,13 @@
 	color: white;
 }
 
+.close {
+    vertical-align: middle;
+    font-size: 34px;
+    margin-top: -5px;
+    margin-right: 10px;
+}
+
 .mdl-layout-title {
     color: black;
 }
@@ -17,7 +24,37 @@
 #badge{
     margin-right: 0;
 }
-
+.filterButton {
+    background-color: rgb(255,64,129);
+    color: white;
+}
+.filterButtonDiv {
+    text-align: center;
+    margin-bottom: 5px;
+    margin-top: 5px;
+}
+.genre, .venue {
+    display: inline-block;
+    margin-right: 5px;
+    background-color: white;
+    color: black;
+    border-radius: 7px;
+    padding: 2px;
+    margin-bottom: 3px;;
+}
+.remove{
+    background-color: black;
+    color: white;
+}
+.filterDiv {
+    padding: 0;
+    margin-left: 3px;
+    margin-right: 3px;
+}
+.filterDiv h5 {
+    display: inline;
+    margin: 0 0;
+}
 #badge::after {
     top: 5px;
     right: -13px;

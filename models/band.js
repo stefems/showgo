@@ -3,7 +3,8 @@ var mongoose = require('mongoose');
 // defining schema for bands
 var BandSchema = new mongoose.Schema({
 	fbId: String,
-	bcUrl: String
+	bcUrl: String,
+	tags: [String]
 });
 // define the model
 var Band = mongoose.model("Band", BandSchema);

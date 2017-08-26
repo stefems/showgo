@@ -13,6 +13,7 @@ export class User {
   	private inviteNotifications = 0;
   	private eventInvites = [];
   	private invitesSent = [];
+  	private genres = [];
 
 	constructor(inputJson: any) {
 		if (inputJson !== 0) {
@@ -30,6 +31,7 @@ export class User {
 			this.inviteNotifications = inputJson.inviteNotifications;
 			this.eventInvites = inputJson.eventInvites;
 			this.invitesSent = inputJson.invitesSent;
+			this.genres = inputJson.genres;
 			//use the id to get from DB to populate other data
 		}
 		else {
@@ -45,6 +47,7 @@ export class User {
 			this.inviteNotifications = 0;
 			this.eventInvites = [];
 			this.invitesSent = [];
+			this.genres = [];
 		}
 	}
 

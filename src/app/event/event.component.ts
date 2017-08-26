@@ -32,6 +32,7 @@ export class EventComponent implements OnInit {
 	public socialPreview = [];
 	public socialPreviewExtra = "";
 	public address: string = "";
+	public tagString = "";
 
 	constructor(private apiService: ApiService) {
 	}
@@ -42,6 +43,18 @@ export class EventComponent implements OnInit {
 		this.address = address;
 	}
 	ngOnInit() {
+		this.event.bands.forEach((band) => {
+			for (let i = 0; i < band.tags.length; i++) {
+				// console.log(band.tags[i]);
+				if (this.tagString === "") {
+					this.tagString = band.tags[i];
+				}
+				else {
+					this.tagString += ", " + band.tags[i];
+				}
+			}
+		});
+		this.tagString 
 		this.invitedByNames = this.event.invitedByNames || "";
 		//renders the event action status on the panel
 		for (let i = 0; i < this.user.events.length; i++) {

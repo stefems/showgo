@@ -23,6 +23,7 @@ router.post("/unfriend/:access_token/:friendId", apiGeneralController.unfriendPo
 router.get("/getId/:access_token", userController.getId);
 router.get("/findUser/:userId", apiGeneralController.getFindUser);
 router.get("/user/:userId", apiGeneralController.getUser);
+router.post("/saveUser", userController.saveUser);
 router.post("/clearNotifs/:access_token/:type", apiGeneralController.postClearNotifs);
 router.delete("/suggestion/:access_token/:friendId", apiGeneralController.deleteSuggestion);
 

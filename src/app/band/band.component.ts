@@ -18,6 +18,7 @@ export class BandComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+   
   	if (this.band.bcUrl !== "") {
   		this.bc = true;
   		// this.scReady = false;

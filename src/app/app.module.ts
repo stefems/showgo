@@ -11,6 +11,7 @@ import { EventsComponent } from './events/events.component';
 import { AuthGuard }                from './auth-guard.service';
 import { AuthService }      from './auth.service';
 import { ApiService }      from './api.service';
+import { FilterService }      from './filter.service';
 import { EventComponent } from './event/event.component';
 import { FbloginService}  from './fblogin.service';
 import { WindowRef } from './window.service';
@@ -120,7 +121,7 @@ const ROUTES = [
     FacebookModule.forRoot(),
     RouterModule.forRoot(ROUTES) // Add routes to the app,
     ],
-  providers: [AuthGuard, AuthService, ApiService, FbloginService, WindowRef],
+  providers: [AuthGuard, AuthService, ApiService, FbloginService, WindowRef, FilterService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

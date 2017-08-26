@@ -233,6 +233,30 @@ var userController = {
         res.json({"error": "invalid"});
       }
     });
+  },
+
+  saveUser: function(req, res) {
+    console.log("user ctl saveUser");
+    let newUserData = req.body;
+    User.findOne({access_token: newUserData.accessToken}, function(err, user) {
+      if(err) {
+        res.json({"error": "mongo error on friend add user find"});
+      }
+      else if (!err && user !== null){
+        user.genres = newUserData.genres;
+        user.venue_pages = newUserData.venues;
+        user.save(function(error) {
+          console.log(error || "no error");
+          if (error) {
+            res.json({"error": "mongo error on user save"});
+          }
+          else {
+            res.json({"status": "save made"});
+          }
+        });
+      }
+    });
+
   }
 };
 

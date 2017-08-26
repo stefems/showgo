@@ -6,7 +6,9 @@
 		</div>
 		<!-- Play Button -->
 	  	<div *ngIf="event.bands.length!==0" class="mdl-cell mdl-cell--2-col mdl-cell--1-col-tablet mdl-cell--1-col-phone playButtonDiv">
-		  	<i [class.isShowing]="showBands" (click)="toggleBands()" class="material-icons">play_circle_outline</i>
+		  	<i [class.isShowing]="showBands" (click)="toggleBands()" class="material-icons play">play_circle_outline</i>
+		  	<p class="tag" *ngIf="tagString.length > 0"><i class="material-icons">audiotrack</i>{{tagString}}</p>
+		  	<!-- <span *ngFor="let bandTag of event.bands"><p class="tag" *ngFor="let tag of bandTag.tags"><i class="material-icons">audiotrack</i>{{tag}}</p></span> -->
 		</div>
 		<div class="bands" *ngIf="showBands">
 			<band *ngFor="let band of event.bands" [band]="band"></band>
