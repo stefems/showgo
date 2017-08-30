@@ -24,7 +24,7 @@ export class FbloginService {
   	if (window.location.href.indexOf("showgo.io") === -1) {
       console.log("dev");
       initParams = {
-	      appId: '1957677144454397',
+	      appId: '634739066720402',
 	      xfbml: true,
 	      version: 'v2.9'
       };
@@ -33,7 +33,7 @@ export class FbloginService {
   	else {
       console.log("prod");
   		initParams = {
-	      appId: '634739066720402',
+	      appId: '1928641050691340',
 	      xfbml: true,
 	      version: 'v2.8',
 	    };
