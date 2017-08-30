@@ -17,11 +17,12 @@ export class FbloginService {
 
   public fb: any;
 
-  constructor (private http: Http, public fbNgx: FacebookService) {
+  constructor (private http: Http) {
     this.fb = FB;
   	let initParams;
   	//if showgo.io is in use, use the prod app's id
   	if (window.location.href.indexOf("showgo.io") === -1) {
+      console.log("dev");
       initParams = {
 	      appId: '1957677144454397',
 	      xfbml: true,
@@ -30,12 +31,14 @@ export class FbloginService {
   	}
   	//else, use the dev app id
   	else {
+      console.log("prod");
   		initParams = {
 	      appId: '634739066720402',
 	      xfbml: true,
 	      version: 'v2.8',
 	    };
   	}
+    console.log(initParams.appId);
     // console.log(initParams.appId);
     this.fb.init(initParams);
     // this.fb.Event.subscribe('auth.statusChange', this.auth_status_change_callback);
