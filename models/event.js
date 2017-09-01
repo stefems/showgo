@@ -25,7 +25,8 @@ var EventSchema = new mongoose.Schema({
 	}],
 	bcEmbeds: [String],
 	scEmbeds: [String],
-	bands: [Band.schema]
+	bands: [Band.schema],
+	genres: [String]
 });
 // define the model
 var Event = mongoose.model("Event", EventSchema);

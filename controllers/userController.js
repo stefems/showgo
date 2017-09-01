@@ -246,11 +246,11 @@ var userController = {
         user.genres = newUserData.genres;
         user.venue_pages = newUserData.venues;
         user.save(function(error) {
-          console.log(error || "no error");
           if (error) {
             res.json({"error": "mongo error on user save"});
           }
           else {
+            console.log(user);
             res.json({"status": "save made"});
           }
         });

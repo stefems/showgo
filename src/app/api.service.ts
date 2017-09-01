@@ -31,6 +31,8 @@ export class ApiService {
 
   public headers = new Headers({ 'Content-Type': 'application/json' });
   public options = new RequestOptions({ headers: this.headers });
+  public genres;
+  public venues;
 
   private eventsProvided: BehaviorSubject<Event[]> = new BehaviorSubject([]);
 
@@ -38,9 +40,9 @@ export class ApiService {
   redirectUrl: string;
 
   constructor (private http: Http) {
-    this.loadEvents(16).subscribe(res => {
-      // console.log("api service load events res");
-      // console.log(res);
+    this.genres = [];
+    this.venues = [];
+    this.loadEvents().subscribe(res => {
       this.eventsProvided.next(res);
     });
   }
@@ -76,7 +78,6 @@ export class ApiService {
         }
       });
   }
-
   friendSuggestionDelete(access_token: string, friendId: string): Observable<boolean> {
     let url = this.deleteSuggestion + "/" + access_token + "/" + friendId;
     // console.log(url);
@@ -91,7 +92,6 @@ export class ApiService {
         }
     });
   }
-
   userGet(fbId): Observable<any> {
     return this.http.get(this.getUser + "/" + fbId)
       .map((res:Response) => {
@@ -108,7 +108,6 @@ export class ApiService {
       //if found, return the picture and name
       //if not found, send requests to backend
   }
-
   friendPost(friend, access_token: string): Observable<any> {
     let url = this.postFriend + "/" + access_token + "/" + friend.fbId;
     let body = JSON.stringify(friend);
@@ -120,7 +119,6 @@ export class ApiService {
         return false;
       });
   }
-  
   friendInvitePost(friend, eventId, access_token: string): Observable<boolean> {
     //if fbid is a user, send a showgo notification, otherwise tack the invite onto the friend object
     let url = this.postFriendInvite + "/" + eventId + "/" + friend.fbId;
@@ -135,7 +133,6 @@ export class ApiService {
         return false;
       });
   }
-
   unfriendPost(friend, access_token: string): Observable<boolean> {
     let url = this.postUnfriend + "/" + access_token + "/" + friend.fbId;
     let body = JSON.stringify(friend);
@@ -150,7 +147,6 @@ export class ApiService {
         return false;
       });
   }
-
   //todo: ERROR HANDLING?
   eventPost(eventType: string, eventId: string, userId: string): Observable<boolean> {
     var url = this.postEventActionUrl + "/" + eventType + "/" + eventId + "/" + userId + "/" + localStorage.getItem("showgoUserAT");
@@ -173,26 +169,47 @@ export class ApiService {
   }
 
   getEvents(): Observable<Event[]> {
-    return this.eventsProvided.asObservable();
+    this.loadMoreEvents();
+    return this.eventsProvided.asObservable();    
   }
 
-  loadEvents(last): Observable<Event[]> {
-    return this.http.get(this.getEventsUrl+"/"+last)
+
+  loadEvents(): Observable<Event[]> {
+    console.log("loadEvents() api service");
+    let filter = "?genres=";
+    for (let i = 0; i < this.genres.length; i++) {
+      if (i === 0) {
+        filter += this.genres[i];
+      }
+      else {
+        filter += "," + this.genres[i];
+      }
+    }
+    for (let i = 0; i < this.venues.length; i++) {
+      if (i === 0) {
+        filter += "&venues=" + this.venues[i].name;
+      }
+      else {
+        filter += "," + this.venues[i].name;
+      }
+    }
+    if (this.venues.length === 0 && this.genres.length === 0) {
+      filter = "";
+    }
+    return this.http.get(this.getEventsUrl + filter)
       .map((res:Response) => {
         let eventArray = [];
         for (let i = 0; i < res.json().length; i++) {
           let newEvent = new Event(res.json()[i]);
           eventArray.push(newEvent);
         }
-        res.json()
         return eventArray;  
       });
   }
 
-  loadMoreEvents(lastEventToLoad): void {
-    console.log("loadMoreEvents() " + lastEventToLoad);
-    this.loadEvents(lastEventToLoad).subscribe(res => {
-      // console.log("api service load events res");
+  loadMoreEvents(): void {
+    this.loadEvents().subscribe(res => {
+      // console.log("api service load more events res");
       // console.log(res);
       this.eventsProvided.next(res);
     });

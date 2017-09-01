@@ -5,24 +5,4 @@ var Band = require("./models/band");
 
 mongoose.connect('mongodb://localhost/events');
 
-Event.find({}, function(error, docs) {
-	if (error) {
-		console.log(error); 
-	}
-	else {
-		//for each event
-		for (let event = 0; event < docs.length; event++) {
-			//for each person
-			for (let personIndex = 0; personIndex < docs[event].social.length; personIndex++) {
-				//for each person
-				for (let index = 0; index < docs[event].social.length; index++) {
-					console.log(docs[event].social[personIndex].name + " " + docs[event].social[index].name);
-					// if (docs[event].social[personIndex].fbId === docs[event].social[index].fbId) {
-					// 	console.log(docs[event].eventName);
-					// 	break;
-					// }
-				}
-			}
-		}
-	}
-});
+let venueFilter = ['Hi-Dive Denver', 'Globe Hall', 'Larimer Lounge'];// 'Lost Lake', "Marquis Theatre", "Gothic Theatre", "The Fillmore", "Summit Music Hall", "Nocturne", "Dazzle", "The Ogden", "Bluebird", '3 Kings', "Lion's Lair"];

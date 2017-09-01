@@ -37,10 +37,10 @@
       <hr>
       <div class="venueDiv">
         <h5>Venues:</h5>
-        <div (click)="toggleVenue(venue)" class="venue" *ngFor="let venue of venues" [class.remove]="user.venues.indexOf(venue) !== -1" >
-          {{venue}}
-          <i *ngIf="user.venues.indexOf(venue) === -1" class="fa fa-plus-circle" aria-hidden="true"></i>
-          <i *ngIf="user.venues.indexOf(venue) !== -1" class="fa fa-times-circle" aria-hidden="true"></i>
+        <div (click)="toggleVenue(venue)" class="venue" *ngFor="let venue of venues" [class.remove]="contains(venue)" >
+          {{venue.show}}
+          <i *ngIf="!contains(venue)" class="fa fa-plus-circle" aria-hidden="true"></i>
+          <i *ngIf="contains(venue)" class="fa fa-times-circle" aria-hidden="true"></i>
         </div>
       </div>
       <div class="filterButtonDiv">

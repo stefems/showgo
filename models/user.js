@@ -18,7 +18,10 @@ var UserSchema = new mongoose.Schema({
     eventId: String,
     actionType: String
   }],
-  venue_pages: [String],
+  venue_pages: [{
+    show: String,
+    name: String
+  }],
   genres: [String],
   id: String,
   picture: String,

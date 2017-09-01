@@ -75,24 +75,25 @@ export class EventsComponent implements OnInit {
     this.authService.user().subscribe(response => {
       // console.log(response);
       this.user = response;
+      this.apiService.venues = this.user.venues;
+      this.apiService.genres = this.user.genres;
+      this.apiService.getEvents().subscribe(response => {
+        // console.log("events.comp api call res");
+        // console.log(response);
+        if (response && response.length > 0) {
+          console.log("events received " + response.length);
+          this.events = response;
+          this.eventsLoaded = true;
+          this.loading = false;
+        }
+        else {
+          this.eventsContainer.nativeElement.removeEventListener("scroll", this.eventScrollLoader);
+          console.log("erm empty right now");
+        }
+      });
     });
 
-    this.apiService.getEvents().subscribe(response => {
-      // console.log("events.comp api call res");
-      // console.log(response);
-      if (response && response.length > 0) {
-        console.log("events received " + response.length);
-        this.events = this.events.concat(response);
-        this.eventsLoaded = true;
-        this.loading = false;
-        // this.eventsContainer.nativeElement.style.overflow = "auto";
-      }
-      else {
-        this.eventsContainer.nativeElement.removeEventListener("scroll", this.eventScrollLoader);
-        console.log("erm empty right now");
-
-      }
-    });
+   
   }
 
   public loadMoreEvents(): void {
@@ -100,7 +101,7 @@ export class EventsComponent implements OnInit {
     if (!this.loading) {
       this.loading = true;
       this.eventsToLoad += 16;
-      this.apiService.loadMoreEvents(this.eventsToLoad);
+      // this.apiService.loadMoreEvents(this.eventsToLoad);
     }
     else {
       console.log("still loading, wait.");

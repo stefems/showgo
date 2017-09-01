@@ -31,15 +31,18 @@ export class AppComponent {
   notifications = 0;
   public showFilterDiv = false;
   public genres = ['rock', 'indie', 'jazz', 'country', 'blues', 'soul', 'electronic', 'hip-hop', 'punk', 'metal', 'ambient', 'pop', 'shoegaze', 'experimental', 'garage', 'folk', 'psychedelic', 'lo-fi'];
-  public venues = ['Hi-Dive', 'Globe Hall', 'Larimer Lounge', 'Lost Lake', "Marquis Theatre", "Gothic Theatre", "The Fillmore", "Summit Music Hall", "Nocturne", "Dazzle", "The Ogden", "Bluebird", '3 Kings', "Lion's Lair"];
+  public venues = [{show:'Hi-Dive', name:"Hi-Dive Denver"}, {show:'Globe Hall', name: 'Globe Hall'}, {show: 'Larimer Lounge', name: 'Larimer Lounge'}, { show:'Lost Lake', name: 'Lost Lake'}, {show:"Marquis Theatre", name:"Marquis Theatre"}, {show: "Gothic Theatre", name: "Gothic Theatre"}, {show: "The Fillmore", name:"The Fillmore Auditorium"}, {show: "Summit Music Hall", name:"Summit Music Hall"}, {show: "Nocturne", name:"Nocture"}, {show: "Dazzle", name: "Dazzle"}, {show: "The Ogden", name: "The Ogden Theatre"}, {show: "Bluebird", name: "The Bluebird Theater"}, {show:'3 Kings', name:"3 Kings Tavern"}, {show: "Lion's Lair", name: "Lion's Lair"}];
   hideAlerts = true;
 
   
   constructor(private filterService: FilterService, private apiService: ApiService, private authService: AuthService, private router: Router){    
     this.authService.user().subscribe(response => {
       this.user = response;
+      console.log("venues: " + this.user.venues.length);
       this.filterService.genres = this.user.genres;
       this.filterService.venues = this.user.venues;
+      this.apiService.genres = this.user.genres;
+      this.apiService.venues = this.user.venues;
       if (this.user.dbId !== "") {
         this.notifications = this.user.friendNotifications + this.user.inviteNotifications;
         this.friendAlerts.nativeElement.setAttribute("data-badge", this.user.friendNotifications);
@@ -92,13 +95,26 @@ export class AppComponent {
     }
     this.filterService.genres = this.user.genres;
   }
+  contains(venue): boolean {
+    for (let i = 0; i < this.user.venues.length; i++) {
+      if (this.user.venues[i].show === venue.show) {
+        return true;
+      }
+    }
+    return false;
+  }
   toggleVenue(venue): void {
-    //apply venue
-    if (this.user.venues.indexOf(venue) === -1) {
-      this.user.venues.push(venue);
+    let remove = -1;
+    for (let i = 0; i < this.user.venues.length; i++) {
+      if (this.user.venues[i].show === venue.show) {
+        remove = i;
+      }
+    }
+    if (remove > -1) {
+      this.user.venues.splice(remove, 1);
     }
     else {
-      this.user.venues.splice(this.user.venues.indexOf(venue), 1);
+      this.user.venues.push(venue);
     }
     this.filterService.venues = this.user.venues;
 
@@ -109,12 +125,10 @@ export class AppComponent {
     this.drawer.nativeElement.MaterialLayout.toggleDrawer();
     this.router.navigate(['/events/'+type]);
   }
-
   goToAbout(): void {
     this.drawer.nativeElement.MaterialLayout.toggleDrawer();
     this.router.navigate(['/about']);
   }
-
   friendAlertsNav(): void {
     //remove user friend notifications
     this.user.friendNotifications = 0;
@@ -147,7 +161,6 @@ export class AppComponent {
     this.authService.logout();
     this.router.navigate(['/splash']);
   }
-
   home(): void {
     // console.log("home()");
     this.router.navigate(['/events/all']);

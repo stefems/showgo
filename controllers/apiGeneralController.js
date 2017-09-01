@@ -394,19 +394,71 @@ var generalApiController = {
 
   //will need a function for sending delete request for any kind of event (because they can't have an event in multiple categories)
   getEvents: function(req, res) {
-    // mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/events');
-    let last = parseInt(req.params.lastToLoad);
-    //get events from db
-    let skipAmount = last - 16;
-    Event.find({}).skip(skipAmount).limit(16).sort('eventTime.start_time').exec(function(eventsFindError, eventsFound) {
-      if (!eventsFindError && eventsFound) {
-        console.log("sending " + eventsFound.length + " events.");
-        res.json(eventsFound);
-      }
-      else {
-        res.json([]);
-      }
-    });
+    let venues, genres;
+    if (req.query.venues && req.query.genres) {
+      console.log("both:" + genres + " " + venues);
+      venues = req.query.venues.split(",");
+      genres = req.query.genres.split(",");
+      console.log(genres);
+      Event.find({
+        "eventVenue": {"$in": venues },
+        "genres": {"$in": genres}
+      }, function(eventsFindError, eventsFound){
+        if (!eventsFindError && eventsFound) {
+          console.log("events: " + eventsFound.length);
+          res.json(eventsFound);
+        }
+        else {
+          console.log(eventsFindError || "no events");
+          res.json([]);
+        }
+      });
+    }
+    else if (req.query.venues && !req.query.genres) {
+      venues = req.query.venues.split(",");
+      console.log("venues only:" + venues);
+      Event.find({
+        "eventVenue": {"$in": venues }
+      }, function(eventsFindError, eventsFound){
+        if (!eventsFindError && eventsFound) {
+          console.log("events: " + eventsFound.length);
+          res.json(eventsFound);
+        }
+        else {
+          console.log(eventsFindError || "no events");
+          res.json([]);
+        }
+      });
+    }
+    else if (!req.query.venues && req.query.genres) {
+      genres = req.query.genres.split(",");
+      console.log("genres only:" + genres);
+      Event.find({
+        "genres": {"$in": genres}
+      }, function(eventsFindError, eventsFound){
+        if (!eventsFindError && eventsFound) {
+          console.log("events: " + eventsFound.length);
+          res.json(eventsFound);
+        }
+        else {
+          console.log(eventsFindError || "no events");
+          res.json([]);
+        }
+      });
+    }
+    else {
+      console.log("neither");
+       Event.find({}).limit(40).exec(function(eventsFindError, eventsFound){
+        if (!eventsFindError && eventsFound) {
+          console.log("events: " + eventsFound.length);
+          res.json(eventsFound);
+        }
+        else {
+          console.log(eventsFindError || "no events");
+          res.json([]);
+        }
+      });
+    }
   },
 
   friendPost: function(req, res) {

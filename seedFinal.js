@@ -467,6 +467,11 @@ function acquireEvents(url) {
 										for (let i = 0; i < bandsToAdd.length; i++) {
 											if (bandsToAdd[i]) {
 												eventToSave.bands.push(bandsToAdd[i]);
+												for (let genreIndex = 0; genreIndex < bandsToAdd[i].tags.length; genreIndex++) {
+													if (eventtoSave.genres.indexOf(bandsToAdd[i].tags[genreIndex]) === -1) {
+														eventtoSave.genres.push(bandsToAdd[i].tags[genreIndex]);
+													}
+												}
 											}
 										}
 										eventToSave.save(function(finalEventSaveError) {
@@ -573,7 +578,8 @@ function getEventPromiseArray(events) {
 				social: [],
 				bcEmbeds: [],
 				scEmbeds: [],
-				bands: []
+				bands: [],
+				genres: []
 			});
 			//save
 			newEvent.save(function(saveError) {
@@ -591,7 +597,7 @@ function getEventPromiseArray(events) {
 
 function getPeople(url, array, event, resolve, reject) {
 	request(url, function (error, response, body) {
-		if (!error && JSON.parse(body) && && JSON.parse(body).data && (JSON.parse(body).data.length > 0)) {
+		if (!error && JSON.parse(body) && JSON.parse(body).data && (JSON.parse(body).data.length > 0)) {
 			let people = JSON.parse(body).data;
 			for (let i = 0; i < people.length; i++) {
 				let attendee = {
